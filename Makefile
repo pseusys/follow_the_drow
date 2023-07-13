@@ -20,7 +20,7 @@ venv:
 	pip3 install --upgrade pip
 	pip3 install -e library
 	pip3 install jupyter~=1.0
-	jupyter nbextension enable --py widgetsnbextension
+	jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
 
 

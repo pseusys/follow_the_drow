@@ -145,8 +145,8 @@ class DrowDetector(Module):
 
     def forward_all(self, va: Dataset):
         all_confs, all_votes = [], []
-        for iseq in trange(len(va.det_id), desc=" sequence", disable=not self._verbose):
-            for idet in trange(len(va.det_id[iseq]), desc=" scan", disable=not self._verbose):
+        for iseq in trange(len(va.det_id), desc="Sequence", disable=not self._verbose):
+            for idet in trange(len(va.det_id[iseq]), desc="Scan", disable=not self._verbose):
                 iscan = va.idet2iscan[iseq][idet]
                 scans, odoms = va.get_scan(iseq, iscan, self.N_TIME)
                 cut = cutout(scans, odoms, len(va.scans[iseq][iscan]), nsamp=self.N_SAMP)
