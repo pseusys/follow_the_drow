@@ -12,6 +12,7 @@ from numpy import array
 
 from tqdm.auto import trange
 
+from .detector import Detector
 from ..datasets import Dataset
 from ..utils.file_utils import DROW_WEIGHTS_PATH
 from ..utils.drow_utils import cutout
@@ -22,14 +23,14 @@ cudnn.benchmark = True  # Run benchmark to select fastest implementation of ops.
 _DETECTOR_WEIGHTS_PATH = Path(__file__).parent.parent / DROW_WEIGHTS_PATH
 
 
-class DrowDetector(Module):
+class DrowDetector(Module, Detector):
     N_TIME = 5
     N_SAMP = 48
     GPU = False  # This is the GPU index, use 0 for first GPU.
 
     def __init__(self, dropout: float = 0.5, verbose: bool = True, *args, **kwargs):
-        super(DrowDetector, self).__init__(*args, **kwargs)
-        self._verbose = verbose
+        Module.__init__(self, *args, **kwargs)
+        Detector.__init__(self, verbose)
 
         self.dropout = dropout
         self.conv1a = Conv1d(1, 64, kernel_size=3, padding=1)
@@ -133,10 +134,6 @@ class DrowDetector(Module):
         constant_(self.bn4a.weight, 1)
         constant_(self.bn4b.weight, 1)
 
-    def _print(self, message: str):
-        if self._verbose:
-            print(message)
-
     def forward_one(self, xb):
         self.eval()
         with no_grad():
@@ -145,8 +142,8 @@ class DrowDetector(Module):
 
     def forward_all(self, va: Dataset):
         all_confs, all_votes = [], []
-        for iseq in trange(len(va.det_id), desc="Sequence", disable=not self._verbose):
-            for idet in trange(len(va.det_id[iseq]), desc="Scan", disable=not self._verbose):
+        for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
+            for idet in trange(len(va.det_id[iseq]), desc=f"Scans from sequence {iseq}", disable=not self._verbose):
                 iscan = va.idet2iscan[iseq][idet]
                 scans, odoms = va.get_scan(iseq, iscan, self.N_TIME)
                 cut = cutout(scans, odoms, len(va.scans[iseq][iscan]), nsamp=self.N_SAMP)

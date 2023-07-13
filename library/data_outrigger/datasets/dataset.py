@@ -6,16 +6,17 @@ from numpy import genfromtxt, fromregex, where, array, full, array_equal, vector
 from numpy.typing import NDArray
 
 from ..utils.file_utils import DROW_TEST_PATH
+from ..utils.generic_utils import Logging
 
 _DATASET_TEST_PATH = Path(__file__).parent.parent / DROW_TEST_PATH
 
 
-class Dataset:
+class Dataset(Logging):
     _LOAD_JSON_VECTOR = vectorize(loads, otypes=[object])
 
     def __init__(self, dataset: Union[Path, str] = _DATASET_TEST_PATH, laser_scans: int = 450, verbose: bool = True):
+        Logging.__init__(self, verbose)
         filenames = [f"{f.parent}/{f.stem}" for f in Path(dataset).glob("*.csv")]
-        self._verbose = verbose
 
         self.scan_id: NDArray[uint32]
         self.scan_time: NDArray[float32]
@@ -57,10 +58,6 @@ class Dataset:
     @staticmethod
     def _load_odom(fname: Union[Path, str]) -> NDArray:
         return genfromtxt(fname, delimiter=",", dtype=[("eq", uint32), ("t", float32), ("xya", float32, 3)])
-
-    def _print(self, message: str):
-        if self._verbose:
-            print(message)
 
     def get_scan(self, sequence_id: int, scan_id: int, time_window: int) -> Tuple[NDArray, NDArray]:
         start_time = scan_id - time_window + 1
