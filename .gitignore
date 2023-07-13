@@ -1,0 +1,11 @@
+.vscode
+.idea
+
+**/__pycache__
+**/venv
+
+compare/cache
+stdlib/data_outrigger/include
+
+*.py[cod]
+*.egg-info
