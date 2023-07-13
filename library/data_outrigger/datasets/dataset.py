@@ -5,13 +5,16 @@ from typing import Union, List, Dict, Tuple
 from numpy import genfromtxt, fromregex, where, array, full, array_equal, vectorize, float32, uint32
 from numpy.typing import NDArray
 
+from ..utils.file_utils import DROW_TEST_PATH
+
+_DATASET_TEST_PATH = Path(__file__).parent.parent / DROW_TEST_PATH
+
 
 class Dataset:
     _LOAD_JSON_VECTOR = vectorize(loads, otypes=[object])
 
-    def __init__(self, dataset: Union[Path, str], laser_scans: int = 450, verbose: bool = True):
+    def __init__(self, dataset: Union[Path, str] = _DATASET_TEST_PATH, laser_scans: int = 450, verbose: bool = True):
         filenames = [f"{f.parent}/{f.stem}" for f in Path(dataset).glob("*.csv")]
-        print(filenames)
         self._verbose = verbose
 
         self.scan_id: NDArray[uint32]

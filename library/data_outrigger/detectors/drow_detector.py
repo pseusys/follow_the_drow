@@ -13,11 +13,13 @@ from numpy import array
 from tqdm.auto import trange
 
 from ..datasets import Dataset
+from ..utils.file_utils import DROW_WEIGHTS_PATH
 from ..utils.drow_utils import cutout
 from ..utils.torch_utils import init_module, move, count_parameters
 
-# TODO: use tqdm
 cudnn.benchmark = True  # Run benchmark to select fastest implementation of ops.
+
+_DETECTOR_WEIGHTS_PATH = Path(__file__).parent.parent / DROW_WEIGHTS_PATH
 
 
 class DrowDetector(Module):
@@ -58,7 +60,7 @@ class DrowDetector(Module):
         self.reset_parameters()
 
     @classmethod
-    def init(cls, weights_file: Union[Path, str], verbose: bool = True) -> "DrowDetector":
+    def init(cls, weights_file: Union[Path, str] = _DETECTOR_WEIGHTS_PATH, verbose: bool = True) -> "DrowDetector":
         map_location = None if cls.GPU else device("cpu")
         weights = load(weights_file, map_location)
 

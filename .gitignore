@@ -5,7 +5,7 @@
 **/venv
 
 compare/cache
-stdlib/data_outrigger/include
+library/data_outrigger/include
 
 *.py[cod]
 *.egg-info
