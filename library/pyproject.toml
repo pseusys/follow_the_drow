@@ -4,3 +4,34 @@ requires = [
     "pybind11>=2.10.0"
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "data_outrigger"
+description = "Library for all simple and commonly used ROS utilities I use"
+authors = [
+    {name = "Aleksandr Sergeev", email = "alexander.sergeev@onmail.com"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy~=1.24",
+    "torch~=2.0",
+    "tqdm~=4.64",
+    "scipy~=1.11",
+    "opencv-python~=4.8",
+    "scikit-learn~=1.2",
+    "matplotlib~=3.7"
+]
+dynamic = ["version"]
+
+
+[project.urls]
+Homepage = "http://github.com/pseusys/follow_the_drow"
+
+
+[tool.setuptools]
+packages = ["data_outrigger"]
+
+
+[tool.setuptools.dynamic]
+version = {attr = "setup.VERSION"}

@@ -7,6 +7,7 @@ from numpy.typing import NDArray
 
 from ..utils.file_utils import DROW_TEST_PATH
 from ..utils.generic_utils import Logging
+from ..utils.drow_utils import laser_measures
 
 _DATASET_TEST_PATH = Path(__file__).parent.parent / DROW_TEST_PATH
 
@@ -14,7 +15,7 @@ _DATASET_TEST_PATH = Path(__file__).parent.parent / DROW_TEST_PATH
 class Dataset(Logging):
     _LOAD_JSON_VECTOR = vectorize(loads, otypes=[object])
 
-    def __init__(self, dataset: Union[Path, str] = _DATASET_TEST_PATH, laser_scans: int = 450, verbose: bool = True):
+    def __init__(self, dataset: Union[Path, str] = _DATASET_TEST_PATH, laser_scans: int = laser_measures, verbose: bool = True):
         Logging.__init__(self, verbose)
         filenames = [f"{f.parent}/{f.stem}" for f in Path(dataset).glob("*.csv")]
 

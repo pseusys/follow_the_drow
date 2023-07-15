@@ -9,11 +9,14 @@ from numpy.typing import NDArray
 
 from cv2 import resize, GaussianBlur, INTER_AREA, INTER_LINEAR
 
-laserIncrement = radians(0.5)
-laserFoV = (450 - 1) * laserIncrement  # 450 points.
+laser_measures = 450
+laser_increment = radians(0.5)
+laser_FoV = (laser_measures - 1) * laser_increment
+laser_minimum = -laser_FoV * 0.5
+laser_maximum = laser_FoV * 0.5
 
 
-def cutout(scans, odoms, number, win_sz=1.66, thresh_dist=1, nsamp=48, UNK=29.99, laserIncrement=laserIncrement):
+def cutout(scans, odoms, number, win_sz=1.66, thresh_dist=1, nsamp=48, UNK=29.99, laserIncrement=laser_increment):
     """ TODO: Probably we can still try to clean this up more.
     This function here only creates a single cut-out; for training,
     we'd want to get a batch of cutouts from each seq (can vectorize) and for testing
@@ -177,9 +180,8 @@ def _deep2flat_gt(gts, radius):
     return array(all_x), array(all_y), array(all_r), array(all_frames)
 
 
-def _laser_angles(N, fov=None):
-    fov = fov or laserFoV
-    return linspace(-fov*0.5, fov*0.5, N)
+def _laser_angles(N):
+    return linspace(laser_minimum, laser_maximum, N)
 
 
 def _rphi_to_xy(r, phi):
