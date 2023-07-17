@@ -7,9 +7,12 @@ venv
 deploy/out
 deploy/follow_the_drow/CMakeLists.txt
 
-compare/cache
-library/data_outrigger/include
-library/data_outrigger/*.so
+compare
 
 *.py[cod]
 *.egg-info
+
+.gitattributes
+.gitignore
+Makefile
+README.md

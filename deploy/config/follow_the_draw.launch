@@ -1,0 +1,4 @@
+<launch>
+	<node name="rviz_visualization" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d /~/catkin_ws/config/$(optenv RVIZ_CONFIG marker.rviz)" />
+	<node name="rosbag_recording" pkg="rosbag" type="play" output="log" if="$(optenv ROSBAG_PLAY false)" args="-l /~/catkin_ws/out/$(env RECORD_LOCATION latest.bag)" />
+</launch>
