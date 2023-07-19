@@ -5,7 +5,6 @@
 venv
 
 deploy/out
-deploy/follow_the_drow/CMakeLists.txt
 
 compare/cache
 library/data_outrigger/include

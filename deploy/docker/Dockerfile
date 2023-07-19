@@ -11,7 +11,12 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 COPY library /~/fillow_the_drow_library
 RUN python3.9 -m pip install -e /~/fillow_the_drow_library
-ENV FOLLOW_THE_DROW_LIBRARY /~/fillow_the_drow_library/cpp_core
+
+ENV CMAKE_INSTALL_PREFIX /usr/local
+RUN mkdir /~/fillow_the_drow_library/cpp_core/build && cd /~/fillow_the_drow_library/cpp_core/build && cmake .. && make && make install
+ENV FollowTheDrow_INCLUDE_DIRS /~/fillow_the_drow_library/cpp_core/include
+ENV FollowTheDrow_LIBRARY_DIRS ${CMAKE_INSTALL_PREFIX}/lib
+ENV FollowTheDrow_DIR ${CMAKE_INSTALL_PREFIX}/cmake
 
 ENV ROS_LANG_DISABLE geneus:genlisp:gennodejs
 RUN mkdir -p /~/catkin_ws/src

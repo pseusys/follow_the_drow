@@ -1,4 +1,5 @@
 <launch>
-	<node name="rviz_visualization" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d /~/catkin_ws/config/$(optenv RVIZ_CONFIG marker.rviz)" />
-	<node name="rosbag_recording" pkg="rosbag" type="play" output="log" if="$(optenv ROSBAG_PLAY false)" args="-l /~/catkin_ws/out/$(env RECORD_LOCATION latest.bag)" />
+	<node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d /~/catkin_ws/config/$(optenv RVIZ_CONFIG marker.rviz)" />
+	<node name="rosbag_play" pkg="rosbag" type="play" output="log" if="$(optenv ROSBAG_PLAY false)" args="-l /~/catkin_ws/out/$(env RECORD_LOCATION latest.bag)" />
+	<node name="follow_the_drow_raw_data_aggregator" pkg="follow_the_drow" type="raw_data_aggregator" output="screen" launch-prefix="gdb -ex run --args" if="$(optenv AGGREGATE_DATA true)" />
 </launch>

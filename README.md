@@ -1,5 +1,11 @@
 # Follow the DROW
 
+## Debug
+
+In order to run any of the nodes with GDB, add `launch-prefix="gdb -ex run --args"` to node arguments.
+
+> [`GDB`](https://www.sourceware.org/gdb/) is already bundled into Docker image!
+
 ## REPORT
 
 ### DROW dataset
