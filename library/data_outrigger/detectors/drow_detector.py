@@ -1,3 +1,11 @@
+"""
+This file is totally based on research papaer about DROW.
+Here th link to the paper can be found:
+https://arxiv.org/abs/1603.02636
+This model is based on the "final best model" described in paper:
+https://github.com/VisualComputingInstitute/DROW/blob/master/v2/Clean%20Final*%20%5BT%3D5%2Cnet%3Ddrow3xLF2p%2Codom%3Drot%2Ctrainval%5D.ipynb
+"""
+
 from pathlib import Path
 from typing import Union
 

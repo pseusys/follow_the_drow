@@ -1,3 +1,11 @@
+"""
+This file is totally based on research papaer about DROW.
+Here the link to the paper can be found:
+https://arxiv.org/abs/1603.02636
+The utility functions present here can be found in paper's GitHub:
+https://github.com/VisualComputingInstitute/DROW/blob/master/v2/utils/__init__.py
+"""
+
 from numpy import max, clip, where, argmin, abs
 
 from sklearn.metrics import auc
