@@ -3,11 +3,10 @@
 from rospy import Publisher, Rate, is_shutdown, init_node, spin, loginfo
 from geometry_msgs.msg import Point
 
+from follow_the_drow import HEARTBEAT_RATE, RAW_DATA_TOPIC, FILE_LOADER
 from follow_the_drow.msg import raw_data
 from data_outrigger.datasets import Dataset
 from data_outrigger.utils.drow_utils import laser_angles, rphi_to_xy
-
-RAW_DATA_TOPIC = "raw_data"
 
 
 class FileLoader:
@@ -25,7 +24,7 @@ class FileLoader:
     def __call__(self) -> None:
         self.raw_data = Publisher(RAW_DATA_TOPIC, raw_data, queue_size=10)
         counter = 0
-        rate = Rate(10)
+        rate = Rate(HEARTBEAT_RATE)
         while not is_shutdown():
             if counter >= len(self.dataset.scans):
                 counter = 0
@@ -35,6 +34,6 @@ class FileLoader:
 
 
 if __name__ == "__main__":
-    init_node("file_loader")
+    init_node(FILE_LOADER)
     FileLoader().__call__()
     spin()

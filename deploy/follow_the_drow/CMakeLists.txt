@@ -18,6 +18,8 @@ add_message_files(FILES
   raw_data.msg
 )
 
+catkin_python_setup()
+
 generate_messages(DEPENDENCIES
   geometry_msgs
 )
