@@ -14,22 +14,23 @@ class FileLoader:
         self.dataset = Dataset()
         loginfo(f"Dataset includes {len(self.dataset.scan_id)} scans and {len(self.dataset.det_id)} detections")
 
-    def update(self, counter):
+    def update(self, file_counter, scan_counter):
         bottom_lidar_points = list()
-        scans = self.dataset.scans[counter]
+        scans = self.dataset.scans[file_counter][scan_counter]
         angles = laser_angles(scans.shape[-1])
         bottom_lidar_points = [Point(x=x, y=y) for x, y in zip(*rphi_to_xy(scans, angles))]
         self.raw_data.publish(raw_data(bottom_lidar=bottom_lidar_points))
 
     def __call__(self) -> None:
         self.raw_data = Publisher(RAW_DATA_TOPIC, raw_data, queue_size=10)
-        counter = 0
+        file_counter, scan_counter = 0, 0
         rate = Rate(HEARTBEAT_RATE)
         while not is_shutdown():
-            if counter >= len(self.dataset.scans):
-                counter = 0
-            self.update(counter)
-            counter += 1
+            if scan_counter >= len(self.dataset.scans[file_counter]):
+                file_counter = file_counter + 1 if file_counter < len(self.dataset.scans) - 1 else 0
+                scan_counter = 0
+            self.update(file_counter, scan_counter)
+            scan_counter += 1
             rate.sleep()
 
 

@@ -5,7 +5,6 @@
 #include "geometry_msgs/Point.h"
 #include "sensor_msgs/LaserScan.h"
 
-#include "main.hpp"
 #include "transformation.hpp"
 
 
@@ -33,7 +32,7 @@ class LiveLoader {
         std::vector<geometry_msgs::Point> lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan, std::array<geometry_msgs::Point, 2>& transform) const;
         void bottom_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan);
         void top_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan);
-        void update();
+        void update() const;
 
     public:
         LiveLoader();

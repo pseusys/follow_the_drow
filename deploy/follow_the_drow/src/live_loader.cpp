@@ -2,6 +2,8 @@
 
 #include "follow_the_drow/raw_data.h"
 
+#include "main.hpp"
+
 #define polar 0
 #define cartesian 1
 
@@ -32,7 +34,7 @@ void LiveLoader::top_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan
     top_lidar_initialized = true;
 }
 
-void LiveLoader::update() {
+void LiveLoader::update() const {
     if (!bottom_lidar_initialized || !top_lidar_initialized) return;
     follow_the_drow::raw_data message;
     message.bottom_lidar = latest_bottom_scan;

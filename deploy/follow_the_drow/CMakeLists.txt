@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(FILES
   raw_data.msg
+  detection.msg
 )
 
 catkin_python_setup()
@@ -54,6 +55,10 @@ set(UTIL_SOURCES src/transformation.cpp)
 add_executable(live_loader src/live_loader.cpp ${UTIL_SOURCES})
 add_dependencies(live_loader ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(live_loader ${catkin_LIBRARIES} FollowTheDrow)
+
+add_executable(visualizer src/visualizer.cpp ${UTIL_SOURCES})
+add_dependencies(visualizer ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(visualizer ${catkin_LIBRARIES} FollowTheDrow)
 
 catkin_install_python(PROGRAMS nodes/file_loader.py 
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
