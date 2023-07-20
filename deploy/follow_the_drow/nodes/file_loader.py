@@ -3,14 +3,9 @@
 from rospy import Publisher, Rate, is_shutdown, init_node, spin, loginfo
 from geometry_msgs.msg import Point
 
-# TODO: FIX!!
-import sys, os
-sys.path += ["/~/catkin_ws/devel/lib/python3/dist-packages"]
-print(sys.path)
-
 from follow_the_drow.msg import raw_data
 from data_outrigger.datasets import Dataset
-from data_outrigger.utils.drow_utils import _laser_angles as laser_angles, _rphi_to_xy as rphi_to_xy
+from data_outrigger.utils.drow_utils import laser_angles, rphi_to_xy
 
 RAW_DATA_TOPIC = "raw_data"
 

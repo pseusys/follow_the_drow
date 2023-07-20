@@ -30,4 +30,4 @@ services:
       ../conf.env
     network_mode:
       host
-    command: bash -c "catkin_make && roslaunch config/follow_the_drow.launch"
+    command: bash -c "roslaunch config/follow_the_drow.launch"

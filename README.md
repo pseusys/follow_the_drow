@@ -6,6 +6,8 @@ In order to run any of the nodes with GDB, add `launch-prefix="gdb -ex run --arg
 
 > [`GDB`](https://www.sourceware.org/gdb/) is already bundled into Docker image!
 
+Each docker image call will be prepended with `catkin_make` - all the nodes will be automatically rebuilt!
+
 ## REPORT
 
 ### DROW dataset
