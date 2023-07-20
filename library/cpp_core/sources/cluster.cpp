@@ -1,5 +1,7 @@
 #include "detectors.hpp"
 
+using namespace follow_the_drow;
+
 
 Cluster::Cluster(int start, int end, const std::vector<Point>& reference):
     dSize(reference[start].distance_to(reference[end])),

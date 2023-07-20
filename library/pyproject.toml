@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=42",
-    "pybind11>=2.10.0"
+    "pybind11>=2.10.0",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -12,15 +12,15 @@ description = "Library for all simple and commonly used ROS utilities I use"
 authors = [
     {name = "Aleksandr Sergeev", email = "alexander.sergeev@onmail.com"},
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 dependencies = [
     "numpy~=1.24",
     "torch~=2.0",
     "tqdm~=4.64",
-    "scipy~=1.11",
+    "scipy~=1.10",
     "opencv-python~=4.8",
     "scikit-learn~=1.2",
-    "matplotlib~=3.7"
+    "matplotlib~=3.7",
 ]
 dynamic = ["version"]
 
@@ -29,8 +29,12 @@ dynamic = ["version"]
 Homepage = "http://github.com/pseusys/follow_the_drow"
 
 
-[tool.setuptools]
-packages = ["data_outrigger"]
+[tool.setuptools.packages.find]
+include = ["data_outrigger*"]
+
+
+[tool.setuptools.package-data]
+data_outrigger = ["include/*.pth.tar", "include/DROWv2-data/*/*.bag.*"]
 
 
 [tool.setuptools.dynamic]

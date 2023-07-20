@@ -24,6 +24,10 @@ Contains many sequences, each sequence has:
 - End of FoV: 430
 - Number of rays: 726
 
+### DROW detector frequency
+
+It's 12.5 in paper, but here I decided to use 10 for compatibility and annotations
+
 ## TODOs
 
 1. Test "cutouts" with translation data

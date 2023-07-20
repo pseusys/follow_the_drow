@@ -6,8 +6,10 @@
 
 #include "detectors.hpp"
 
+using namespace follow_the_drow;
 
-const std::vector<Cluster>& StatelessDetector::performClustering(const std::vector<Point>& storage) const {
+
+const std::vector<Cluster> StatelessDetector::performClustering(const std::vector<Point>& storage) const {
     std::vector<Cluster> clusters;
     int clusterStart = 0;
     for (int loop = 1; loop < storage.size(); loop++)
@@ -20,7 +22,7 @@ const std::vector<Cluster>& StatelessDetector::performClustering(const std::vect
     return clusters;
 }
 
-const std::vector<Cluster>& StatelessDetector::detectLegs(const std::vector<Cluster>& clusters) const {
+const std::vector<Cluster> StatelessDetector::detectLegs(const std::vector<Cluster>& clusters) const {
     std::vector<Cluster> legClusters;
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < LEG_SIZE_MAX) && (clusters[loop].size() > LEG_SIZE_MIN))
@@ -29,7 +31,7 @@ const std::vector<Cluster>& StatelessDetector::detectLegs(const std::vector<Clus
     return legClusters;
 }
 
-const std::vector<Cluster>& StatelessDetector::detectChests(const std::vector<Cluster>& clusters) const {
+const std::vector<Cluster> StatelessDetector::detectChests(const std::vector<Cluster>& clusters) const {
     std::vector<Cluster> chestClusters;
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < CHEST_SIZE_MAX) && (clusters[loop].size() > CHEST_SIZE_MIN))
@@ -38,7 +40,7 @@ const std::vector<Cluster>& StatelessDetector::detectChests(const std::vector<Cl
     return chestClusters;
 }
 
-const std::vector<Point>& StatelessDetector::detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters) const {
+const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters) const {
     std::vector<Point> detection;
 
     for (int loopLeftLeg = 0; loopLeftLeg < legClusters.size(); loopLeftLeg++)
@@ -59,7 +61,7 @@ const std::vector<Point>& StatelessDetector::detectPeople(const std::vector<Clus
     return detection;
 }
 
-const std::vector<Point>& StatelessDetector::forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan) {
+const std::vector<Point> StatelessDetector::forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan) {
     const std::vector<Cluster>& legs = detectLegs(performClustering(latestBottomScan));
     const std::vector<Cluster>& chests = detectChests(performClustering(latestTopScan));
     return detectPeople(legs, chests);

@@ -8,8 +8,6 @@
 #include "transformation.hpp"
 
 
-// Coordinate systems related transformations:
-
 geometry_msgs::Point cartesian_to_polar(geometry_msgs::Point point) {
     geometry_msgs::Point result;
     result.x = sqrt(pow(point.x, 2) + pow(point.y, 2));
@@ -26,8 +24,6 @@ geometry_msgs::Point polar_to_cartesian(geometry_msgs::Point point) {
     return result;
 }
 
-
-// RobAIR related transformations:
 
 geometry_msgs::Point bottom_laser_transform_translation() {
     geometry_msgs::Point transform;
@@ -59,11 +55,4 @@ geometry_msgs::Point top_laser_transform_rotation() {
     transform.y = 0.05;
     transform.z = 0.0;
     return transform;
-}
-
-
-// Math and functions:
-
-float cartesian_distance(geometry_msgs::Point first, geometry_msgs::Point second) {
-    return sqrt(pow((first.x - second.x), 2) + pow((first.y - second.y), 2));
 }

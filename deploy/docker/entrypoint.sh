@@ -1,2 +1,2 @@
 #!/bin/bash
-source "/opt/ros/noetic/setup.bash" && source "./devel/setup.sh" && exec "$@"
+source "/opt/ros/noetic/setup.bash" && source "./devel/setup.bash" && exec "$@"

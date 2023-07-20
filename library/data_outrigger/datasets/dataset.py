@@ -12,6 +12,7 @@ from ..utils.drow_utils import laser_measures
 _DATASET_TEST_PATH = Path(__file__).parent.parent / DROW_TEST_PATH
 
 
+# TODO: one dataset seems to be enough
 class Dataset(Logging):
     _LOAD_JSON_VECTOR = vectorize(loads, otypes=[object])
 

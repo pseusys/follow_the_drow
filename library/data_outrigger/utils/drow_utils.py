@@ -180,11 +180,11 @@ def _deep2flat_gt(gts, radius):
     return array(all_x), array(all_y), array(all_r), array(all_frames)
 
 
-def _laser_angles(N):
+def laser_angles(N):
     return linspace(laser_minimum, laser_maximum, N)
 
 
-def _rphi_to_xy(r, phi):
+def rphi_to_xy(r, phi):
     return r * -sin(phi), r * cos(phi)
 
 
@@ -195,8 +195,8 @@ def _win2global(r, phi, dx, dy):
 
 
 def _prepare_prec_rec_softmax(scans, pred_offs):
-    angles = _laser_angles(scans.shape[-1])[None,:]
-    return _rphi_to_xy(*_win2global(scans, angles, pred_offs[:,:,0], pred_offs[:,:,1]))
+    angles = laser_angles(scans.shape[-1])[None,:]
+    return rphi_to_xy(*_win2global(scans, angles, pred_offs[:,:,0], pred_offs[:,:,1]))
 
 
 def _vote_avg(vx, vy, p):

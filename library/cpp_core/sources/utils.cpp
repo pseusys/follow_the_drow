@@ -2,6 +2,8 @@
 
 #include "utils.hpp"
 
+using namespace follow_the_drow;
+
 
 Point::Point(): Point(0, 0, 0) {}
 

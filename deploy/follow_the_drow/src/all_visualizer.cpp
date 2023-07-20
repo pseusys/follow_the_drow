@@ -20,7 +20,6 @@ class all_visualizer {
         ros::Subscriber raw_data, algorithmic_detector;
         ros::Publisher back_visualizer, front_visualizer;
 
-        // Latest received from devices data.
         std::vector<geometry_msgs::Point> latest_bottom_scan;
         std::vector<geometry_msgs::Point> latest_top_scan;
 

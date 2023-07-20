@@ -3,14 +3,12 @@ FROM ros:noetic-ros-base-focal
 SHELL ["/bin/bash", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install --no-install-recommends -y software-properties-common && rm -rf /var/lib/apt/lists/*
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install --no-install-recommends -y gdb python3.9 python3.9-dev python3-pip ros-noetic-desktop && rm -rf /var/lib/apt/lists/*
-
+RUN apt-get update && apt-get install --no-install-recommends -y gdb python3-dev python3-pip ros-noetic-desktop && rm -rf /var/lib/apt/lists/*
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+
 COPY library /~/fillow_the_drow_library
-RUN python3.9 -m pip install -e /~/fillow_the_drow_library
+RUN pip install /~/fillow_the_drow_library
 
 ENV CMAKE_INSTALL_PREFIX /usr/local
 RUN mkdir /~/fillow_the_drow_library/cpp_core/build && cd /~/fillow_the_drow_library/cpp_core/build && cmake .. && make && make install

@@ -12,7 +12,8 @@ DROW_WEIGHTS = "https://github.com/VisualComputingInstitute/DROW/releases/downlo
 ext_modules = [
     Pybind11Extension(
         "data_outrigger.cpp_binding",
-        [str(file) for file in Path("cpp_core").glob("*.cpp")],
+        sources=[str(file) for file in Path("cpp_core/sources").glob("*.cpp")],
+        include_dirs=[str(Path("cpp_core/include/follow_the_drow"))],
         define_macros=[("VERSION_INFO", VERSION)],
     ),
 ]
@@ -26,6 +27,7 @@ if not include_dir.exists():
     with ZipFile(file, "r") as archive:
         archive.extractall(include_dir)
     urlretrieve(DROW_WEIGHTS, include_dir / Path("weights.pth.tar"))
+    open(include_dir / Path("__init__.py"), "w").close()
 
 setup(
     ext_modules=ext_modules,

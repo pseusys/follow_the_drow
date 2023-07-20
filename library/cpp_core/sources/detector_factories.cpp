@@ -3,6 +3,8 @@
 
 #include "detector_factories.hpp"
 
+using namespace follow_the_drow;
+
 
 DetectorFactory::DetectorFactory(const DetectorType& detector, double minAngle, double incAngle, double minRange, double maxRange): type(detector), minimumAngle(minAngle), incrementAngle(incAngle), minimumRange(minRange), maximumRange(maxRange) {
     switch (detector) {
@@ -16,6 +18,5 @@ DetectorFactory::DetectorFactory(const DetectorType& detector, double minAngle, 
 }
 
 const std::string DetectorFactory::typeName() const {
-    std::cout << "start!!" << std::endl;
     return typeid(*this->detector).name();
 }

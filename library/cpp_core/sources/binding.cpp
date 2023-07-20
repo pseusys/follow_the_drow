@@ -6,6 +6,8 @@
 
 #define STRINGIFY(x) #x
 
+using namespace follow_the_drow;
+
 
 PythonDetectorFactory::PythonDetectorFactory(const DetectorType& detector, double minAngle, double incAngle): DetectorFactory(detector, minAngle, incAngle, -1, -1) {}
 

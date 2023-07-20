@@ -8,6 +8,9 @@ deploy/out
 
 compare
 
+library/cpp_core/build
+library/build
+
 *.py[cod]
 *.egg-info
 

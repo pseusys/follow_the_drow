@@ -9,6 +9,8 @@ deploy/out
 compare/cache
 library/data_outrigger/include
 library/data_outrigger/*.so
+library/cpp_core/build
+library/build
 
 *.py[cod]
 *.egg-info

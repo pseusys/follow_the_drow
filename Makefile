@@ -20,8 +20,17 @@ venv:
 	@ # Create python virtual environment
 	python3 -m venv venv
 	pip3 install --upgrade pip jupyter~=1.0
-	pip install -e library
+	pip3 install -e library
 	jupyter nbextension enable --py widgetsnbextension
+
+build-lib:
+	@ # Build and install `follow_the_drow` library locally
+	mkdir -p library/cpp_core/build
+	cd library/cpp_core/build
+	cmake ..
+	make
+	test $(shell id -u) -eq 0 && { make install; } || { echo "Installation can be performed in superuser mode only!"; }
+.PHONY: build-lib
 
 
 
@@ -53,4 +62,12 @@ launch-docker-robot:
 clean:
 	rm -rf venv
 	rm -rf compare/cache
+	rm -rf library/cpp_core/build
+	rm -rf library/data_outrigger.egg-info
+	rm -rf library/data_outrigger/*.so
+	rm -rf library/data_outrigger/include
+	rm -rf deploy/out
+	rm -rf **/__pycache__
 .PHONY: clean
+
+# TODO: add different clean targets
