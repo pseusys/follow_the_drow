@@ -44,7 +44,7 @@ redrow-detector-test: venv
 build-image:
 	@ # Build docker image - internet connection required!
 	docker compose -f deploy/docker/docker-compose.yml build
-	test -n "$(shell docker images -q ghcr.io/pseusys/follow_the_drow/follow_the_drow:master 2> /dev/null)" || { echo "Image building error!"; exit 1; }
+	test -n "$(shell docker images -q ghcr.io/pseusys/follow_the_drow/follow_the_drow:main 2> /dev/null)" || { echo "Image building error!"; exit 1; }
 .PHONY: build-image
 
 launch-docker-local:

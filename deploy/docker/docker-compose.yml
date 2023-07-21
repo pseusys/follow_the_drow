@@ -2,10 +2,10 @@ version: "3.9"
 
 services:
   roslaunch:
-    container_name: roslaunch-combined
+    container_name: ros-desktop-follow-the-drow
     restart: "no"
     privileged: true
-    image: ghcr.io/pseusys/follow_the_drow/follow_the_drow:master
+    image: ghcr.io/pseusys/follow_the_drow/follow_the_drow:main
     build:
       context: ../..
       dockerfile: deploy/docker/Dockerfile

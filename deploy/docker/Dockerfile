@@ -3,7 +3,7 @@ FROM ros:noetic-ros-base-focal
 SHELL ["/bin/bash", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install --no-install-recommends -y gdb python3-dev python3-pip ros-noetic-desktop && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --no-install-recommends -y gdb python3-dev python3-pip ros-noetic-desktop-full && rm -rf /var/lib/apt/lists/*
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
