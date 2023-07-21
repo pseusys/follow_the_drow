@@ -4,13 +4,19 @@
 #include "std_msgs/ColorRGBA.h"
 
 #include "main.hpp"
+#include "transformation.hpp"
 #include "visualizer.hpp"
 
 
 void Visualizer::raw_data_callback(const follow_the_drow::raw_data::ConstPtr& data) {
-    // TODO: cast to cartesian!
-    latest_bottom_scan = data->bottom_lidar;
-    latest_top_scan = data->top_lidar;
+    latest_bottom_scan = std::vector<geometry_msgs::Point>(data->bottom_lidar.size());
+    for (int i = 0; i < data->bottom_lidar.size(); i++)
+        latest_bottom_scan[i] = polar_to_cartesian(data->bottom_lidar[i]);
+
+    latest_top_scan = std::vector<geometry_msgs::Point>(data->top_lidar.size());
+    for (int i = 0; i < data->top_lidar.size(); i++)
+        latest_top_scan[i] = polar_to_cartesian(data->top_lidar[i]);
+
     scan_received = true;
 }
 
@@ -45,50 +51,50 @@ void Visualizer::add_point_to_marker(visualization_msgs::Marker& marker, float x
 }
 
 void Visualizer::update() const {
-    if (!scan_received) return;
-    visualization_msgs::Marker back_marker;
+    if (scan_received) {
+        visualization_msgs::Marker back_marker;
 
-    back_marker.header.frame_id = general_frame;
-    back_marker.header.stamp = ros::Time::now();
-    back_marker.ns = back_visualization_topic;
-    back_marker.id = 0;
-    back_marker.type = visualization_msgs::Marker::POINTS;
-    back_marker.action = visualization_msgs::Marker::ADD;
+        back_marker.header.frame_id = general_frame;
+        back_marker.header.stamp = ros::Time::now();
+        back_marker.ns = back_visualization_topic;
+        back_marker.id = 0;
+        back_marker.type = visualization_msgs::Marker::POINTS;
+        back_marker.action = visualization_msgs::Marker::ADD;
 
-    back_marker.pose.orientation.w = 1;
-    back_marker.scale.x = 0.05;
-    back_marker.scale.y = 0.05;
-    back_marker.color.a = 1.0;
+        back_marker.pose.orientation.w = 1;
+        back_marker.scale.x = 0.05;
+        back_marker.scale.y = 0.05;
+        back_marker.color.a = 1.0;
 
-    int laser_size = std::min(latest_bottom_scan.size(), latest_top_scan.size());
-    for (int loop = 0; loop < laser_size; loop++) {
-        add_point_to_marker(back_marker, latest_bottom_scan[loop], 0, 0, 1);
-        add_point_to_marker(back_marker, latest_top_scan[loop], 1, 0, 0);
+        for (int loop = 0; loop < latest_bottom_scan.size(); loop++)
+            add_point_to_marker(back_marker, latest_bottom_scan[loop], 0, 0, 1);
+        for (int loop = 0; loop < latest_bottom_scan.size(); loop++)
+            add_point_to_marker(back_marker, latest_top_scan[loop], 1, 0, 0);
+
+        back_visualizer.publish(back_marker);
     }
 
-    back_visualizer.publish(back_marker);
+    if (algorithmic_received) {
+        visualization_msgs::Marker front_marker;
 
-    if (!algorithmic_received) return;
-    visualization_msgs::Marker front_marker;
+        front_marker.header.frame_id = general_frame;
+        front_marker.header.stamp = ros::Time::now();
+        front_marker.ns = back_visualization_topic;
+        front_marker.id = 0;
+        front_marker.type = visualization_msgs::Marker::POINTS;
+        front_marker.action = visualization_msgs::Marker::ADD;
 
-    front_marker.header.frame_id = general_frame;
-    front_marker.header.stamp = ros::Time::now();
-    front_marker.ns = back_visualization_topic;
-    front_marker.id = 0;
-    front_marker.type = visualization_msgs::Marker::POINTS;
-    front_marker.action = visualization_msgs::Marker::ADD;
+        front_marker.pose.orientation.w = 1;
+        front_marker.scale.x = 0.15;
+        front_marker.scale.y = 0.15;
+        front_marker.color.a = 1.0;
 
-    front_marker.pose.orientation.w = 1;
-    front_marker.scale.x = 0.15;
-    front_marker.scale.y = 0.15;
-    front_marker.color.a = 1.0;
+        for (int loop = 0; loop < algorithmic_detector_data.size(); loop++)
+            add_point_to_marker(front_marker, algorithmic_detector_data[loop], 0, 1, 0);
 
-    for (int loop = 0; loop < algorithmic_detector_data.size(); loop++) {
-        add_point_to_marker(front_marker, algorithmic_detector_data[loop], 0, 1, 0);
+        add_point_to_marker(front_marker, 0, 0, 0, 1, 0, 1);
+        front_visualizer.publish(front_marker);
     }
-
-    add_point_to_marker(front_marker, 0, 0, 0, 1, 0, 1);
-    front_visualizer.publish(front_marker);
 }
 
 Visualizer::Visualizer() {

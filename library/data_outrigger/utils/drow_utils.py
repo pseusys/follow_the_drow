@@ -192,7 +192,7 @@ def laser_angles(N):
     return linspace(laser_minimum, laser_maximum, N)
 
 
-def rphi_to_xy(r, phi):
+def _rphi_to_xy(r, phi):
     return r * -sin(phi), r * cos(phi)
 
 
@@ -204,7 +204,7 @@ def _win2global(r, phi, dx, dy):
 
 def _prepare_prec_rec_softmax(scans, pred_offs):
     angles = laser_angles(scans.shape[-1])[None,:]
-    return rphi_to_xy(*_win2global(scans, angles, pred_offs[:,:,0], pred_offs[:,:,1]))
+    return _rphi_to_xy(*_win2global(scans, angles, pred_offs[:,:,0], pred_offs[:,:,1]))
 
 
 def _vote_avg(vx, vy, p):

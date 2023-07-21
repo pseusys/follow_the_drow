@@ -6,7 +6,7 @@ from geometry_msgs.msg import Point
 from follow_the_drow import HEARTBEAT_RATE, RAW_DATA_TOPIC, FILE_LOADER
 from follow_the_drow.msg import raw_data
 from data_outrigger.datasets import Dataset
-from data_outrigger.utils.drow_utils import laser_angles, rphi_to_xy
+from data_outrigger.utils.drow_utils import laser_angles
 
 
 class FileLoader:
@@ -18,7 +18,7 @@ class FileLoader:
         bottom_lidar_points = list()
         scans = self.dataset.scans[file_counter][scan_counter]
         angles = laser_angles(scans.shape[-1])
-        bottom_lidar_points = [Point(x=x, y=y) for x, y in zip(*rphi_to_xy(scans, angles))]
+        bottom_lidar_points = [Point(x=x, y=y) for x, y in zip(scans, angles)]
         self.raw_data.publish(raw_data(bottom_lidar=bottom_lidar_points))
 
     def __call__(self) -> None:
