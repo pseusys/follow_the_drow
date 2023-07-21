@@ -7,27 +7,33 @@
 #include "follow_the_drow/raw_data.h"
 #include "follow_the_drow/detection.h"
 
+#include "colors.hpp"
+
 
 class Visualizer {
     private:
         ros::NodeHandle handle;
-        ros::Subscriber raw_data, algorithmic_detector;
-        ros::Publisher back_visualizer, front_visualizer;
+        ros::Subscriber rawData, algorithmicDetector;
+        ros::Publisher backVisualizer, frontVisualizer;
 
-        std::vector<geometry_msgs::Point> latest_bottom_scan;
-        std::vector<geometry_msgs::Point> latest_top_scan;
+        bool flattenOutput = false;
+        Color bottomBackground, topBackground, centerMarker;
+        Color algorithmicDetection;
 
-        std::vector<geometry_msgs::Point> algorithmic_detector_data;
+        std::vector<geometry_msgs::Point> latestBottomScan, latestTopScan;
+        std::vector<geometry_msgs::Point> algorithmicDetectorData;
 
-        bool scan_received = false;
-        bool algorithmic_received = false;
+        bool scanReceived = false;
+        bool algorithmicReceived = false;
 
-        void raw_data_callback(const follow_the_drow::raw_data::ConstPtr& data);
-        void algorithmic_detector_callback(const follow_the_drow::detection::ConstPtr& data);
+        void rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data);
+        void algorithmicDetectorCallback(const follow_the_drow::detection::ConstPtr& data);
 
-        void add_point_to_marker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const std_msgs::ColorRGBA& color) const;
-        void add_point_to_marker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, float r, float g, float b) const;
-        void add_point_to_marker(visualization_msgs::Marker& marker, float x, float y, float z, float r, float g, float b) const;
+        void addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const;
+        void addPointToMarker(visualization_msgs::Marker& marker, float x, float y, float z, const Color color) const;
+
+        const Color readColorFromParams(const std::string& parameter) const;
+        visualization_msgs::Marker initMarker(const std::string& id, const std::string& topic, float scaleRadius) const;
 
         void update() const;
 

@@ -38,7 +38,7 @@ namespace follow_the_drow {
             const Point& betweenPoint() const;
             const Point& endPoint() const;
 
-            double distance_to(const Cluster& cluster) const;
+            double distanceTo(const Cluster& cluster) const;
     };
 
 

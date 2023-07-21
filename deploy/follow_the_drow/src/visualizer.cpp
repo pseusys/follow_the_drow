@@ -1,107 +1,104 @@
 #include <algorithm>
-#include <iostream>
-
-#include "std_msgs/ColorRGBA.h"
+#include <stdexcept>
 
 #include "main.hpp"
 #include "transformation.hpp"
 #include "visualizer.hpp"
 
+#define BACKGROUND_RADIUS 0.05
+#define DETECTION_RADIUS 0.15
 
-void Visualizer::raw_data_callback(const follow_the_drow::raw_data::ConstPtr& data) {
-    latest_bottom_scan = std::vector<geometry_msgs::Point>(data->bottom_lidar.size());
+
+void Visualizer::rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data) {
+    latestBottomScan = std::vector<geometry_msgs::Point>(data->bottom_lidar.size());
     for (int i = 0; i < data->bottom_lidar.size(); i++)
-        latest_bottom_scan[i] = polar_to_cartesian(data->bottom_lidar[i]);
+        latestBottomScan[i] = polarToCartesian(data->bottom_lidar[i]);
 
-    latest_top_scan = std::vector<geometry_msgs::Point>(data->top_lidar.size());
+    latestTopScan = std::vector<geometry_msgs::Point>(data->top_lidar.size());
     for (int i = 0; i < data->top_lidar.size(); i++)
-        latest_top_scan[i] = polar_to_cartesian(data->top_lidar[i]);
+        latestTopScan[i] = polarToCartesian(data->top_lidar[i]);
 
-    scan_received = true;
+    scanReceived = true;
 }
 
-void Visualizer::algorithmic_detector_callback(const follow_the_drow::detection::ConstPtr& data) {
-    algorithmic_detector_data = data->detection;
-    algorithmic_received = true;
+void Visualizer::algorithmicDetectorCallback(const follow_the_drow::detection::ConstPtr& data) {
+    algorithmicDetectorData = data->detection;
+    algorithmicReceived = true;
 }
 
-void Visualizer::add_point_to_marker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const std_msgs::ColorRGBA& color) const {
-    // TODO: read flatten value from params + colors
+void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const {
     geometry_msgs::Point copy = point;
-    if (true) copy.z = 0;
+    if (flattenOutput) copy.z = 0;
     marker.points.push_back(copy);
-    marker.colors.push_back(color);
+    marker.colors.push_back(getRGBAFromColor(color));
 }
 
-void Visualizer::add_point_to_marker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, float r, float g, float b) const {
-    std_msgs::ColorRGBA color;
-    color.r = r;
-    color.g = g;
-    color.b = b;
-    color.a = 1;
-    add_point_to_marker(marker, point, color);
-}
-
-void Visualizer::add_point_to_marker(visualization_msgs::Marker& marker, float x, float y, float z, float r, float g, float b) const {
+void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, float x, float y, float z, const Color color) const {
     geometry_msgs::Point point;
     point.x = x;
     point.y = y;
     point.z = z;
-    add_point_to_marker(marker, point, r, g, b);
+    addPointToMarker(marker, point, color);
+}
+
+const Color Visualizer::readColorFromParams(const std::string& parameter) const {
+    std::string color;
+    if (handle.getParam("/" + VISUALIZER + "/" + parameter, color)) return getColorFromString(color);
+    else throw std::runtime_error("Visualizer node requires '" + parameter + "' color parameter!");
+}
+
+visualization_msgs::Marker Visualizer::initMarker(const std::string& id, const std::string& topic, float scaleRadius) const {
+    visualization_msgs::Marker marker;
+
+    marker.header.frame_id = id;
+    marker.header.stamp = ros::Time::now();
+    marker.ns = topic;
+    marker.id = 0;
+    marker.type = visualization_msgs::Marker::POINTS;
+    marker.action = visualization_msgs::Marker::ADD;
+
+    marker.pose.orientation.w = 1;
+    marker.scale.x = scaleRadius;
+    marker.scale.y = scaleRadius;
+    marker.color.a = 1.0;
+
+    return marker;
 }
 
 void Visualizer::update() const {
-    if (scan_received) {
-        visualization_msgs::Marker back_marker;
+    if (scanReceived) {
+        visualization_msgs::Marker back_marker = initMarker(GENERAL_FRAME, BACK_VISUALIZATION_TOPIC, BACKGROUND_RADIUS);
 
-        back_marker.header.frame_id = general_frame;
-        back_marker.header.stamp = ros::Time::now();
-        back_marker.ns = back_visualization_topic;
-        back_marker.id = 0;
-        back_marker.type = visualization_msgs::Marker::POINTS;
-        back_marker.action = visualization_msgs::Marker::ADD;
+        for (int loop = 0; loop < latestBottomScan.size(); loop++)
+            addPointToMarker(back_marker, latestBottomScan[loop], bottomBackground);
+        for (int loop = 0; loop < latestTopScan.size(); loop++)
+            addPointToMarker(back_marker, latestTopScan[loop], topBackground);
 
-        back_marker.pose.orientation.w = 1;
-        back_marker.scale.x = 0.05;
-        back_marker.scale.y = 0.05;
-        back_marker.color.a = 1.0;
-
-        for (int loop = 0; loop < latest_bottom_scan.size(); loop++)
-            add_point_to_marker(back_marker, latest_bottom_scan[loop], 0, 0, 1);
-        for (int loop = 0; loop < latest_bottom_scan.size(); loop++)
-            add_point_to_marker(back_marker, latest_top_scan[loop], 1, 0, 0);
-
-        back_visualizer.publish(back_marker);
+        backVisualizer.publish(back_marker);
     }
 
-    if (algorithmic_received) {
-        visualization_msgs::Marker front_marker;
+    visualization_msgs::Marker front_marker = initMarker(GENERAL_FRAME, FRONT_VISUALIZATION_TOPIC, DETECTION_RADIUS);;
 
-        front_marker.header.frame_id = general_frame;
-        front_marker.header.stamp = ros::Time::now();
-        front_marker.ns = back_visualization_topic;
-        front_marker.id = 0;
-        front_marker.type = visualization_msgs::Marker::POINTS;
-        front_marker.action = visualization_msgs::Marker::ADD;
-
-        front_marker.pose.orientation.w = 1;
-        front_marker.scale.x = 0.15;
-        front_marker.scale.y = 0.15;
-        front_marker.color.a = 1.0;
-
-        for (int loop = 0; loop < algorithmic_detector_data.size(); loop++)
-            add_point_to_marker(front_marker, algorithmic_detector_data[loop], 0, 1, 0);
-
-        add_point_to_marker(front_marker, 0, 0, 0, 1, 0, 1);
-        front_visualizer.publish(front_marker);
+    if (algorithmicReceived) {
+        for (int loop = 0; loop < algorithmicDetectorData.size(); loop++)
+            addPointToMarker(front_marker, algorithmicDetectorData[loop], algorithmicDetection);
     }
+
+    addPointToMarker(front_marker, 0, 0, 0, centerMarker);
+    frontVisualizer.publish(front_marker);
 }
 
 Visualizer::Visualizer() {
-    back_visualizer = handle.advertise<visualization_msgs::Marker>(back_visualization_topic, 1);
-    front_visualizer = handle.advertise<visualization_msgs::Marker>(front_visualization_topic, 1);
-    raw_data = handle.subscribe(raw_data_topic, 1, &Visualizer::raw_data_callback, this);
-    algorithmic_detector = handle.subscribe(algorithmic_detector_topic, 1, &Visualizer::algorithmic_detector_callback, this);
+    backVisualizer = handle.advertise<visualization_msgs::Marker>(BACK_VISUALIZATION_TOPIC, 1);
+    frontVisualizer = handle.advertise<visualization_msgs::Marker>(FRONT_VISUALIZATION_TOPIC, 1);
+    rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
+    algorithmicDetector = handle.subscribe(ALGORITHMIC_DETECTOR_TOPIC, 1, &Visualizer::algorithmicDetectorCallback, this);
+
+    bottomBackground = readColorFromParams(BOTTOM_BACKGROUND_COLOR);
+    topBackground = readColorFromParams(TOP_BACKGROUND_COLOR);
+    centerMarker = readColorFromParams(CENTER_MARKER_COLOR);
+    algorithmicDetection = readColorFromParams(ALGORITHMIC_DETECTION_COLOR);
+    handle.param("/" + VISUALIZER + "/" + FLATTEN_OUTPUT, flattenOutput, true);
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {
@@ -112,8 +109,8 @@ Visualizer::Visualizer() {
 }
 
 
-int main(int argc, char **argv){
-    ros::init(argc, argv, visualizer);
+int main(int argc, char **argv) {
+    ros::init(argc, argv, VISUALIZER);
     Visualizer bsObject;
     return 0;
 }

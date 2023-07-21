@@ -13,7 +13,7 @@ const std::vector<Cluster> StatelessDetector::performClustering(const std::vecto
     std::vector<Cluster> clusters;
     int clusterStart = 0;
     for (int loop = 1; loop < storage.size(); loop++)
-        if (storage[loop-1].distance_to(storage[loop]) >= CLUSTER_THRESHOLD) {
+        if (storage[loop-1].distanceTo(storage[loop]) >= CLUSTER_THRESHOLD) {
             clusters.push_back(Cluster(clusterStart, loop - 1, storage));
             clusterStart = loop;
         }
@@ -45,13 +45,13 @@ const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Clust
 
     for (int loopLeftLeg = 0; loopLeftLeg < legClusters.size(); loopLeftLeg++)
         for (int loopRightLeg = loopLeftLeg + 1; loopRightLeg < legClusters.size(); loopRightLeg++) {
-            double twoLegsDistance = legClusters[loopLeftLeg].distance_to(legClusters[loopRightLeg]);
+            double twoLegsDistance = legClusters[loopLeftLeg].distanceTo(legClusters[loopRightLeg]);
             bool personLegsDetected = (twoLegsDistance > LEGS_DISTANCE_MIN && twoLegsDistance < LEGS_DISTANCE_MAX);
             if (!personLegsDetected) continue;
             
             for (int loopChest = 0; loopChest < chestClusters.size(); loopChest++) {
-                double leftChestDistance = legClusters[loopLeftLeg].distance_to(chestClusters[loopChest]);
-                double rightChestDistance = legClusters[loopRightLeg].distance_to(chestClusters[loopChest]);
+                double leftChestDistance = legClusters[loopLeftLeg].distanceTo(chestClusters[loopChest]);
+                double rightChestDistance = legClusters[loopRightLeg].distanceTo(chestClusters[loopChest]);
                 bool personChestDetected = (leftChestDistance < DISTANCE_LEVEL) && (rightChestDistance < DISTANCE_LEVEL);
                 if (!personChestDetected) continue;
 

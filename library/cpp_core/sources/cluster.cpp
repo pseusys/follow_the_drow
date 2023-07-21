@@ -4,14 +4,14 @@ using namespace follow_the_drow;
 
 
 Cluster::Cluster(int start, int end, const std::vector<Point>& reference):
-    dSize(reference[start].distance_to(reference[end])),
+    dSize(reference[start].distanceTo(reference[end])),
     iStart(start),
     iEnd(end),
     iMiddle((start + end) / 2),
     pStart(reference[start]),
     pMiddle(reference[iMiddle]),
     pEnd(reference[end]),
-    pBetween(pStart.middle_between(pEnd)) {}
+    pBetween(pStart.middleBetween(pEnd)) {}
 
 Cluster::Cluster(const Cluster& cluster):
     dSize(cluster.dSize),
@@ -57,6 +57,6 @@ const Point& Cluster::endPoint() const {
 }
 
 
-double Cluster::distance_to(const Cluster& cluster) const {
-    return this->pBetween.distance_to(cluster.pBetween);
+double Cluster::distanceTo(const Cluster& cluster) const {
+    return this->pBetween.distanceTo(cluster.pBetween);
 }

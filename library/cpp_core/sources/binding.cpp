@@ -11,14 +11,14 @@ using namespace follow_the_drow;
 
 PythonDetectorFactory::PythonDetectorFactory(const DetectorType& detector, double minAngle, double incAngle): DetectorFactory(detector, minAngle, incAngle, -1, -1) {}
 
-const std::vector<Point> PythonDetectorFactory::to_point_vector(std::vector<double>& measures) {
+const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<double>& measures) {
     std::vector<Point> points(measures.size());
     double measureAngle = minimumAngle;
     for (int measure = 0; measure < measures.size(); measure++, measureAngle += incrementAngle) points[measure] = Point::polar_to_cartesian(measures[measure], measureAngle);
     return points;
 }
 
-double* PythonDetectorFactory::to_raw_doubles(std::vector<Point>& points) {
+double* PythonDetectorFactory::toRawDoubles(std::vector<Point>& points) {
     double *dump = new double[points.size() * 2];
     for (size_t i = 0; i < points.size(); i++) {
         dump[i * 2] = points[i].x;
@@ -34,8 +34,8 @@ const py::array_t<double> PythonDetectorFactory::forward(const py::array_t<doubl
     std::vector<double> topScan(latestTopScan.data(), latestTopScan.data() + latestTopScan.size());
     std::cout << "top!!" << std::endl;
     std::vector<Point> result; // TODO: fix!!
-    //std::vector<Point> result = detector->forward(PythonDetectorFactory::to_point_vector(bottomScan), PythonDetectorFactory::to_point_vector(topScan));
-    double* raw_dump = &topScan.front(); // PythonDetectorFactory::to_raw_doubles(result);
+    //std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan), PythonDetectorFactory::to_point_vector(topScan));
+    double* raw_dump = &topScan.front(); // PythonDetectorFactory::toRawDoubles(result);
     std::cout << "raw!!" << std::endl;
     return py::array_t<double>(std::vector<int>{topScan.size(), 1}, std::vector<int>{sizeof(double), sizeof(double)}, raw_dump);
     //return py::array_t<double>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(double), sizeof(double)}, raw_dump);

@@ -10,8 +10,8 @@ namespace py = pybind11;
 namespace follow_the_drow {
     class PythonDetectorFactory: public DetectorFactory {
         private:
-            const std::vector<Point> to_point_vector(std::vector<double>& measures);
-            double* to_raw_doubles(std::vector<Point>& points);
+            const std::vector<Point> toPointVector(std::vector<double>& measures);
+            double* toRawDoubles(std::vector<Point>& points);
 
         public:
             PythonDetectorFactory(const DetectorType& detector, double minAngle, double incAngle);

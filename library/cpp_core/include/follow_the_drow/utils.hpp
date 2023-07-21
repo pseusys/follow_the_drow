@@ -10,10 +10,10 @@ namespace follow_the_drow {
             Point(double x, double y);
             Point(double x, double y, double z);
 
-            static Point polar_to_cartesian(double distance, double angle);
-            static Point cartesian_to_polar(double x, double y, double z);
+            static Point polarToCartesian(double distance, double angle);
+            static Point cartesianToPolar(double x, double y, double z);
 
-            double distance_to(const Point& point) const;
-            Point middle_between(const Point& point) const;
+            double distanceTo(const Point& point) const;
+            Point middleBetween(const Point& point) const;
     };
 }

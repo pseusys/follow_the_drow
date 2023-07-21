@@ -11,27 +11,27 @@
 class LiveLoader {
     private:
         ros::NodeHandle handle;
-        ros::Subscriber bottom_lidar, top_lidar;
-        ros::Publisher raw_data;
+        ros::Subscriber bottomLidar, topLidar;
+        ros::Publisher rawData;
 
-        std::array<geometry_msgs::Point, 2> bottom_lidar_transform {
-            bottom_laser_transform_translation(),
-            bottom_laser_transform_rotation()
+        std::array<geometry_msgs::Point, 2> bottomLidarTransform {
+            bottomLaserTransformTranslation(),
+            bottomLaserTransformRotation()
         };
-        std::array<geometry_msgs::Point, 2> top_lidar_transform {
-            top_laser_transform_translation(),
-            top_laser_transform_rotation()
+        std::array<geometry_msgs::Point, 2> topLidarTransform {
+            topLaserTransformTranslation(),
+            topLaserTransformRotation()
         };
 
-        bool bottom_lidar_initialized = false;
-        bool top_lidar_initialized = false;
+        bool bottomLidarInitialized = false;
+        bool topLidarInitialized = false;
 
-        std::vector<geometry_msgs::Point> latest_bottom_scan;
-        std::vector<geometry_msgs::Point> latest_top_scan;
+        std::vector<geometry_msgs::Point> latestBottomScan;
+        std::vector<geometry_msgs::Point> latestTopScan;
 
-        std::vector<geometry_msgs::Point> lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan, std::array<geometry_msgs::Point, 2>& transform) const;
-        void bottom_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan);
-        void top_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan);
+        std::vector<geometry_msgs::Point> lidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan, std::array<geometry_msgs::Point, 2>& transform) const;
+        void bottomLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
+        void topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
         void update() const;
 
     public:

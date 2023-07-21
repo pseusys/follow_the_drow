@@ -4,48 +4,48 @@
 
 #include "main.hpp"
 
-#define polar 0
-#define cartesian 1
+#define POLAR 0
+#define CARTESIAN 1
 
 
-std::vector<geometry_msgs::Point> LiveLoader::lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan, std::array<geometry_msgs::Point, 2>& transform) const {
-    int nb_beams = ((-1 * scan->angle_min) + scan->angle_max) / scan->angle_increment;
-    std::vector<geometry_msgs::Point> latest_scan(nb_beams);
+std::vector<geometry_msgs::Point> LiveLoader::lidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan, std::array<geometry_msgs::Point, 2>& transform) const {
+    int nbBeams = ((-1 * scan->angle_min) + scan->angle_max) / scan->angle_increment;
+    std::vector<geometry_msgs::Point> latestScan(nbBeams);
 
-    float beam_angle = scan->angle_min;
-    for (int loop = 0; loop < nb_beams; loop++, beam_angle += scan->angle_increment) {
-        bool measure_out_of_range = (scan->ranges[loop] < scan->range_max) && (scan->ranges[loop] > scan->range_min);
-        float patched_measure = measure_out_of_range ? scan->ranges[loop] : scan->range_max;
+    float beamAngle = scan->angle_min;
+    for (int loop = 0; loop < nbBeams; loop++, beamAngle += scan->angle_increment) {
+        bool measureOutOfRange = (scan->ranges[loop] < scan->range_max) && (scan->ranges[loop] > scan->range_min);
+        float patchedMeasure = measureOutOfRange ? scan->ranges[loop] : scan->range_max;
 
-        latest_scan[loop].x = transform[polar].x + transform[cartesian].x + patched_measure;
-        latest_scan[loop].y = transform[polar].y + transform[cartesian].y + beam_angle;
-        latest_scan[loop].z = transform[polar].z + transform[cartesian].z;
+        latestScan[loop].x = transform[POLAR].x + transform[CARTESIAN].x + patchedMeasure;
+        latestScan[loop].y = transform[POLAR].y + transform[CARTESIAN].y + beamAngle;
+        latestScan[loop].z = transform[POLAR].z + transform[CARTESIAN].z;
     }
-    return latest_scan;
+    return latestScan;
 }
 
-void LiveLoader::bottom_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan) {
-    latest_bottom_scan = lidar_callback(scan, bottom_lidar_transform);
-    bottom_lidar_initialized = true;
+void LiveLoader::bottomLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
+    latestBottomScan = lidarCallback(scan, bottomLidarTransform);
+    bottomLidarInitialized = true;
 }
 
-void LiveLoader::top_lidar_callback(const sensor_msgs::LaserScan::ConstPtr& scan) {
-    latest_top_scan = lidar_callback(scan, top_lidar_transform);
-    top_lidar_initialized = true;
+void LiveLoader::topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
+    latestTopScan = lidarCallback(scan, topLidarTransform);
+    topLidarInitialized = true;
 }
 
 void LiveLoader::update() const {
-    if (!bottom_lidar_initialized || !top_lidar_initialized) return;
+    if (!bottomLidarInitialized || !topLidarInitialized) return;
     follow_the_drow::raw_data message;
-    message.bottom_lidar = latest_bottom_scan;
-    message.top_lidar = latest_top_scan;
-    raw_data.publish(message);
+    message.bottom_lidar = latestBottomScan;
+    message.top_lidar = latestTopScan;
+    rawData.publish(message);
 }
 
 LiveLoader::LiveLoader() {
-    bottom_lidar = handle.subscribe(bottom_laser_topic, 1, &LiveLoader::bottom_lidar_callback, this);
-    top_lidar = handle.subscribe(top_laser_topic, 1, &LiveLoader::top_lidar_callback, this);
-    raw_data = handle.advertise<follow_the_drow::raw_data>(raw_data_topic, 1);
+    bottomLidar = handle.subscribe(BOTTOM_LASER_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
+    topLidar = handle.subscribe(TOP_LASER_TOPIC, 1, &LiveLoader::topLidarCallback, this);
+    rawData = handle.advertise<follow_the_drow::raw_data>(RAW_DATA_TOPIC, 1);
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {
@@ -57,7 +57,7 @@ LiveLoader::LiveLoader() {
 
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, live_loader);
+    ros::init(argc, argv, LIVE_LOADER);
     LiveLoader bsObject;
     ros::spin();
     return 0;
