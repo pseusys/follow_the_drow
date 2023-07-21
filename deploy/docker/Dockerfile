@@ -7,12 +7,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y gdb python3-dev
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-COPY library /~/fillow_the_drow_library
-RUN pip install /~/fillow_the_drow_library
+COPY library /~
+RUN pip install /~ && find /~ -maxdepth 1 -mindepth 1 ! -name 'cpp_core' -exec rm -rf {} + && mv /~/cpp_core /~/fillow_the_drow_library
 
 ENV CMAKE_INSTALL_PREFIX /usr/local
-RUN mkdir /~/fillow_the_drow_library/cpp_core/build && cd /~/fillow_the_drow_library/cpp_core/build && cmake .. && make && make install
-ENV FollowTheDrow_INCLUDE_DIRS /~/fillow_the_drow_library/cpp_core/include
+RUN mkdir /~/fillow_the_drow_library/build && cd /~/fillow_the_drow_library/build && cmake .. && make && make install
+ENV FollowTheDrow_INCLUDE_DIRS /~/fillow_the_drow_library/include
 ENV FollowTheDrow_LIBRARY_DIRS ${CMAKE_INSTALL_PREFIX}/lib
 ENV FollowTheDrow_DIR ${CMAKE_INSTALL_PREFIX}/cmake
 
