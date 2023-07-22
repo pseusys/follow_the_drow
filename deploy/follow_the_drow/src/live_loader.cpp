@@ -1,5 +1,7 @@
 #include "live_loader.hpp"
 
+#include "tf/transform_listener.h"
+
 #include "follow_the_drow/raw_data.h"
 
 #include "main.hpp"
@@ -34,17 +36,26 @@ void LiveLoader::topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan) 
     topLidarInitialized = true;
 }
 
+void LiveLoader::odometryCallback(const nav_msgs::Odometry::ConstPtr& odom) {
+    latestOdometry.x = odom->pose.pose.position.x;
+    latestOdometry.y = odom->pose.pose.position.y;
+    latestOdometry.z = tf::getYaw(odom->pose.pose.orientation);
+    odometryInitialized = true;
+}
+
 void LiveLoader::update() const {
     if (!bottomLidarInitialized || !topLidarInitialized) return;
     follow_the_drow::raw_data message;
     message.bottom_lidar = latestBottomScan;
     message.top_lidar = latestTopScan;
+    message.odometry = latestOdometry;
     rawData.publish(message);
 }
 
 LiveLoader::LiveLoader() {
     bottomLidar = handle.subscribe(BOTTOM_LASER_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
     topLidar = handle.subscribe(TOP_LASER_TOPIC, 1, &LiveLoader::topLidarCallback, this);
+    odometry = handle.subscribe(ODOMETRY_TOPIC, 1, &LiveLoader::odometryCallback, this);
     rawData = handle.advertise<follow_the_drow::raw_data>(RAW_DATA_TOPIC, 1);
 
     ros::Rate rate(HEARTBEAT_RATE);

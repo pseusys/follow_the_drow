@@ -17,9 +17,7 @@ ENV FollowTheDrow_LIBRARY_DIRS ${CMAKE_INSTALL_PREFIX}/lib
 ENV FollowTheDrow_DIR ${CMAKE_INSTALL_PREFIX}/cmake
 
 ENV ROS_LANG_DISABLE geneus:genlisp:gennodejs
-RUN mkdir -p /~/catkin_ws/src
-RUN cd /~/catkin_ws/src && source /opt/ros/noetic/setup.bash && catkin_init_workspace
-RUN cd /~/catkin_ws && source /opt/ros/noetic/setup.bash && catkin_make clean && catkin_make && catkin_make install
+RUN mkdir -p /~/catkin_ws/src && cd /~/catkin_ws && source /opt/ros/noetic/setup.bash && catkin_make clean && catkin_make && catkin_make install
 WORKDIR /~/catkin_ws
 
 COPY deploy/docker/entrypoint.sh ./

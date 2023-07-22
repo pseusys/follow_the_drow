@@ -21,7 +21,7 @@ from numpy import array
 from tqdm.auto import trange
 
 from .detector import Detector
-from ..datasets import Dataset
+from ..datasets import DROW_Dataset
 from ..utils.file_utils import DROW_WEIGHTS_PATH
 from ..utils.drow_utils import cutout
 from ..utils.torch_utils import init_module, move, count_parameters
@@ -148,7 +148,7 @@ class DrowDetector(Module, Detector):
             logits, votes = self(Variable(move(from_numpy(xb), self.GPU)))
             return softmax(logits, dim=-1).data.cpu().numpy(), votes.data.cpu().numpy()
 
-    def forward_all(self, va: Dataset):
+    def forward_all(self, va: DROW_Dataset):
         all_confs, all_votes = [], []
         for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
             for idet in trange(len(va.det_id[iseq]), desc="Scans", disable=not self._verbose, leave=False):

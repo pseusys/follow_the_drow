@@ -6,8 +6,10 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  tf
   std_msgs
   sensor_msgs
+  nav_msgs
   message_generation
   visualization_msgs
   geometry_msgs
@@ -28,8 +30,10 @@ generate_messages(DEPENDENCIES
 catkin_package(INCLUDE_DIRS CATKIN_DEPENDS
   roscpp
   rospy
+  tf
   std_msgs
   sensor_msgs
+  nav_msgs
   message_generation
   message_runtime
   visualization_msgs

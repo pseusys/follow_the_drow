@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from ..datasets.dataset import Dataset
+from ..dataset import DROW_Dataset
 from ..utils.generic_utils import Logging
 
 
@@ -20,5 +20,5 @@ class Detector(Logging):
 
      # TODO: single input and output interface
     @abstractmethod
-    def forward_all(self, va: Dataset):
+    def forward_all(self, va: DROW_Dataset):
         raise NotImplementedError

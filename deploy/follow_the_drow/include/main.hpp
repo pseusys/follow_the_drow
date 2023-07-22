@@ -9,6 +9,7 @@ const std::string GENERAL_FRAME = "base_link";
 
 const std::string TOP_LASER_TOPIC = "scan2";
 const std::string BOTTOM_LASER_TOPIC = "scan";
+const std::string ODOMETRY_TOPIC = "odom";
 
 const std::string RAW_DATA_TOPIC = "raw_data";
 const std::string ALGORITHMIC_DETECTOR_TOPIC = "algorithmic_detector";

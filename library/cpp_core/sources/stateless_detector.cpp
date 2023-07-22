@@ -27,7 +27,7 @@ const std::vector<Cluster> StatelessDetector::detectLegs(const std::vector<Clust
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < LEG_SIZE_MAX) && (clusters[loop].size() > LEG_SIZE_MIN))
             legClusters.push_back(Cluster(clusters[loop]));
-    if (legClusters.size() > 0) std::cout << ("%ld legs have been detected", legClusters.size()) << std::endl;
+    if (legClusters.size() > 0) std::cout << legClusters.size() << " legs have been detected" << std::endl;
     return legClusters;
 }
 
@@ -36,7 +36,7 @@ const std::vector<Cluster> StatelessDetector::detectChests(const std::vector<Clu
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < CHEST_SIZE_MAX) && (clusters[loop].size() > CHEST_SIZE_MIN))
             chestClusters.push_back(Cluster(clusters[loop]));
-    if (chestClusters.size()) std::cout << ("%ld chests have been detected", chestClusters.size()) << std::endl;
+    if (chestClusters.size()) std::cout << chestClusters.size() << " chests have been detected" << std::endl;
     return chestClusters;
 }
 

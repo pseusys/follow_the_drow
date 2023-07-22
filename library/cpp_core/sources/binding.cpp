@@ -14,7 +14,7 @@ PythonDetectorFactory::PythonDetectorFactory(const DetectorType& detector, doubl
 const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<double>& measures) {
     std::vector<Point> points(measures.size());
     double measureAngle = minimumAngle;
-    for (int measure = 0; measure < measures.size(); measure++, measureAngle += incrementAngle) points[measure] = Point::polar_to_cartesian(measures[measure], measureAngle);
+    for (int measure = 0; measure < measures.size(); measure++, measureAngle += incrementAngle) points[measure] = Point::polarToCartesian(measures[measure], measureAngle);
     return points;
 }
 
@@ -33,12 +33,13 @@ const py::array_t<double> PythonDetectorFactory::forward(const py::array_t<doubl
     std::cout << "bottom!!" << std::endl;
     std::vector<double> topScan(latestTopScan.data(), latestTopScan.data() + latestTopScan.size());
     std::cout << "top!!" << std::endl;
-    std::vector<Point> result; // TODO: fix!!
-    //std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan), PythonDetectorFactory::to_point_vector(topScan));
-    double* raw_dump = &topScan.front(); // PythonDetectorFactory::toRawDoubles(result);
+    //std::vector<Point> result; // TODO: fix!!
+    std::vector<Point> result = PythonDetectorFactory::toPointVector(bottomScan); //detector->forward(PythonDetectorFactory::toPointVector(bottomScan), PythonDetectorFactory::toPointVector(topScan));
+    std::cout << "detect!!" << std::endl;
+    double* raw_dump = PythonDetectorFactory::toRawDoubles(result); // &topScan.front();
     std::cout << "raw!!" << std::endl;
-    return py::array_t<double>(std::vector<int>{topScan.size(), 1}, std::vector<int>{sizeof(double), sizeof(double)}, raw_dump);
-    //return py::array_t<double>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(double), sizeof(double)}, raw_dump);
+    //return py::array_t<double>(std::vector<int>{topScan.size(), 1}, std::vector<int>{sizeof(double), sizeof(double)}, raw_dump);
+    return py::array_t<double>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(double), sizeof(double)}, raw_dump);
 }
 
 
