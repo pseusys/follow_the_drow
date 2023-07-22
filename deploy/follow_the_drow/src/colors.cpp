@@ -1,26 +1,27 @@
 #include <stdexcept>
 #include <algorithm>
 
+#include "follow_the_drow/misc.hpp"
+
 #include "colors.hpp"
 
 
 const std::string getStringFromColor(const Color color) {
     switch (color) {
-        case Color::Black: return "black";
-        case Color::Blue: return "blue";
-        case Color::Green: return "green";
-        case Color::Cyan: return "cyan";
-        case Color::Red: return "red";
-        case Color::Magenta: return "magenta";
-        case Color::Yellow: return "yellow";
-        case Color::White: return "white";
+        case Color::Black: return "Black";
+        case Color::Blue: return "Blue";
+        case Color::Green: return "Green";
+        case Color::Cyan: return "Cyan";
+        case Color::Red: return "Red";
+        case Color::Magenta: return "Magenta";
+        case Color::Yellow: return "Yellow";
+        case Color::White: return "White";
         default: throw std::runtime_error("Bad Color value");
     }
 }
 
 const Color getColorFromString(const std::string& string) {
-    std::string lower = string;
-    std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char c){ return std::tolower(c); });
+    std::string lower = lowercase(string);
     if (lower == "black") return Color::Black;
     if (lower == "blue") return Color::Blue;
     if (lower == "green") return Color::Green;

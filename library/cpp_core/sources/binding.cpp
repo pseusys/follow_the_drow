@@ -61,7 +61,7 @@ PYBIND11_MODULE(cpp_binding, m) {
         .def("forward", &PythonDetectorFactory::forward, py::return_value_policy::take_ownership)
         .def("__repr__",
             [](const PythonDetectorFactory& factory) {
-                return "<cpp_binding.DetectorFactory bound to '" + factory.typeName() + "'>";
+                return "<cpp_binding.DetectorFactory bound to '" + factory.typeName() + "' detector>";
             }
         );
 
