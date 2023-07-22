@@ -16,6 +16,15 @@
 
 #define DISTANCE_LEVEL 0.6
 
+#if defined ROS_VERSION
+#define LOG(...) ROS_INFO(__VA_ARGS__)
+#elif defined QUIET_LOG
+#define LOG(...) do {} while(0)
+#else
+#include <cstdio>
+#define LOG(...) printf(__VA_ARGS__)
+#endif
+
 
 namespace follow_the_drow {
     class Cluster {

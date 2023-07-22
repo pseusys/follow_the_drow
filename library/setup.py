@@ -14,7 +14,7 @@ ext_modules = [
         "data_outrigger.cpp_binding",
         sources=[str(file) for file in Path("cpp_core/sources").glob("*.cpp")],
         include_dirs=[str(Path("cpp_core/include/follow_the_drow"))],
-        define_macros=[("VERSION_INFO", VERSION)],
+        define_macros=[("VERSION_INFO", VERSION), ("QUIET_LOG", True)],
     ),
 ]
 
