@@ -1,5 +1,7 @@
 #!/usr/bin python3
 
+from pathlib import Path
+
 from rospy import Publisher, Rate, is_shutdown, init_node, spin, loginfo, get_param
 from geometry_msgs.msg import Point
 
@@ -11,8 +13,8 @@ from data_outrigger.utils.file_utils import DROW_TEST_SET
 
 
 class FileLoader:
-    def __init__(self) -> None:
-        self.dataset = DROW_Dataset(dataset=get_param(f"/{FILE_LOADER}/{DATASET_PATH}", DROW_TEST_SET))
+    def __init__(self, dataset: Path) -> None:
+        self.dataset = DROW_Dataset(dataset=dataset)
         loginfo(f"Dataset includes {len(self.dataset.scan_id)} scans and {len(self.dataset.det_id)} detections")
 
     def update(self, file_counter, scan_counter):
@@ -39,5 +41,6 @@ class FileLoader:
 
 if __name__ == "__main__":
     init_node(FILE_LOADER)
-    FileLoader().__call__()
+    dataset = get_param(f"/{FILE_LOADER}/{DATASET_PATH}", DROW_TEST_SET)
+    FileLoader(dataset).__call__()
     spin()

@@ -32,11 +32,9 @@ class Visualizer {
         void addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const;
         void addPointToMarker(visualization_msgs::Marker& marker, float x, float y, float z, const Color color) const;
 
-        const Color readColorFromParams(const std::string& parameter) const;
         visualization_msgs::Marker initMarker(const std::string& id, const std::string& topic, float scaleRadius) const;
-
         void update() const;
 
     public:
-        Visualizer();
+        Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten);
 };

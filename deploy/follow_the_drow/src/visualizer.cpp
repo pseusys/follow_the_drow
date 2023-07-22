@@ -41,12 +41,6 @@ void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, float x, f
     addPointToMarker(marker, point, color);
 }
 
-const Color Visualizer::readColorFromParams(const std::string& parameter) const {
-    std::string color;
-    if (handle.getParam("/" + VISUALIZER + "/" + parameter, color)) return getColorFromString(color);
-    else throw std::runtime_error("Visualizer node requires '" + parameter + "' color parameter!");
-}
-
 visualization_msgs::Marker Visualizer::initMarker(const std::string& id, const std::string& topic, float scaleRadius) const {
     visualization_msgs::Marker marker;
 
@@ -88,17 +82,11 @@ void Visualizer::update() const {
     frontVisualizer.publish(front_marker);
 }
 
-Visualizer::Visualizer() {
+Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten) {
     backVisualizer = handle.advertise<visualization_msgs::Marker>(BACK_VISUALIZATION_TOPIC, 1);
     frontVisualizer = handle.advertise<visualization_msgs::Marker>(FRONT_VISUALIZATION_TOPIC, 1);
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
     algorithmicDetector = handle.subscribe(ALGORITHMIC_DETECTOR_TOPIC, 1, &Visualizer::algorithmicDetectorCallback, this);
-
-    bottomBackground = readColorFromParams(BOTTOM_BACKGROUND_COLOR);
-    topBackground = readColorFromParams(TOP_BACKGROUND_COLOR);
-    centerMarker = readColorFromParams(CENTER_MARKER_COLOR);
-    algorithmicDetection = readColorFromParams(ALGORITHMIC_DETECTION_COLOR);
-    handle.param("/" + VISUALIZER + "/" + FLATTEN_OUTPUT, flattenOutput, true);
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {
@@ -109,8 +97,20 @@ Visualizer::Visualizer() {
 }
 
 
+const Color readColorFromParams(const std::string& parameter) {
+    std::string color;
+    if (ros::param::get("/" + VISUALIZER + "/" + parameter, color)) return getColorFromString(color);
+    else throw std::runtime_error("Visualizer node requires '" + parameter + "' color parameter!");
+}
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, VISUALIZER);
-    Visualizer bsObject;
+    bool flatten;
+    ros::param::param<bool>("/" + VISUALIZER + "/" + FLATTEN_OUTPUT, flatten, true);
+    Color bottomBackground = readColorFromParams(BOTTOM_BACKGROUND_COLOR);
+    Color topBackground = readColorFromParams(TOP_BACKGROUND_COLOR);
+    Color centerMarker = readColorFromParams(CENTER_MARKER_COLOR);
+    Color algorithmicDetection = readColorFromParams(ALGORITHMIC_DETECTION_COLOR);
+    Visualizer bsObject(bottomBackground, topBackground, centerMarker, algorithmicDetection, flatten);
     return 0;
 }
