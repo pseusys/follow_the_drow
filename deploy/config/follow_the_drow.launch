@@ -20,6 +20,9 @@
 		<param name="back_visualization_topic" value="$(optenv BACK_VISUALIZATION_TOPIC visualization_back)" />
 		<param name="front_visualization_topic" value="$(optenv FRONT_VISUALIZATION_TOPIC visualization_front)" />
 	</node>
+	<node name="follow_the_drow_algorithmic_detector" pkg="follow_the_drow" type="algorithmic_detector" output="screen" launch-prefix="gdb -ex run --args" if="$(optenv ALGORITHMIC_DETECTOR true)">
+		<param name="algorithmic_detector_type" value="$(optenv ALGORITHMIC_DETECTOR_TYPE statefull)" />
+	</node>
 	<param name="heartbeat_rate" value="$(optenv HEARTBEAT_RATE 10)" />
 	<param name="raw_data_topic" value="$(optenv RAW_DATA_TOPIC raw_data)" />
 	<param name="algorithmic_detector_topic" value="$(optenv ALGORITHMIC_DETECTOR_TOPIC algorithmic_detector)" />
