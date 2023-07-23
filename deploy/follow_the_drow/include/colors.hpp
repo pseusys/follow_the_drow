@@ -17,5 +17,5 @@ enum Color {
 };
 
 const std::string getStringFromColor(const Color color);
-const Color getColorFromString(const std::string& string);
+const Color getColorFromString(const std::string string);
 const std_msgs::ColorRGBA getRGBAFromColor(const Color color);

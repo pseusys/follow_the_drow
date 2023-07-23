@@ -13,7 +13,7 @@ namespace follow_the_drow {
     };
 
     const std::string getStringFromDetectorType(const DetectorType type);
-    const DetectorType getDetectorTypeFromString(const std::string& string);
+    const DetectorType getDetectorTypeFromString(const std::string string);
     const std::unique_ptr<AbstractDetector> getDetectorFromDetectorType(const DetectorType type);
 
 

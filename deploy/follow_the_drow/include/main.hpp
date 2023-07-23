@@ -2,25 +2,38 @@
 
 #include <string>
 
-#define HEARTBEAT_RATE 10
+#include "follow_the_drow/detector_factories.hpp"
+
+#include "colors.hpp"
 
 
-const std::string GENERAL_FRAME = "base_link";
-
-const std::string TOP_LASER_TOPIC = "scan2";
-const std::string BOTTOM_LASER_TOPIC = "scan";
-const std::string ODOMETRY_TOPIC = "odom";
-
-const std::string RAW_DATA_TOPIC = "raw_data";
-const std::string ALGORITHMIC_DETECTOR_TOPIC = "algorithmic_detector";
-const std::string BACK_VISUALIZATION_TOPIC = "visualization_back";
-const std::string FRONT_VISUALIZATION_TOPIC = "visualization_front";
-
+// Node names
 const std::string LIVE_LOADER = "follow_the_drow_live_loader";
+const std::string FILE_LOADER = "follow_the_drow_file_loader";
 const std::string VISUALIZER = "follow_the_drow_visualizer";
+const std::string ALGORITHMIC_DETECTOR = "follow_the_drow_algorithmic_detector";
 
-const std::string FLATTEN_OUTPUT = "flatten_output";
-const std::string BOTTOM_BACKGROUND_COLOR = "bottom_backgorund_color";
-const std::string TOP_BACKGROUND_COLOR = "top_backgorund_color";
-const std::string CENTER_MARKER_COLOR = "center_marker_color";
-const std::string ALGORITHMIC_DETECTION_COLOR = "algorithmic_detection_color";
+// General arguments
+extern int HEARTBEAT_RATE;
+extern std::string RAW_DATA_TOPIC;
+extern std::string ALGORITHMIC_DETECTOR_TOPIC;
+
+void loadArgumentsForNode(int argc, char** argv, const std::string& name);
+
+// Live loader node arguments
+extern std::string TOP_LIDAR_TOPIC;
+extern std::string BOTTOM_LIDAR_TOPIC;
+extern std::string ODOMETRY_TOPIC;
+
+// Visualizer node arguments
+extern std::string GENERAL_FRAME;
+extern bool FLATTEN_OUTPUT;
+extern Color BOTTOM_BACKGROUND_COLOR;
+extern Color TOP_BACKGROUND_COLOR;
+extern Color CENTER_MARKER_COLOR;
+extern Color ALGORITHMIC_DETECTION_COLOR;
+extern std::string BACK_VISUALIZATION_TOPIC;
+extern std::string FRONT_VISUALIZATION_TOPIC;
+
+// Algorithmic detector node arguments
+extern follow_the_drow::DetectorType ALGORITHMIC_DETECOR_TYPE;

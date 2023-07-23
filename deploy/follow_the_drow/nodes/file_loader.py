@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from rospy import Publisher, Rate, is_shutdown, init_node, spin, loginfo, get_param
+from rospy import Publisher, Rate, is_shutdown, spin, loginfo
 from geometry_msgs.msg import Point
 
-from follow_the_drow import HEARTBEAT_RATE, RAW_DATA_TOPIC, FILE_LOADER, DATASET_PATH
+import follow_the_drow as ftd
 from follow_the_drow.msg import raw_data
 from data_outrigger.datasets import DROW_Dataset
 from data_outrigger.utils.drow_utils import laser_angles
@@ -27,9 +27,9 @@ class FileLoader:
         self.raw_data.publish(raw_data(bottom_lidar=bottom_lidar_points, odometry=odometry_data))
 
     def __call__(self) -> None:
-        self.raw_data = Publisher(RAW_DATA_TOPIC, raw_data, queue_size=10)
+        self.raw_data = Publisher(ftd.RAW_DATA_TOPIC, raw_data, queue_size=10)
         file_counter, scan_counter = 0, 0
-        rate = Rate(HEARTBEAT_RATE)
+        rate = Rate(ftd.HEARTBEAT_RATE)
         while not is_shutdown():
             if scan_counter >= len(self.dataset.scans[file_counter]):
                 file_counter = file_counter + 1 if file_counter < len(self.dataset.scans) - 1 else 0
@@ -40,7 +40,6 @@ class FileLoader:
 
 
 if __name__ == "__main__":
-    init_node(FILE_LOADER)
-    dataset = get_param(f"/{FILE_LOADER}/{DATASET_PATH}", DROW_TEST_SET)
-    FileLoader(dataset).__call__()
+    ftd.load_args_for_node(ftd.FILE_LOADER, ftd)
+    FileLoader(ftd.DATASET_PATH).__call__()
     spin()

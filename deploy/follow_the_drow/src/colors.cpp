@@ -16,11 +16,11 @@ const std::string getStringFromColor(const Color color) {
         case Color::Magenta: return "Magenta";
         case Color::Yellow: return "Yellow";
         case Color::White: return "White";
-        default: throw std::runtime_error("Bad Color value");
+        default: throw std::runtime_error("Bad Color value!");
     }
 }
 
-const Color getColorFromString(const std::string& string) {
+const Color getColorFromString(const std::string string) {
     std::string lower = lowercase(string);
     if (lower == "black") return Color::Black;
     if (lower == "blue") return Color::Blue;
@@ -30,7 +30,7 @@ const Color getColorFromString(const std::string& string) {
     if (lower == "magenta") return Color::Magenta;
     if (lower == "yellow") return Color::Yellow;
     if (lower == "white") return Color::White;
-    throw std::runtime_error("Bad Color value");
+    throw std::runtime_error("Bad color name '" + string + "'!");
 }
 
 const std_msgs::ColorRGBA getRGBAFromColor(const Color color) {
@@ -69,7 +69,7 @@ const std_msgs::ColorRGBA getRGBAFromColor(const Color color) {
             rgba.b = 1;
             break;
         default:
-            throw std::runtime_error("Bad Color value");
+            throw std::runtime_error("Bad Color value!");
     }
     return rgba;
 }

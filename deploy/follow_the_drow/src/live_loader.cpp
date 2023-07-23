@@ -53,8 +53,8 @@ void LiveLoader::update() const {
 }
 
 LiveLoader::LiveLoader() {
-    bottomLidar = handle.subscribe(BOTTOM_LASER_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
-    topLidar = handle.subscribe(TOP_LASER_TOPIC, 1, &LiveLoader::topLidarCallback, this);
+    bottomLidar = handle.subscribe(BOTTOM_LIDAR_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
+    topLidar = handle.subscribe(TOP_LIDAR_TOPIC, 1, &LiveLoader::topLidarCallback, this);
     odometry = handle.subscribe(ODOMETRY_TOPIC, 1, &LiveLoader::odometryCallback, this);
     rawData = handle.advertise<follow_the_drow::raw_data>(RAW_DATA_TOPIC, 1);
 
@@ -68,7 +68,7 @@ LiveLoader::LiveLoader() {
 
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, LIVE_LOADER);
+    loadArgumentsForNode(argc, argv, LIVE_LOADER);
     LiveLoader bsObject;
     ros::spin();
     return 0;

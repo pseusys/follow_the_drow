@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <stdexcept>
+#include <iostream>
 
 #include "main.hpp"
 #include "transformation.hpp"
@@ -41,10 +41,10 @@ void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, float x, f
     addPointToMarker(marker, point, color);
 }
 
-visualization_msgs::Marker Visualizer::initMarker(const std::string& id, const std::string& topic, float scaleRadius) const {
+visualization_msgs::Marker Visualizer::initMarker(const std::string& topic, float scaleRadius) const {
     visualization_msgs::Marker marker;
 
-    marker.header.frame_id = id;
+    marker.header.frame_id = GENERAL_FRAME;
     marker.header.stamp = ros::Time::now();
     marker.ns = topic;
     marker.id = 0;
@@ -61,30 +61,30 @@ visualization_msgs::Marker Visualizer::initMarker(const std::string& id, const s
 
 void Visualizer::update() const {
     if (scanReceived) {
-        visualization_msgs::Marker back_marker = initMarker(GENERAL_FRAME, BACK_VISUALIZATION_TOPIC, BACKGROUND_RADIUS);
+        visualization_msgs::Marker backMarker = initMarker(backTopic, BACKGROUND_RADIUS);
 
         for (int loop = 0; loop < latestBottomScan.size(); loop++)
-            addPointToMarker(back_marker, latestBottomScan[loop], bottomBackground);
+            addPointToMarker(backMarker, latestBottomScan[loop], bottomBackground);
         for (int loop = 0; loop < latestTopScan.size(); loop++)
-            addPointToMarker(back_marker, latestTopScan[loop], topBackground);
+            addPointToMarker(backMarker, latestTopScan[loop], topBackground);
 
-        backVisualizer.publish(back_marker);
+        backVisualizer.publish(backMarker);
     }
 
-    visualization_msgs::Marker front_marker = initMarker(GENERAL_FRAME, FRONT_VISUALIZATION_TOPIC, DETECTION_RADIUS);;
+    visualization_msgs::Marker frontMarker = initMarker(frontTopic, DETECTION_RADIUS);;
 
     if (algorithmicReceived) {
         for (int loop = 0; loop < algorithmicDetectorData.size(); loop++)
-            addPointToMarker(front_marker, algorithmicDetectorData[loop], algorithmicDetection);
+            addPointToMarker(frontMarker, algorithmicDetectorData[loop], algorithmicDetection);
     }
 
-    addPointToMarker(front_marker, 0, 0, 0, centerMarker);
-    frontVisualizer.publish(front_marker);
+    addPointToMarker(frontMarker, 0, 0, 0, centerMarker);
+    frontVisualizer.publish(frontMarker);
 }
 
-Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten) {
-    backVisualizer = handle.advertise<visualization_msgs::Marker>(BACK_VISUALIZATION_TOPIC, 1);
-    frontVisualizer = handle.advertise<visualization_msgs::Marker>(FRONT_VISUALIZATION_TOPIC, 1);
+Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, std::string front, std::string back): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten), frontTopic(front), backTopic(back) {
+    backVisualizer = handle.advertise<visualization_msgs::Marker>(backTopic, 1);
+    frontVisualizer = handle.advertise<visualization_msgs::Marker>(frontTopic, 1);
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
     algorithmicDetector = handle.subscribe(ALGORITHMIC_DETECTOR_TOPIC, 1, &Visualizer::algorithmicDetectorCallback, this);
 
@@ -97,20 +97,8 @@ Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic,
 }
 
 
-const Color readColorFromParams(const std::string& parameter) {
-    std::string color;
-    if (ros::param::get("/" + VISUALIZER + "/" + parameter, color)) return getColorFromString(color);
-    else throw std::runtime_error("Visualizer node requires '" + parameter + "' color parameter!");
-}
-
 int main(int argc, char **argv) {
-    ros::init(argc, argv, VISUALIZER);
-    bool flatten;
-    ros::param::param<bool>("/" + VISUALIZER + "/" + FLATTEN_OUTPUT, flatten, true);
-    Color bottomBackground = readColorFromParams(BOTTOM_BACKGROUND_COLOR);
-    Color topBackground = readColorFromParams(TOP_BACKGROUND_COLOR);
-    Color centerMarker = readColorFromParams(CENTER_MARKER_COLOR);
-    Color algorithmicDetection = readColorFromParams(ALGORITHMIC_DETECTION_COLOR);
-    Visualizer bsObject(bottomBackground, topBackground, centerMarker, algorithmicDetection, flatten);
+    loadArgumentsForNode(argc, argv, VISUALIZER);
+    Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
     return 0;
 }

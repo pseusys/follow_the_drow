@@ -53,6 +53,7 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 2. Debug and run stateless detector
 3. Rewrite stateful detector, make sure it inherits from abstract
 4. Debug and run it in wrapper
-5. Remove data aggregation node, let file loader transmit raw odometry - write a proper transformation function instead
+5. Write a proper transformation function instead
 6. Setup follow me behavior interop (topics, connections)
 7. Bring all RobAIR specific input and output names to parameters, to `conf.env`.
+8. Rename data_outrigger.
