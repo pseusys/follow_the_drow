@@ -1,5 +1,12 @@
 from typing import Any
 
+try:
+    from rospy import loginfo
+
+    infolog = loginfo
+except ImportError:
+    infolog = print
+
 
 def istype(obj: Any, field: str, type) -> bool:
     return isinstance(getattr(obj, field, None), type)
@@ -11,5 +18,4 @@ class Logging:
 
     def _print(self, message: str):
         if self._verbose:
-            print(message)
-
+            infolog(message)
