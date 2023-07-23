@@ -1,7 +1,8 @@
 <launch>
-	<node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d /~/catkin_ws/config/$(optenv RVIZ_CONFIG default.rviz)" />
+	<node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d $(find follow_the_drow)/config/$(optenv RVIZ_CONFIG default.rviz)" />
 	<node name="rosbag_play" pkg="rosbag" type="play" output="log" if="$(optenv ROSBAG_PLAY false)" args="-l /~/catkin_ws/out/$(env RECORD_LOCATION latest.bag)" />
 	<node name="follow_the_drow_live_loader" pkg="follow_the_drow" type="live_loader" output="screen" launch-prefix="gdb -ex run --args" if="$(optenv LIVE_LOADER true)">
+		<rosparam param="transform_data" file="$(find follow_the_drow)/config/robair_transform.yaml" />
 		<param name="top_lidar_topic" value="$(optenv TOP_LIDAR_TOPIC scan2)" />
 		<param name="bottom_lidar_topic" value="$(optenv BOTTOM_LIDAR_TOPIC scan)" />
 		<param name="odometry_topic" value="$(optenv ODOMETRY_TOPIC odom)" />

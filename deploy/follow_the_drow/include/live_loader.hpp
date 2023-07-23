@@ -6,8 +6,6 @@
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
 
-#include "transformation.hpp"
-
 
 class LiveLoader {
     private:
@@ -15,14 +13,8 @@ class LiveLoader {
         ros::Subscriber bottomLidar, topLidar, odometry;
         ros::Publisher rawData;
 
-        std::array<geometry_msgs::Point, 2> bottomLidarTransform {
-            bottomLaserTransformTranslation(),
-            bottomLaserTransformRotation()
-        };
-        std::array<geometry_msgs::Point, 2> topLidarTransform {
-            topLaserTransformTranslation(),
-            topLaserTransformRotation()
-        };
+        std::array<geometry_msgs::Point, 2> bottomLidarTransform;
+        std::array<geometry_msgs::Point, 2> topLidarTransform;
 
         bool bottomLidarInitialized = false;
         bool topLidarInitialized = false;
@@ -36,6 +28,7 @@ class LiveLoader {
         void topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
         void odometryCallback(const nav_msgs::Odometry::ConstPtr& odom);
         void update() const;
+        geometry_msgs::Point setupPointFromParams(std::string paramName) const;
 
     public:
         LiveLoader();

@@ -5,6 +5,7 @@
 venv
 
 deploy/out
+deploy/follow_the_drow/config
 
 compare/cache
 library/data_outrigger/include

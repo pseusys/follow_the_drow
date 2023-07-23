@@ -11,8 +11,8 @@ services:
       dockerfile: deploy/docker/Dockerfile
     volumes:
       - ../out:/~/catkin_ws/out
-      - ../config:/~/catkin_ws/config
-      - ../follow_the_drow:/~/catkin_ws/src
+      - ../config:/~/catkin_ws/src/follow_the_drow/config
+      - ../follow_the_drow:/~/catkin_ws/src/follow_the_drow
       # Some volumes required for RVIZ GUI
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ~/.Xauthority:/root/.Xauthority:ro
@@ -30,4 +30,4 @@ services:
       ../conf.env
     network_mode:
       host
-    command: bash -c "roslaunch config/follow_the_drow.launch"
+    command: bash -c "roslaunch src/follow_the_drow/config/follow_the_drow.launch"

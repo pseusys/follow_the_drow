@@ -4,6 +4,7 @@
 
 #include "follow_the_drow/raw_data.h"
 
+#include "utils.hpp"
 #include "main.hpp"
 
 #define POLAR 0
@@ -52,11 +53,22 @@ void LiveLoader::update() const {
     rawData.publish(message);
 }
 
+geometry_msgs::Point LiveLoader::setupPointFromParams(std::string paramName) const {
+    geometry_msgs::Point point;
+    point.x = TRANSFORM_DATA[paramName + "_x"];
+    point.y = TRANSFORM_DATA[paramName + "_y"];
+    point.z = TRANSFORM_DATA[paramName + "_z"];
+    return point;
+}
+
 LiveLoader::LiveLoader() {
     bottomLidar = handle.subscribe(BOTTOM_LIDAR_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
     topLidar = handle.subscribe(TOP_LIDAR_TOPIC, 1, &LiveLoader::topLidarCallback, this);
     odometry = handle.subscribe(ODOMETRY_TOPIC, 1, &LiveLoader::odometryCallback, this);
     rawData = handle.advertise<follow_the_drow::raw_data>(RAW_DATA_TOPIC, 1);
+
+    bottomLidarTransform = {cartesianToPolar(setupPointFromParams("bottom_polar")), setupPointFromParams("bottom_cartesian")};
+    topLidarTransform = {cartesianToPolar(setupPointFromParams("top_polar")), setupPointFromParams("top_cartesian")};
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {

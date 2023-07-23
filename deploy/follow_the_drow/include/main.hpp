@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 
 #include "follow_the_drow/detector_factories.hpp"
@@ -21,6 +22,7 @@ extern std::string ALGORITHMIC_DETECTOR_TOPIC;
 void loadArgumentsForNode(int argc, char** argv, const std::string& name);
 
 // Live loader node arguments
+extern std::map<std::string, double> TRANSFORM_DATA;
 extern std::string TOP_LIDAR_TOPIC;
 extern std::string BOTTOM_LIDAR_TOPIC;
 extern std::string ODOMETRY_TOPIC;

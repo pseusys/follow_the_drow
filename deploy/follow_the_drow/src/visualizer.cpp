@@ -1,8 +1,7 @@
 #include <algorithm>
-#include <iostream>
 
 #include "main.hpp"
-#include "transformation.hpp"
+#include "utils.hpp"
 #include "visualizer.hpp"
 
 #define BACKGROUND_RADIUS 0.05

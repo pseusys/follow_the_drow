@@ -7,7 +7,7 @@ AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType det
 
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, LIVE_LOADER);
+    ros::init(argc, argv, ALGORITHMIC_DETECTOR);
     std::string detector;
     follow_the_drow::DetectorType type;
     if (ros::param::get("/" + ALGORITHMIC_DETECTOR + "/" + ALGORITHMIC_DETECOR_TYPE, detector)) type = follow_the_drow::getDetectorTypeFromString(detector);

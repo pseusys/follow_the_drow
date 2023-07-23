@@ -13,6 +13,8 @@ const std::string RAW_DATA_TOPIC_NAME = "raw_data_topic";
 std::string ALGORITHMIC_DETECTOR_TOPIC;
 const std::string ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic";
 
+std::map<std::string, double> TRANSFORM_DATA;
+const std::string TRANSFORM_DATA_NAME = "transform_data";
 std::string TOP_LIDAR_TOPIC;
 const std::string TOP_LIDAR_TOPIC_NAME = "top_lidar_topic";
 std::string BOTTOM_LIDAR_TOPIC;
@@ -47,8 +49,8 @@ template <typename T> T readFromParams(const std::string parameter) {
     else throw std::runtime_error("Parameter '" + parameter + "' not defined!");
 }
 
-template <typename T> T readFromParams(const std::string parameter, std::function<T(std::string&)> converter) {
-    return converter(readDefaultFromParams<std::string>(parameter));
+template <typename T> T readFromParams(const std::string parameter, std::function<T(std::string)> converter) {
+    return converter(readFromParams<std::string>(parameter));
 }
 
 void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
@@ -59,6 +61,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
     std::string prefix = "/" + name + "/";
 
     if (name == LIVE_LOADER) {
+        TRANSFORM_DATA = readFromParams<std::map<std::string, double>>(prefix + TRANSFORM_DATA_NAME);
         TOP_LIDAR_TOPIC = readFromParams<std::string>(prefix + TOP_LIDAR_TOPIC_NAME);
         BOTTOM_LIDAR_TOPIC = readFromParams<std::string>(prefix + BOTTOM_LIDAR_TOPIC_NAME);
         ODOMETRY_TOPIC = readFromParams<std::string>(prefix + ODOMETRY_TOPIC_NAME);
