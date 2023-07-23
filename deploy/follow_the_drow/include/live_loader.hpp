@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "ros/ros.h"
 
 #include "geometry_msgs/Point.h"
@@ -13,6 +15,7 @@ class LiveLoader {
         ros::Subscriber bottomLidar, topLidar, odometry;
         ros::Publisher rawData;
 
+        const std::map<std::string, double> inputTransformData;
         std::array<geometry_msgs::Point, 2> bottomLidarTransform;
         std::array<geometry_msgs::Point, 2> topLidarTransform;
 
@@ -31,6 +34,6 @@ class LiveLoader {
         geometry_msgs::Point setupPointFromParams(std::string paramName) const;
 
     public:
-        LiveLoader();
+        LiveLoader(const std::map<std::string, double>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic);
 };
 

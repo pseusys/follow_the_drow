@@ -55,16 +55,16 @@ void LiveLoader::update() const {
 
 geometry_msgs::Point LiveLoader::setupPointFromParams(std::string paramName) const {
     geometry_msgs::Point point;
-    point.x = TRANSFORM_DATA[paramName + "_x"];
-    point.y = TRANSFORM_DATA[paramName + "_y"];
-    point.z = TRANSFORM_DATA[paramName + "_z"];
+    point.x = inputTransformData.at(paramName + "_x");
+    point.y = inputTransformData.at(paramName + "_y");
+    point.z = inputTransformData.at(paramName + "_z");
     return point;
 }
 
-LiveLoader::LiveLoader() {
-    bottomLidar = handle.subscribe(BOTTOM_LIDAR_TOPIC, 1, &LiveLoader::bottomLidarCallback, this);
-    topLidar = handle.subscribe(TOP_LIDAR_TOPIC, 1, &LiveLoader::topLidarCallback, this);
-    odometry = handle.subscribe(ODOMETRY_TOPIC, 1, &LiveLoader::odometryCallback, this);
+LiveLoader::LiveLoader(const std::map<std::string, double>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic): inputTransformData(transformData) {
+    bottomLidar = handle.subscribe(bottomLidarTopic, 1, &LiveLoader::bottomLidarCallback, this);
+    topLidar = handle.subscribe(topLidarTopic, 1, &LiveLoader::topLidarCallback, this);
+    odometry = handle.subscribe(odometryLidarTopic, 1, &LiveLoader::odometryCallback, this);
     rawData = handle.advertise<follow_the_drow::raw_data>(RAW_DATA_TOPIC, 1);
 
     bottomLidarTransform = {cartesianToPolar(setupPointFromParams("bottom_polar")), setupPointFromParams("bottom_cartesian")};
@@ -81,7 +81,7 @@ LiveLoader::LiveLoader() {
 
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, LIVE_LOADER);
-    LiveLoader bsObject;
+    LiveLoader bsObject(TRANSFORM_DATA, TOP_LIDAR_TOPIC, BOTTOM_LIDAR_TOPIC, ODOMETRY_TOPIC);
     ros::spin();
     return 0;
 }

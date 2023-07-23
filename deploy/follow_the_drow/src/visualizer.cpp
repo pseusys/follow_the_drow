@@ -81,7 +81,7 @@ void Visualizer::update() const {
     frontVisualizer.publish(frontMarker);
 }
 
-Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, std::string front, std::string back): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten), frontTopic(front), backTopic(back) {
+Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, const std::string& front, const std::string& back): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten), frontTopic(front), backTopic(back) {
     backVisualizer = handle.advertise<visualization_msgs::Marker>(backTopic, 1);
     frontVisualizer = handle.advertise<visualization_msgs::Marker>(frontTopic, 1);
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
@@ -99,5 +99,6 @@ Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic,
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, VISUALIZER);
     Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
+    ros::spin();
     return 0;
 }

@@ -37,5 +37,5 @@ class Visualizer {
         void update() const;
 
     public:
-        Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, std::string front, std::string back);
+        Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, const std::string& front, const std::string& back);
 };
