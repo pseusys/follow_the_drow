@@ -29,9 +29,9 @@
 namespace follow_the_drow {
     class Cluster {
         private:
-            const double dSize;
-            const int iStart, iMiddle, iEnd;
-            const Point pStart, pMiddle, pEnd, pBetween;
+            double dSize;
+            int iStart, iMiddle, iEnd;
+            Point pStart, pMiddle, pEnd, pBetween;
 
         public:
             Cluster(const Cluster& cluster);
@@ -48,22 +48,29 @@ namespace follow_the_drow {
             const Point& endPoint() const;
 
             double distanceTo(const Cluster& cluster) const;
+            Point middleBetween(const Cluster& cluster) const;
     };
 
 
     class AbstractDetector {
+        protected:
+            virtual const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) = 0;
+
         public:
-            virtual const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan) = 0;
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan);
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan);
     };
 
 
     class StatelessDetector: public AbstractDetector {
+        protected:
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) override;
+
         private:
             const std::vector<Cluster> performClustering(const std::vector<Point>& storage) const;
             const std::vector<Cluster> detectLegs(const std::vector<Cluster>& clusters) const;
             const std::vector<Cluster> detectChests(const std::vector<Cluster>& clusters) const;
-            const std::vector<Point> detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters) const;
-            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan) override;
+            const std::vector<Point> detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters, bool topScanReceived) const;
 
         public:
             StatelessDetector();

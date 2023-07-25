@@ -6,22 +6,20 @@
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
 
+#include "follow_the_drow/raw_data.h"
 #include "follow_the_drow/detector_factories.hpp"
 
 
 class AlgorithmicDetector: follow_the_drow::DetectorFactory {
     private:
-        bool scanParamsInitialized = false;
-        void initializeScanParams(double minimumAngle, double incrementAngle, double minimumRange, double maximumRange);
+        ros::NodeHandle handle;
+        ros::Subscriber rawData;
+        ros::Publisher detectionData;
 
-        bool bottomLidarInitialized = false;
-        void bottomLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
+        std::vector<follow_the_drow::Point> latestBottomScan, latestTopScan;
 
-        bool topLidarInitialized = false;
-        void topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan);
-
-        bool odometryInitialized = false;
-        void odometryCallback(const nav_msgs::Odometry::ConstPtr& odom);
+        bool rawDataInitialized = false;
+        void rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data);
 
         // Convert polar to Points
         // Run forward

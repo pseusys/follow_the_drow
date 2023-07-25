@@ -6,7 +6,7 @@ namespace follow_the_drow {
             double x, y, z;
 
             Point();
-            Point(const Point& cluster);
+            Point(const Point& point);
             Point(double x, double y);
             Point(double x, double y, double z);
 

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from ..dataset import DROW_Dataset
+from ..datasets import DROW_Dataset
 from ..utils.generic_utils import Logging
 
 

@@ -60,3 +60,7 @@ const Point& Cluster::endPoint() const {
 double Cluster::distanceTo(const Cluster& cluster) const {
     return this->pBetween.distanceTo(cluster.pBetween);
 }
+
+Point Cluster::middleBetween(const Cluster& cluster) const {
+    return this->betweenPoint().middleBetween(cluster.betweenPoint());
+}

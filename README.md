@@ -2,7 +2,10 @@
 
 ## Debug
 
-In order to run any of the nodes with GDB, add `launch-prefix="gdb -ex run --args"` to node arguments.
+> Nodes are _by default_ built with debug info **and** GDB is included into image.
+
+In order to run any of the nodes with GDB, add `launch-prefix="gdb -batch -ex run -ex bt --args"` to node arguments.
+In file `deploy/follow_the_drow/CMakeLists.txt` line #5 can be changed to `Release` for release artifact or to `Debug` for debug artifact.
 
 ## RobAIR interop
 
@@ -54,4 +57,5 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 3. Rewrite stateful detector, make sure it inherits from abstract
 4. Debug and run it in wrapper
 5. Setup follow me behavior interop (topics, connections)
-6. Rename data_outrigger.
+6. Rename data_outrigger
+7. Rename cpp_core.utils to point.

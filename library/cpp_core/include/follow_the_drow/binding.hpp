@@ -16,6 +16,7 @@ namespace follow_the_drow {
         public:
             PythonDetectorFactory(const DetectorType& detector, double minAngle, double incAngle);
 
-            const py::array_t<double> forward(const py::array_t<double>& latestBottomScan, const py::array_t<double>& latestTopScan);
+            const py::array_t<double> forwardOne(const py::array_t<double>& latestBottomScan);
+            const py::array_t<double> forwardBoth(const py::array_t<double>& latestBottomScan, const py::array_t<double>& latestTopScan);
     };
 }

@@ -15,7 +15,7 @@ const std::vector<Cluster> StatelessDetector::performClustering(const std::vecto
             clusters.push_back(Cluster(clusterStart, loop - 1, storage));
             clusterStart = loop;
         }
-    if (clusterStart != storage.size() - 1)
+    if (clusterStart != storage.size() - 1 && storage.size() > 0)
         clusters.push_back(Cluster(clusterStart, storage.size() - 1, storage));
     return clusters;
 }
@@ -25,7 +25,7 @@ const std::vector<Cluster> StatelessDetector::detectLegs(const std::vector<Clust
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < LEG_SIZE_MAX) && (clusters[loop].size() > LEG_SIZE_MIN))
             legClusters.push_back(Cluster(clusters[loop]));
-    if (legClusters.size() > 0) LOG("%d legs have been detected\n", legClusters.size());
+    if (legClusters.size() > 0) LOG("%ld legs have been detected\n", legClusters.size());
     return legClusters;
 }
 
@@ -34,11 +34,11 @@ const std::vector<Cluster> StatelessDetector::detectChests(const std::vector<Clu
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < CHEST_SIZE_MAX) && (clusters[loop].size() > CHEST_SIZE_MIN))
             chestClusters.push_back(Cluster(clusters[loop]));
-    if (chestClusters.size()) LOG("%d chests have been detected\n", chestClusters.size());
+    if (chestClusters.size()) LOG("%ld chests have been detected\n", chestClusters.size());
     return chestClusters;
 }
 
-const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters) const {
+const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters, bool topScanReceived) const {
     std::vector<Point> detection;
 
     for (int loopLeftLeg = 0; loopLeftLeg < legClusters.size(); loopLeftLeg++)
@@ -46,7 +46,12 @@ const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Clust
             double twoLegsDistance = legClusters[loopLeftLeg].distanceTo(legClusters[loopRightLeg]);
             bool personLegsDetected = (twoLegsDistance > LEGS_DISTANCE_MIN && twoLegsDistance < LEGS_DISTANCE_MAX);
             if (!personLegsDetected) continue;
-            
+
+            if (!topScanReceived) {
+                detection.push_back(legClusters[loopLeftLeg].middleBetween(legClusters[loopRightLeg]));
+                continue;
+            }
+
             for (int loopChest = 0; loopChest < chestClusters.size(); loopChest++) {
                 double leftChestDistance = legClusters[loopLeftLeg].distanceTo(chestClusters[loopChest]);
                 double rightChestDistance = legClusters[loopRightLeg].distanceTo(chestClusters[loopChest]);
@@ -59,10 +64,11 @@ const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Clust
     return detection;
 }
 
-const std::vector<Point> StatelessDetector::forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan) {
-    const std::vector<Cluster>& legs = detectLegs(performClustering(latestBottomScan));
-    const std::vector<Cluster>& chests = detectChests(performClustering(latestTopScan));
-    return detectPeople(legs, chests);
+const std::vector<Point> StatelessDetector::forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) {
+    std::vector<Cluster> legs = detectLegs(performClustering(latestBottomScan));
+    std::vector<Cluster> chests;
+    if (topScanReceived) chests = detectChests(performClustering(latestTopScan));
+    return detectPeople(legs, chests, topScanReceived);
 }
 
 StatelessDetector::StatelessDetector() {}

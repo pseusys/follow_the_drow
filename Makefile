@@ -29,7 +29,7 @@ build-lib:
 	cd library/cpp_core/build
 	cmake ..
 	make
-	test $$(shell id -u) -eq 0 && { make install; } || { echo "Installation can be performed in superuser mode only!"; }
+	test $$(id -u) -eq 0 && { make install; } || { echo "Installation can be performed in superuser mode only!"; }
 .PHONY: build-lib
 
 

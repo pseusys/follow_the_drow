@@ -11,7 +11,7 @@ Point::Point(double x, double y): Point(x, y, 0) {}
 
 Point::Point(double x, double y, double z): x(x), y(y), z(z) {}
 
-Point::Point(const Point& cluster): Point(this->x, this->y, this->z) {}
+Point::Point(const Point& point): Point(this->x, this->y, this->z) {}
 
 Point Point::polarToCartesian(double distance, double angle) {
     double x = distance * cos(angle);

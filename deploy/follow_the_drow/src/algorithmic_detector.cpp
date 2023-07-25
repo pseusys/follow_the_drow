@@ -1,30 +1,46 @@
 #include "algorithmic_detector.hpp"
 
+#include "follow_the_drow/detectors.hpp"
+#include "follow_the_drow/detection.h"
+
 #include "main.hpp"
+#include "utils.hpp"
 
 
-void AlgorithmicDetector::initializeScanParams(double minimumAngle, double incrementAngle, double minimumRange, double maximumRange) {
+void AlgorithmicDetector::rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data) {
+    latestBottomScan = std::vector<follow_the_drow::Point>(data->bottom_lidar.size());
+    for (int i = 0; i < data->bottom_lidar.size(); i++)
+        latestBottomScan[i] = geometryToPoint(polarToCartesian(data->bottom_lidar[i]));
 
-}
+    latestTopScan = std::vector<follow_the_drow::Point>(data->top_lidar.size());
+    for (int i = 0; i < data->top_lidar.size(); i++)
+        latestTopScan[i] = geometryToPoint(polarToCartesian(data->top_lidar[i]));
 
-void AlgorithmicDetector::bottomLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
-
-}
-
-void AlgorithmicDetector::topLidarCallback(const sensor_msgs::LaserScan::ConstPtr& scan) {
-
-}
-
-void AlgorithmicDetector::odometryCallback(const nav_msgs::Odometry::ConstPtr& odom) {
-
+   rawDataInitialized = true;
 }
 
 void AlgorithmicDetector::update() const {
+    if (!rawDataInitialized) return;
+    std::vector<follow_the_drow::Point> points = detector->forward(latestBottomScan, latestTopScan);
+    std::vector<geometry_msgs::Point> geometries = std::vector<geometry_msgs::Point>(points.size());
+    ROS_INFO("%ld PERSONS DETECTED!!", points.size());
+    for (int i = 0; i < points.size(); i++) geometries[i] = pointToGeometry(points[i]);
 
+    follow_the_drow::detection detection;
+    detection.detection = geometries;
+    detectionData.publish(detection);
 }
 
 AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType detector): DetectorFactory(detector, -1, -1, -1, -1) {
+    rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &AlgorithmicDetector::rawDataCallback, this);
+    detectionData = handle.advertise<follow_the_drow::detection>(ALGORITHMIC_DETECTOR_TOPIC, 1);
 
+    ros::Rate rate(HEARTBEAT_RATE);
+    while (ros::ok()) {
+        ros::spinOnce();
+        update();
+        rate.sleep();
+    }
 }
 
 

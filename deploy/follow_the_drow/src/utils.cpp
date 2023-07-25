@@ -23,3 +23,16 @@ geometry_msgs::Point polarToCartesian(const geometry_msgs::Point point) {
     result.z = point.z;
     return result;
 }
+
+
+follow_the_drow::Point geometryToPoint(const geometry_msgs::Point point) {
+    return follow_the_drow::Point(point.x, point.y, point.z);
+}
+
+geometry_msgs::Point pointToGeometry(const follow_the_drow::Point point) {
+    geometry_msgs::Point result;
+    result.x = point.x;
+    result.y = point.y;
+    result.z = point.z;
+    return result;
+}
