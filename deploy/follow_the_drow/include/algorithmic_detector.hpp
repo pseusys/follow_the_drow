@@ -7,7 +7,7 @@
 #include "nav_msgs/Odometry.h"
 
 #include "follow_the_drow/raw_data.h"
-#include "follow_the_drow/detector_factories.hpp"
+#include "follow_the_drow/detector_factory.hpp"
 
 
 class AlgorithmicDetector: follow_the_drow::DetectorFactory {

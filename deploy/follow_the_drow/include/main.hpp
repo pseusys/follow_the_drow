@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "follow_the_drow/detector_factories.hpp"
+#include "follow_the_drow/detector_factory.hpp"
 
 #include "colors.hpp"
 

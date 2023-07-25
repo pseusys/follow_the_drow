@@ -22,7 +22,7 @@ namespace follow_the_drow {
             const DetectorType type;
 
         protected:
-            double minimumAngle, incrementAngle, minimumRange, maximumRange;
+            double minimumAngle, incrementAngle, minimumRange, maximumRange; // TODO: remove
             const std::unique_ptr<AbstractDetector> detector;
 
         public:

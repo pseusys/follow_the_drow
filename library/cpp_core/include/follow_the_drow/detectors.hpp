@@ -8,7 +8,7 @@
 
 #define LEG_SIZE_MIN 0.0
 #define LEG_SIZE_MAX 0.2
-#define LEGS_DISTANCE_MIN 0.0
+#define LEGS_DISTANCE_MIN 0.05
 #define LEGS_DISTANCE_MAX 0.7
 
 #define CHEST_SIZE_MIN 0.3

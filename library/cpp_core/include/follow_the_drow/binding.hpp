@@ -2,7 +2,7 @@
 
 #include <pybind11/numpy.h>
 
-#include "detector_factories.hpp"
+#include "detector_factory.hpp"
 
 namespace py = pybind11;
 

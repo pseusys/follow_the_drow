@@ -2,7 +2,7 @@
 
 #include "misc.hpp"
 
-#include "detector_factories.hpp"
+#include "detector_factory.hpp"
 
 using namespace follow_the_drow;
 
