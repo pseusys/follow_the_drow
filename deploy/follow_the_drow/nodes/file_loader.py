@@ -7,9 +7,8 @@ from geometry_msgs.msg import Point
 
 import follow_the_drow as ftd
 from follow_the_drow.msg import raw_data
-from data_outrigger.datasets import DROW_Dataset
-from data_outrigger.utils.drow_utils import laser_angles
-from data_outrigger.utils.file_utils import DROW_TEST_SET
+from follow_the_drow.datasets import DROW_Dataset
+from follow_the_drow.utils.drow_utils import laser_angles
 
 
 class FileLoader:

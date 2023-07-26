@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "utils.hpp"
+#include "point.hpp"
 
 #define CLUSTER_THRESHOLD 0.2
 

@@ -57,6 +57,4 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 3. Rewrite stateful detector, make sure it inherits from abstract
 4. Debug and run it in wrapper
 5. Setup follow me behavior interop (topics, connections)
-6. Rename data_outrigger
-7. Rename cpp_core.utils to point.
-8. Detector interface (including pythonic) should accept odometry
+6. Detector interface (including pythonic) should accept odometry

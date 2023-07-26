@@ -11,7 +11,7 @@ DROW_WEIGHTS = "https://github.com/VisualComputingInstitute/DROW/releases/downlo
 
 ext_modules = [
     Pybind11Extension(
-        "data_outrigger.cpp_binding",
+        "follow_the_drow.cpp_binding",
         sources=[str(file) for file in Path("cpp_core/sources").glob("*.cpp")],
         include_dirs=[str(Path("cpp_core/include/follow_the_drow"))],
         define_macros=[("VERSION_INFO", VERSION), ("QUIET_LOG", True)],
@@ -20,7 +20,7 @@ ext_modules = [
 
 
 
-include_dir = Path("data_outrigger/include")
+include_dir = Path("follow_the_drow/include")
 if not include_dir.exists():
     include_dir.mkdir(parents=True)
     file, _ = urlretrieve(DROW_DATA)

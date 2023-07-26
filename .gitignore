@@ -8,8 +8,8 @@ deploy/out
 deploy/follow_the_drow/config
 
 compare/cache
-library/data_outrigger/include
-library/data_outrigger/*.so
+library/follow_the_drow/include
+library/follow_the_drow/*.so
 library/cpp_core/build
 library/build
 

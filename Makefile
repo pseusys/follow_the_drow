@@ -63,9 +63,9 @@ clean:
 	rm -rf venv
 	rm -rf compare/cache
 	rm -rf library/cpp_core/build
-	rm -rf library/data_outrigger.egg-info
-	rm -rf library/data_outrigger/*.so
-	rm -rf library/data_outrigger/include
+	rm -rf library/follow_the_drow.egg-info
+	rm -rf library/follow_the_drow/*.so
+	rm -rf library/follow_the_drow/include
 	rm -rf deploy/out
 	rm -rf **/__pycache__
 .PHONY: clean

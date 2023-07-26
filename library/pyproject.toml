@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "data_outrigger"
+name = "follow_the_drow"
 description = "Library for all simple and commonly used ROS utilities I use"
 authors = [
     {name = "Aleksandr Sergeev", email = "alexander.sergeev@onmail.com"},
@@ -30,11 +30,11 @@ Homepage = "http://github.com/pseusys/follow_the_drow"
 
 
 [tool.setuptools.packages.find]
-include = ["data_outrigger*"]
+include = ["follow_the_drow*"]
 
 
 [tool.setuptools.package-data]
-data_outrigger = ["include/*.pth.tar", "include/DROWv2-data/*/*.bag.*"]
+follow_the_drow = ["include/*.pth.tar", "include/DROWv2-data/*/*.bag.*"]
 
 
 [tool.setuptools.dynamic]
