@@ -15,6 +15,7 @@ class FileLoader:
     def __init__(self, dataset: Path) -> None:
         self.dataset = DROW_Dataset(dataset=dataset)
         loginfo(f"Dataset includes {len(self.dataset.scan_id)} scans and {len(self.dataset.det_id)} detections")
+        self.raw_data = Publisher(ftd.RAW_DATA_TOPIC, raw_data, queue_size=10)
 
     def update(self, file_counter, scan_counter):
         bottom_lidar_points = list()
@@ -26,7 +27,6 @@ class FileLoader:
         self.raw_data.publish(raw_data(bottom_lidar=bottom_lidar_points, odometry=odometry_data))
 
     def __call__(self) -> None:
-        self.raw_data = Publisher(ftd.RAW_DATA_TOPIC, raw_data, queue_size=10)
         file_counter, scan_counter = 0, 0
         rate = Rate(ftd.HEARTBEAT_RATE)
         while not is_shutdown():

@@ -52,9 +52,15 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 
 ## Roadmap
 
-1. Create wrapper node for detectors
-2. Debug and run stateless detector
-3. Rewrite stateful detector, make sure it inherits from abstract
-4. Debug and run it in wrapper
-5. Setup follow me behavior interop (topics, connections)
-6. Detector interface (including pythonic) should accept odometry
+1. Debug and run stateless detector
+2. Rewrite stateful detector, make sure it inherits from abstract
+3. Debug and run it in wrapper
+4. Setup follow me behavior interop (topics, connections)
+5. Detector interface (including pythonic) should accept odometry
+6. Fix TODOs
+7. Complete workflows
+8. Follow me: Study inputs, is it first detected human or closest? Create adapter node, input humans, output one human, with modes; first_index, closest, first_detected (with tracking).
+9. Move colors to visualizer.
+10. Remove additional params from Detector CPP.
+11. Remove CPP logging control - move to detector args
+12. Move defines to parameters
