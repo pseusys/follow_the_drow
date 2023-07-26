@@ -69,6 +69,8 @@ add_executable(algorithmic_detector src/algorithmic_detector.cpp ${UTIL_SOURCES}
 add_dependencies(algorithmic_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(algorithmic_detector ${catkin_LIBRARIES} FollowTheDrow)
 
-catkin_install_python(PROGRAMS nodes/file_loader.py 
+catkin_install_python(PROGRAMS
+  nodes/file_loader.py
+  nodes/drow_detector.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

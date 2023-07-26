@@ -25,6 +25,11 @@ void Visualizer::algorithmicDetectorCallback(const follow_the_drow::detection::C
     algorithmicReceived = true;
 }
 
+void Visualizer::DROWDetectorCallback(const follow_the_drow::detection::ConstPtr& data) {
+    DROWDetectorData = data->detection;
+    DROWReceived = true;
+}
+
 void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const {
     geometry_msgs::Point copy = point;
     if (flattenOutput) copy.z = 0;
@@ -72,20 +77,24 @@ void Visualizer::update() const {
 
     visualization_msgs::Marker frontMarker = initMarker(frontTopic, DETECTION_RADIUS);;
 
-    if (algorithmicReceived) {
+    if (algorithmicReceived)
         for (int loop = 0; loop < algorithmicDetectorData.size(); loop++)
             addPointToMarker(frontMarker, algorithmicDetectorData[loop], algorithmicDetection);
-    }
+
+    if (DROWReceived)
+        for (int loop = 0; loop < DROWDetectorData.size(); loop++)
+            addPointToMarker(frontMarker, DROWDetectorData[loop], DROWDetection);
 
     addPointToMarker(frontMarker, 0, 0, 0, centerMarker);
     frontVisualizer.publish(frontMarker);
 }
 
-Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, bool flatten, const std::string& front, const std::string& back): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), flattenOutput(flatten), frontTopic(front), backTopic(back) {
+Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic, Color drow, bool flatten, const std::string& front, const std::string& back): bottomBackground(bottom), topBackground(top), centerMarker(center), algorithmicDetection(algorithmic), DROWDetection(drow), flattenOutput(flatten), frontTopic(front), backTopic(back) {
     backVisualizer = handle.advertise<visualization_msgs::Marker>(backTopic, 1);
     frontVisualizer = handle.advertise<visualization_msgs::Marker>(frontTopic, 1);
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
     algorithmicDetector = handle.subscribe(ALGORITHMIC_DETECTOR_TOPIC, 1, &Visualizer::algorithmicDetectorCallback, this);
+    DROWDetector = handle.subscribe(DROW_DETECTOR_TOPIC, 1, &Visualizer::DROWDetectorCallback, this);
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {
@@ -98,7 +107,7 @@ Visualizer::Visualizer(Color bottom, Color top, Color center, Color algorithmic,
 
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, VISUALIZER);
-    Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
+    Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, DROW_DETECTION_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
     ros::spin();
     return 0;
 }

@@ -202,7 +202,7 @@ def _win2global(r, phi, dx, dy):
     return y / cos(dphi), phi + dphi
 
 
-def _prepare_prec_rec_softmax(scans, pred_offs):
+def prepare_prec_rec_softmax(scans, pred_offs):
     angles = laser_angles(scans.shape[-1])[None,:]
     return _rphi_to_xy(*_win2global(scans, angles, pred_offs[:,:,0], pred_offs[:,:,1]))
 
@@ -217,7 +217,7 @@ def _agnostic_weighted_vote_avg(vx, vy, p):
     return norm * sum(weights*vx), norm * sum(weights*vy), norm * sum(weights[:,None]*p, axis=0)
 
 
-def _votes_to_detections(xs, ys, probas, weighted_avg=False, min_thresh=1e-5, bin_size=0.1, blur_win=21, blur_sigma=2.0, x_min=-15.0, x_max=15.0, y_min=-5.0, y_max=15.0, vote_collect_radius=0.3, retgrid=False, class_weights=None):
+def votes_to_detections(xs, ys, probas, weighted_avg=False, min_thresh=1e-5, bin_size=0.1, blur_win=21, blur_sigma=2.0, x_min=-15.0, x_max=15.0, y_min=-5.0, y_max=15.0, vote_collect_radius=0.3, retgrid=False, class_weights=None):
     '''
     Convert a list of votes to a list of detections based on Non-Max suppression.
 
@@ -346,6 +346,6 @@ def _process_detections(det_x, det_y, det_p, det_f, wcs, was, wps, eval_r):
 
 
 def comp_prec_rec_softmax(scans, wcs, was, wps, pred_conf, pred_offs, eval_r=0.5, **v2d_kw):
-    x, y = _prepare_prec_rec_softmax(scans, pred_offs)
-    det_x, det_y, det_p, det_f = _deep2flat(_votes_to_detections(x, y, pred_conf, **v2d_kw))
+    x, y = prepare_prec_rec_softmax(scans, pred_offs)
+    det_x, det_y, det_p, det_f = _deep2flat(votes_to_detections(x, y, pred_conf, **v2d_kw))
     return _process_detections(det_x, det_y, det_p, det_f, wcs, was, wps, eval_r)

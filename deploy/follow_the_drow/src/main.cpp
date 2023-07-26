@@ -12,6 +12,8 @@ std::string RAW_DATA_TOPIC;
 const std::string RAW_DATA_TOPIC_NAME = "raw_data_topic";
 std::string ALGORITHMIC_DETECTOR_TOPIC;
 const std::string ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic";
+std::string DROW_DETECTOR_TOPIC;
+const std::string DROW_DETECTOR_TOPIC_NAME = "drow_detector_topic";
 
 std::map<std::string, double> TRANSFORM_DATA;
 const std::string TRANSFORM_DATA_NAME = "transform_data";
@@ -34,6 +36,8 @@ Color CENTER_MARKER_COLOR;
 const std::string CENTER_MARKER_COLOR_NAME = "center_marker_color";
 Color ALGORITHMIC_DETECTION_COLOR;
 const std::string ALGORITHMIC_DETECTION_COLOR_NAME = "algorithmic_detection_color";
+Color DROW_DETECTION_COLOR;
+const std::string DROW_DETECTION_COLOR_NAME = "drow_detection_color";
 std::string BACK_VISUALIZATION_TOPIC;
 const std::string BACK_VISUALIZATION_TOPIC_NAME = "back_visualization_topic";
 std::string FRONT_VISUALIZATION_TOPIC;
@@ -58,6 +62,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
     HEARTBEAT_RATE = readFromParams<int>("/" + HEARTBEAT_RATE_NAME);
     RAW_DATA_TOPIC = readFromParams<std::string>("/" + RAW_DATA_TOPIC_NAME);
     ALGORITHMIC_DETECTOR_TOPIC = readFromParams<std::string>("/" + ALGORITHMIC_DETECTOR_TOPIC_NAME);
+    DROW_DETECTOR_TOPIC = readFromParams<std::string>("/" + DROW_DETECTOR_TOPIC_NAME);
     std::string prefix = "/" + name + "/";
 
     if (name == LIVE_LOADER) {
@@ -72,6 +77,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
         TOP_BACKGROUND_COLOR = readFromParams<Color>(prefix + TOP_BACKGROUND_COLOR_NAME, &getColorFromString);
         CENTER_MARKER_COLOR = readFromParams<Color>(prefix + CENTER_MARKER_COLOR_NAME, &getColorFromString);
         ALGORITHMIC_DETECTION_COLOR = readFromParams<Color>(prefix + ALGORITHMIC_DETECTION_COLOR_NAME, &getColorFromString);
+        DROW_DETECTION_COLOR = readFromParams<Color>(prefix + DROW_DETECTION_COLOR_NAME, &getColorFromString);
         BACK_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + BACK_VISUALIZATION_TOPIC_NAME);
         FRONT_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + FRONT_VISUALIZATION_TOPIC_NAME);
     } else if (name == ALGORITHMIC_DETECTOR) {
