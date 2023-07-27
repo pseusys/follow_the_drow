@@ -21,11 +21,11 @@ The image includes:
 
 ## Build and Pull
 
-The image is available in GitHub image registry under name `follow_the_drow:main` and can be pulled from there.
+The image is available in GitHub image registry under name `ros_complete_env:main` and can be pulled from there.
 Use the following command to do that:
 
 ```bash
-docker pull ghcr.io/pseusys/follow_the_drow/follow_the_drow:main
+docker pull ghcr.io/pseusys/follow_the_drow/ros_complete_env:main
 ```
 
 It can be re-built using make `build-image` target, defined in `Makefile`:
