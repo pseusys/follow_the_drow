@@ -10,6 +10,7 @@ from geometry_msgs.msg import Point
 from follow_the_drow import Params, load_args_for_node
 from follow_the_drow.msg import raw_data, detection
 from follow_the_drow.detectors import DrowDetector
+from follow_the_drow.datasets import LiveDataset
 from follow_the_drow.utils.drow_utils import cutout, prepare_prec_rec_softmax, votes_to_detections
 
 
@@ -25,31 +26,27 @@ class DROWDetector:
 
     def __init__(self) -> None:
         self.detector = DrowDetector.init()
+        self.dataset = LiveDataset(self.detector.N_TIME)
         self.drow_data = Publisher(Params.DROW_DETECTOR_TOPIC, detection, queue_size=1)
         self.raw_data = Subscriber(Params.RAW_DATA_TOPIC, raw_data, self.callback, queue_size=10)
         self.rate = Rate(Params.HEARTBEAT_RATE)
         self.data_initialized = False
-        self.data_queue = deque(list())
 
     def callback(self, raw_data):
         bottom_lidar = array([measure.x for measure in raw_data.bottom_lidar], dtype=float32)
+        top_lidar = array([measure.x for measure in raw_data.top_lidar], dtype=float32)
         odometry = zeros(1, dtype=[("xya", float32, 3)])
         odometry[0]["xya"] = (raw_data.odometry.x, raw_data.odometry.y, raw_data.odometry.z)
-        if not self.data_initialized:
-            self.data_queue = deque([(bottom_lidar, odometry[0])] * self.detector.N_TIME, self.detector.N_TIME)
-        else:
-            self.data_queue.appendleft((bottom_lidar, odometry[0]))
+        self.dataset.push_measure(bottom_lidar, top_lidar, odometry[0])
         self.data_initialized = True
 
     def update(self):
         if self.data_initialized:
-            scans, odoms = zip(*list(self.data_queue))
-            scans, odoms = array(scans), array(odoms)
+            scans, odoms = self.dataset.get_bottom_scan()
             cut = cutout(scans, odoms, scans.shape[-1], nsamp=self.detector.N_SAMP)
             confs, offs = self.detector.forward_one(cut)
-            confs, offs = array([confs]), array([offs])
-            x, y = prepare_prec_rec_softmax(scans, offs)
-            detections = votes_to_detections(x, y, confs, **self.RESULT_CONF)
+            x, y = prepare_prec_rec_softmax(scans, array([offs]))
+            detections = votes_to_detections(x, y, array([confs]), **self.RESULT_CONF)
             # WARNING! Here, with points 'x' and 'y' are changed!
             points = [Point(x=detect[1], y=detect[0]) for detect in detections[-1]]
             self.drow_data.publish(detection(detection=points))

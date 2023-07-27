@@ -14,8 +14,8 @@ from numpy import genfromtxt, fromregex, where, array, full, array_equal, vector
 from numpy.typing import NDArray
 
 from ..utils.file_utils import DROW_DATA_PATH, DROW_TEST_SET
-from ..utils.generic_utils import Logging
 from ..utils.drow_utils import laser_measures
+from ..utils.generic_utils import Logging
 
 _DATASET_PATH = Path(__file__).parent.parent / DROW_DATA_PATH
 

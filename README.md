@@ -64,3 +64,4 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 10. Remove additional params from Detector CPP.
 11. Remove CPP logging control - move to detector args
 12. Move defines to parameters
+13. Move params and funcs from notebooks to utils
