@@ -2,7 +2,7 @@
 
 from collections import deque
 
-from numpy import array, zeros, float32
+from numpy import array, zeros, float32, argmax
 
 from rospy import Publisher, Subscriber, Rate, is_shutdown, spin
 from geometry_msgs.msg import Point
@@ -24,7 +24,8 @@ class DROWDetector:
         "class_weights": [0.89740097838073, 0.3280190481521334, 0.4575675717820713]
     }
 
-    def __init__(self, verbose: bool) -> None:
+    def __init__(self, persons_only: bool, verbose: bool) -> None:
+        self.persons_only = persons_only
         self.detector = DrowDetector.init(verbose=verbose)
         self.dataset = LiveDataset(self.detector.N_TIME, verbose)
         self.drow_data = Publisher(Params.DROW_DETECTOR_TOPIC, detection, queue_size=1)
@@ -46,9 +47,11 @@ class DROWDetector:
             cut = cutout(scans, odoms, scans.shape[-1], nsamp=self.detector.N_SAMP)
             confs, offs = self.detector.forward_one(cut)
             x, y = prepare_prec_rec_softmax(scans, array([offs]))
-            detections = votes_to_detections(x, y, array([confs]), **self.RESULT_CONF)
+            detections = votes_to_detections(x, y, array([confs]), **self.RESULT_CONF)[-1]
+            if self.persons_only:
+                detections = [det for det in detections if argmax(det[2][1:]) == 2]
             # WARNING! Here, with points 'x' and 'y' are changed!
-            points = [Point(x=detect[1], y=detect[0]) for detect in detections[-1]]
+            points = [Point(x=detect[1], y=detect[0]) for detect in detections]
             self.drow_data.publish(detection(detection=points))
 
     def __call__(self) -> None:
@@ -59,5 +62,5 @@ class DROWDetector:
 
 if __name__ == "__main__":
     load_args_for_node(Params.DROW_DETECTOR)
-    DROWDetector(Params.DROW_DETECTOR_VERBOSE).__call__()
+    DROWDetector(Params.DROW_DETECTOR_PERSONS_ONLY, Params.DROW_DETECTOR_VERBOSE).__call__()
     spin()

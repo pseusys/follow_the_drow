@@ -46,7 +46,9 @@ class Params:
 
     # DROW detector node arguments
     DROW_DETECTOR_VERBOSE = _property("DROW_DETECTOR_VERBOSE")
-    _DROW_DETECTOR_VERBOSE_NAME = "drow_detector_verbose"
+    _DROW_DETECTOR_VERBOSE_NAME = "verbose"
+    DROW_DETECTOR_PERSONS_ONLY = _property("DROW_DETECTOR_PERSONS_ONLY")
+    _DROW_DETECTOR_PERSONS_ONLY_NAME = "persons_only"
 
 
 def load_args_for_node(name: str):

@@ -44,9 +44,9 @@ std::string FRONT_VISUALIZATION_TOPIC;
 const std::string FRONT_VISUALIZATION_TOPIC_NAME = "front_visualization_topic";
 
 follow_the_drow::DetectorType ALGORITHMIC_DETECOR_TYPE;
-const std::string ALGORITHMIC_DETECOR_TYPE_NAME = "algorithmic_detector_type";
+const std::string ALGORITHMIC_DETECOR_TYPE_NAME = "detector_type";
 bool ALGORITHMIC_DETECOR_VERBOSE;
-const std::string ALGORITHMIC_DETECOR_VERBOSE_NAME = "algorithmic_detector_verbose";
+const std::string ALGORITHMIC_DETECOR_VERBOSE_NAME = "verbose";
 
 
 template <typename T> T readFromParams(const std::string parameter) {
