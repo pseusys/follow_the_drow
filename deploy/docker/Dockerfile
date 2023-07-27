@@ -19,7 +19,7 @@ CMD ["rosversion", "ros"]
 FROM basic as ftd
 
 COPY library /~
-RUN pip install /~ && find /~ -maxdepth 1 -mindepth 1 ! -name 'cpp_core' -exec rm -rf {} + && mv /~/cpp_core /~/fillow_the_drow_library
+RUN pip install /~ && find /~ -maxdepth 1 -mindepth 1 ! \( -name 'cpp_core' -o -name 'entrypoint.sh' -o -name 'catkin_ws' \) -exec rm -rf {} + && mv /~/cpp_core /~/fillow_the_drow_library
 
 ENV CMAKE_INSTALL_PREFIX /usr/local
 RUN mkdir /~/fillow_the_drow_library/build && cd /~/fillow_the_drow_library/build && cmake .. && make && make install
