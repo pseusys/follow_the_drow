@@ -44,6 +44,10 @@ class Params:
     DATASET_PATH = _property("DATASET_PATH")
     _DATASET_PATH_NAME = "dataset_path"
 
+    # DROW detector node arguments
+    DROW_DETECTOR_VERBOSE = _property("DROW_DETECTOR_VERBOSE")
+    _DROW_DETECTOR_VERBOSE_NAME = "drow_detector_verbose"
+
 
 def load_args_for_node(name: str):
     init_node(name)
@@ -55,6 +59,6 @@ def load_args_for_node(name: str):
     if name == Params.FILE_LOADER:
         Params.DATASET_PATH = get_param(f"/{name}/{Params._DATASET_PATH_NAME}")
     elif name == Params.DROW_DETECTOR:
-        pass
+        Params.DROW_DETECTOR_VERBOSE = get_param(f"/{name}/{Params._DROW_DETECTOR_VERBOSE_NAME}")
     else:
         raise RuntimeError(f"Unknown node name '{name}'!")

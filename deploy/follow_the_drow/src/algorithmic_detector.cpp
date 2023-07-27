@@ -30,7 +30,7 @@ void AlgorithmicDetector::update() const {
     detectionData.publish(detection);
 }
 
-AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType detector): DetectorFactory(detector, true) {
+AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType detector, const bool verbose): DetectorFactory(detector, verbose) {
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &AlgorithmicDetector::rawDataCallback, this);
     detectionData = handle.advertise<follow_the_drow::detection>(ALGORITHMIC_DETECTOR_TOPIC, 1);
 
@@ -45,7 +45,7 @@ AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType det
 
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, ALGORITHMIC_DETECTOR);
-    AlgorithmicDetector bsObject(ALGORITHMIC_DETECOR_TYPE);
+    AlgorithmicDetector bsObject(ALGORITHMIC_DETECOR_TYPE, ALGORITHMIC_DETECOR_VERBOSE);
     ros::spin();
     return 0;
 }

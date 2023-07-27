@@ -43,7 +43,7 @@ redrow-detector-test: venv
 
 build-image:
 	@ # Build docker image - internet connection required!
-	docker compose -f deploy/docker/docker-compose.yml build --no-cache
+	docker compose -f deploy/docker/docker-compose.yml build
 	test -n "$$(docker images -q follow_the_drow 2> /dev/null)" || { echo "Image building error!"; exit 1; }
 .PHONY: build-image
 

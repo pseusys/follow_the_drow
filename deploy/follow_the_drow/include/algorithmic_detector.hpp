@@ -26,5 +26,5 @@ class AlgorithmicDetector: follow_the_drow::DetectorFactory {
         void update() const;
     
     public:
-        AlgorithmicDetector(const follow_the_drow::DetectorType detector);
+        AlgorithmicDetector(const follow_the_drow::DetectorType detector, const bool verbose);
 };

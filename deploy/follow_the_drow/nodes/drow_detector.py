@@ -24,9 +24,9 @@ class DROWDetector:
         "class_weights": [0.89740097838073, 0.3280190481521334, 0.4575675717820713]
     }
 
-    def __init__(self) -> None:
-        self.detector = DrowDetector.init()
-        self.dataset = LiveDataset(self.detector.N_TIME)
+    def __init__(self, verbose: bool) -> None:
+        self.detector = DrowDetector.init(verbose=verbose)
+        self.dataset = LiveDataset(self.detector.N_TIME, verbose)
         self.drow_data = Publisher(Params.DROW_DETECTOR_TOPIC, detection, queue_size=1)
         self.raw_data = Subscriber(Params.RAW_DATA_TOPIC, raw_data, self.callback, queue_size=10)
         self.rate = Rate(Params.HEARTBEAT_RATE)
@@ -59,5 +59,5 @@ class DROWDetector:
 
 if __name__ == "__main__":
     load_args_for_node(Params.DROW_DETECTOR)
-    DROWDetector().__call__()
+    DROWDetector(Params.DROW_DETECTOR_VERBOSE).__call__()
     spin()
