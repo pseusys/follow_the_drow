@@ -25,7 +25,7 @@ const std::vector<Cluster> StatelessDetector::detectLegs(const std::vector<Clust
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < LEG_SIZE_MAX) && (clusters[loop].size() > LEG_SIZE_MIN))
             legClusters.push_back(Cluster(clusters[loop]));
-    if (legClusters.size() > 0) LOG("%ld legs have been detected\n", legClusters.size());
+    if (logging && legClusters.size() > 0) LOG("%ld legs have been detected\n", legClusters.size());
     return legClusters;
 }
 
@@ -34,7 +34,7 @@ const std::vector<Cluster> StatelessDetector::detectChests(const std::vector<Clu
     for (int loop = 0; loop < clusters.size(); loop++)
         if ((clusters[loop].size() < CHEST_SIZE_MAX) && (clusters[loop].size() > CHEST_SIZE_MIN))
             chestClusters.push_back(Cluster(clusters[loop]));
-    if (chestClusters.size()) LOG("%ld chests have been detected\n", chestClusters.size());
+    if (logging && chestClusters.size() > 0) LOG("%ld chests have been detected\n", chestClusters.size());
     return chestClusters;
 }
 
@@ -61,6 +61,7 @@ const std::vector<Point> StatelessDetector::detectPeople(const std::vector<Clust
                 detection.push_back(chestClusters[loopChest].betweenPoint());
             }
         }
+    if (logging && detection.size() > 0) LOG("%ld persons have been detected\n", detection.size());
     return detection;
 }
 
@@ -71,4 +72,4 @@ const std::vector<Point> StatelessDetector::forward(const std::vector<Point>& la
     return detectPeople(legs, chests, topScanReceived);
 }
 
-StatelessDetector::StatelessDetector() {}
+StatelessDetector::StatelessDetector(bool verbose): AbstractDetector(verbose) {}

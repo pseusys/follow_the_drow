@@ -12,3 +12,5 @@ const std::vector<Point> AbstractDetector::forward(const std::vector<Point>& lat
     bool topScanExists = latestTopScan.size() > 0;
     return forward(latestBottomScan, latestTopScan, topScanExists);
 }
+
+AbstractDetector::AbstractDetector(bool verbose): logging(verbose) {}

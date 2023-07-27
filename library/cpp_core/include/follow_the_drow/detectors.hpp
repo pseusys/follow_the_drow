@@ -16,10 +16,8 @@
 
 #define DISTANCE_LEVEL 0.6
 
-#if defined ROS_VERSION
+#if defined ROS_ENVIRONMENT
 #define LOG(...) ROS_INFO(__VA_ARGS__)
-#elif defined QUIET_LOG
-#define LOG(...) do {} while(0)
 #else
 #include <cstdio>
 #define LOG(...) printf(__VA_ARGS__)
@@ -54,9 +52,12 @@ namespace follow_the_drow {
 
     class AbstractDetector {
         protected:
+            const bool logging = true;
             virtual const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) = 0;
 
         public:
+            AbstractDetector(bool verbose);
+
             const std::vector<Point> forward(const std::vector<Point>& latestBottomScan);
             const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan);
     };
@@ -73,6 +74,6 @@ namespace follow_the_drow {
             const std::vector<Point> detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters, bool topScanReceived) const;
 
         public:
-            StatelessDetector();
+            StatelessDetector(bool verbose);
     };
 }

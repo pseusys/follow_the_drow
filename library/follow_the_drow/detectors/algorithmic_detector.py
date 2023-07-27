@@ -12,10 +12,10 @@ class AlgorithmicDetector(Detector):
 
     def __init__(self, type: DetectorType, verbose: bool = True, *args, **kwargs):
         Detector.__init__(self, verbose)
-        self._detector = DetectorFactory(type, laser_minimum, laser_increment)
+        self._detector = DetectorFactory(type, verbose)
 
     def forward_one(self, xb):
-        return self._detector.forward_one(xb)
+        return self._detector.forward_one(xb, laser_minimum, laser_increment)
 
     def forward_all(self, va: DROW_Dataset):
         people = list()

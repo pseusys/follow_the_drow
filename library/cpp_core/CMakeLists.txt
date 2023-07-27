@@ -13,6 +13,10 @@ add_library(FollowTheDrow ${SOURCES})
 target_include_directories(FollowTheDrow PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/follow_the_drow)
 target_link_libraries(FollowTheDrow PRIVATE ${catkin_LIBRARIES})
 
+if(DEFINED ENV{ROS_ROOT})
+target_compile_definitions(FollowTheDrow PRIVATE -DROS_ENVIRONMENT)
+endif()
+
 install(TARGETS FollowTheDrow LIBRARY DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include)
 install(FILES FollowTheDrowConfig.cmake DESTINATION cmake)

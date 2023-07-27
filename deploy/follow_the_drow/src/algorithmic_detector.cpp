@@ -23,7 +23,6 @@ void AlgorithmicDetector::update() const {
     if (!rawDataInitialized) return;
     std::vector<follow_the_drow::Point> points = detector->forward(latestBottomScan, latestTopScan);
     std::vector<geometry_msgs::Point> geometries = std::vector<geometry_msgs::Point>(points.size());
-    ROS_INFO("%ld PERSONS DETECTED!!", points.size());
     for (int i = 0; i < points.size(); i++) geometries[i] = pointToGeometry(points[i]);
 
     follow_the_drow::detection detection;
@@ -31,7 +30,7 @@ void AlgorithmicDetector::update() const {
     detectionData.publish(detection);
 }
 
-AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType detector): DetectorFactory(detector, -1, -1, -1, -1) {
+AlgorithmicDetector::AlgorithmicDetector(const follow_the_drow::DetectorType detector): DetectorFactory(detector, true) {
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &AlgorithmicDetector::rawDataCallback, this);
     detectionData = handle.advertise<follow_the_drow::detection>(ALGORITHMIC_DETECTOR_TOPIC, 1);
 

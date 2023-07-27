@@ -14,7 +14,7 @@ ext_modules = [
         "follow_the_drow.cpp_binding",
         sources=[str(file) for file in Path("cpp_core/sources").glob("*.cpp")],
         include_dirs=[str(Path("cpp_core/include/follow_the_drow"))],
-        define_macros=[("VERSION_INFO", VERSION), ("QUIET_LOG", True)],
+        define_macros=[("VERSION_INFO", VERSION)],
     ),
 ]
 

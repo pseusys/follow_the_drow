@@ -14,7 +14,7 @@ namespace follow_the_drow {
 
     const std::string getStringFromDetectorType(const DetectorType type);
     const DetectorType getDetectorTypeFromString(const std::string string);
-    const std::unique_ptr<AbstractDetector> getDetectorFromDetectorType(const DetectorType type);
+    const std::unique_ptr<AbstractDetector> getDetectorFromDetectorType(const DetectorType type, const bool verbose);
 
 
     class DetectorFactory {
@@ -22,11 +22,10 @@ namespace follow_the_drow {
             const DetectorType type;
 
         protected:
-            double minimumAngle, incrementAngle, minimumRange, maximumRange; // TODO: remove
             const std::unique_ptr<AbstractDetector> detector;
 
         public:
-            DetectorFactory(const DetectorType& detector, double minAngle, double incAngle, double minRanges, double maxRange);
+            DetectorFactory(const DetectorType& detector, const bool verbose);
 
             const std::string typeName() const;
     };
