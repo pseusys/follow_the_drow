@@ -5,10 +5,11 @@ services:
     container_name: ros-desktop-follow-the-drow
     restart: "no"
     privileged: true
-    image: ghcr.io/pseusys/follow_the_drow/follow_the_drow:main
+    image: follow_the_drow
     build:
       context: ../..
       dockerfile: deploy/docker/Dockerfile
+      target: ftd
     volumes:
       - ../out:/~/catkin_ws/out
       - ../config:/~/catkin_ws/src/follow_the_drow/config

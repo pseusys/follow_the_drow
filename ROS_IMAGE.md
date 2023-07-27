@@ -11,12 +11,12 @@ Provided Docker image is aimed to solve the problem.
 ## Image
 
 The image configuration can be found in `deploy/docker` directory.
+You will be interested in `basic` target in Dockerfile; the rest is about `follow_the_drow` library, that is not universally needed.
 The image includes:
 
 - [`GDB`](https://www.sourceware.org/gdb/) for C++ based node debugging.
 - Python 3.8 alongside with `python3-dev` (for Python to C++ interop) `python3-pip` (for external package installation).
 - ROS [`desktop-full`](https://packages.ubuntu.com/jammy/ros-desktop-full) distribution (find out what it includes [here](https://www.ros.org/reps/rep-0003.html#noetic-ninjemys-may-2020-may-2025)).
-- The `library` (see `library` directory), which includes `follow_the_drow` C++ library (`library/cpp_core`) and `follow_the_drow` Python library (`library/follow_the_drow`).
 - Configured `catkin` environment under `/~/catkin_ws` root (set as workdir).
 
 ## Build and Pull
@@ -33,6 +33,10 @@ It can be re-built using make `build-image` target, defined in `Makefile`:
 ```bash
 make build-image
 ```
+
+TODO: add optional argument to add the lib.
+Describe it with:
+The `library` (see `library` directory), which includes `follow_the_drow` C++ library (`library/cpp_core`) and `follow_the_drow` Python library (`library/follow_the_drow`).
 
 TODO: create a release with docker compose config and image with the release tag.
 

@@ -1,4 +1,4 @@
-FROM ros:noetic-ros-base-focal
+FROM ros:noetic-ros-base-focal AS basic
 
 SHELL ["/bin/bash", "-c"]
 
@@ -6,6 +6,17 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install --no-install-recommends -y gdb python3-dev python3-pip ros-noetic-desktop-full && rm -rf /var/lib/apt/lists/*
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+
+ENV ROS_LANG_DISABLE geneus:genlisp:gennodejs
+RUN mkdir -p /~/catkin_ws/src && cd /~/catkin_ws && source /opt/ros/noetic/setup.bash && catkin_make clean && catkin_make && catkin_make install
+WORKDIR /~/catkin_ws
+
+COPY deploy/docker/entrypoint.sh ./
+ENTRYPOINT ["bash", "entrypoint.sh"]
+CMD ["rosversion", "ros"]
+
+
+FROM basic as ftd
 
 COPY library /~
 RUN pip install /~ && find /~ -maxdepth 1 -mindepth 1 ! -name 'cpp_core' -exec rm -rf {} + && mv /~/cpp_core /~/fillow_the_drow_library
@@ -15,11 +26,3 @@ RUN mkdir /~/fillow_the_drow_library/build && cd /~/fillow_the_drow_library/buil
 ENV FollowTheDrow_INCLUDE_DIRS /~/fillow_the_drow_library/include
 ENV FollowTheDrow_LIBRARY_DIRS ${CMAKE_INSTALL_PREFIX}/lib
 ENV FollowTheDrow_DIR ${CMAKE_INSTALL_PREFIX}/cmake
-
-ENV ROS_LANG_DISABLE geneus:genlisp:gennodejs
-RUN mkdir -p /~/catkin_ws/src && cd /~/catkin_ws && source /opt/ros/noetic/setup.bash && catkin_make clean && catkin_make && catkin_make install
-WORKDIR /~/catkin_ws
-
-COPY deploy/docker/entrypoint.sh ./
-ENTRYPOINT ["bash", "entrypoint.sh"]
-CMD ["rosversion", "ros"]
