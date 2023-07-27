@@ -3,8 +3,8 @@ name: BUILD
 on:
   push:
     paths:
-      - deploy/docker/**
-      - library/**
+      - 'deploy/docker/**''
+      - 'library/**''
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
