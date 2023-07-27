@@ -60,8 +60,6 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 6. Fix TODOs
 7. Complete workflows
 8. Follow me: Study inputs, is it first detected human or closest? Create adapter node, input humans, output one human, with modes; first_index, closest, first_detected (with tracking).
-9. Move colors to visualizer.
-10. Remove additional params from Detector CPP.
-11. Remove CPP logging control - move to detector args
-12. Move defines to parameters
-13. Move params and funcs from notebooks to utils
+9. Move colors to visualizer
+10. Move defines to parameters
+11. Clear docker image on make clear
