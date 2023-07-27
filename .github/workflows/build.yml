@@ -5,7 +5,6 @@ on:
     paths:
       - '.github/workflows/**'
       - 'deploy/docker/**'
-      - 'library/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
