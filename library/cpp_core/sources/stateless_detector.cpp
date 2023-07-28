@@ -1,7 +1,6 @@
 // Person detector using 2 lidar data
 // Written by O. Aycard
 
-// TODO: something pythonic?
 #include "detectors.hpp"
 
 using namespace follow_the_drow;

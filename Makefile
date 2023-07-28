@@ -69,5 +69,3 @@ clean:
 	rm -rf deploy/out
 	rm -rf **/__pycache__
 .PHONY: clean
-
-# TODO: add different clean targets

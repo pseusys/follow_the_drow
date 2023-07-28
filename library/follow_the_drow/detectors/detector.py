@@ -13,12 +13,10 @@ class Detector(Logging):
     def init(cls, verbose: bool = True) -> "Detector":
         raise NotImplementedError
 
-    # TODO: single input and output interface
     @abstractmethod
     def forward_one(self, xb):
         raise NotImplementedError
 
-     # TODO: single input and output interface
     @abstractmethod
     def forward_all(self, va: DROW_Dataset):
         raise NotImplementedError

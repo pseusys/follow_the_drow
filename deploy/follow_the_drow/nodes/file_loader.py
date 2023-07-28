@@ -12,11 +12,12 @@ from follow_the_drow.utils.drow_utils import laser_angles
 
 
 class FileLoader:
-    def __init__(self, dataset: Path) -> None:
-        self.dataset = DROW_Dataset(dataset=dataset)
-        loginfo(f"Dataset includes {len(self.dataset.scan_id)} scans and {len(self.dataset.det_id)} detections")
+    def __init__(self, dataset: Path, verbose: bool) -> None:
+        self.dataset = DROW_Dataset(dataset=dataset, verbose=verbose)
         self.raw_data = Publisher(Params.RAW_DATA_TOPIC, raw_data, queue_size=10)
         self.rate = Rate(Params.HEARTBEAT_RATE)
+        if verbose:
+            loginfo(f"Dataset includes {len(self.dataset.scan_id)} scans and {len(self.dataset.det_id)} detections")
 
     def update(self, file_counter, scan_counter):
         bottom_lidar_points = list()
@@ -40,5 +41,5 @@ class FileLoader:
 
 if __name__ == "__main__":
     load_args_for_node(Params.FILE_LOADER)
-    FileLoader(Params.DATASET_PATH).__call__()
+    FileLoader(Params.DATASET_PATH, Params.FILE_LOADER_VERBOSE).__call__()
     spin()

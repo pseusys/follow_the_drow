@@ -12,7 +12,7 @@ from scipy.ndimage import maximum_filter
 from scipy.spatial.distance import cdist
 from scipy.optimize import linear_sum_assignment
 
-from numpy import zeros, arctan, arctan2, square, add, sin, cos, logical_not, concatenate, linspace, sum, mean, argmin, argsort, array, where, full, full_like, arange, clip, unique, radians, float32, int64, uint32, nan, c_, r_
+from numpy import zeros, arctan, arctan2, square, add, sin, cos, logical_not, concatenate, linspace, sum, mean, argmin, argsort, array, where, full, full_like, arange, clip, unique, radians, float64, int64, uint32, nan, c_, r_
 from numpy.typing import NDArray
 
 from cv2 import resize, GaussianBlur, INTER_AREA, INTER_LINEAR
@@ -36,7 +36,7 @@ def cutout(scans, odoms, number, win_sz=1.66, thresh_dist=1, nsamp=48, UNK=29.99
     - out: None or a (T,nsamp) buffer where to store the cutouts.
     """
     T, N = scans.shape
-    out = zeros((number, T, nsamp), float32)
+    out = zeros((number, T, nsamp), float64)
 
     for ipoint in range(number):
         # Compute the size (width) of the window at the last time index:
@@ -44,7 +44,7 @@ def cutout(scans, odoms, number, win_sz=1.66, thresh_dist=1, nsamp=48, UNK=29.99
         half_alpha = float(arctan(0.5*win_sz/z))
 
         # Pre-allocate some buffers
-        SCANBUF = full(N + 1, UNK, float32)  # Pad by UNK for the border-padding by UNK.
+        SCANBUF = full(N + 1, UNK, float64)  # Pad by UNK for the border-padding by UNK.
         for t in range(T):
             # If necessary, compute the odometry of the current time relative to the "key" one.
             odom_x, odom_y, odom_a = map(float, odoms[t]["xya"] - odoms[-1]["xya"])
@@ -241,7 +241,7 @@ def votes_to_detections(xs, ys, probas, weighted_avg=False, min_thresh=1e-5, bin
     vote_combiner = _agnostic_weighted_vote_avg if weighted_avg is True else _vote_avg
     x_range = int((x_max-x_min)/bin_size)
     y_range = int((y_max-y_min)/bin_size)
-    grid = zeros((x_range, y_range, probas.shape[2]), float32)
+    grid = zeros((x_range, y_range, probas.shape[2]), float64)
 
     vote_collect_radius_sq = vote_collect_radius * vote_collect_radius
 

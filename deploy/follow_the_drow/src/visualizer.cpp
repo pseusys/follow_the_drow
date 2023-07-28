@@ -37,7 +37,7 @@ void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, const geom
     marker.colors.push_back(getRGBAFromColor(color));
 }
 
-void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, float x, float y, float z, const Color color) const {
+void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, double x, double y, double z, const Color color) const {
     geometry_msgs::Point point;
     point.x = x;
     point.y = y;
@@ -45,7 +45,7 @@ void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, float x, f
     addPointToMarker(marker, point, color);
 }
 
-visualization_msgs::Marker Visualizer::initMarker(const std::string& topic, float scaleRadius) const {
+visualization_msgs::Marker Visualizer::initMarker(const std::string& topic, double scaleRadius) const {
     visualization_msgs::Marker marker;
 
     marker.header.frame_id = GENERAL_FRAME;

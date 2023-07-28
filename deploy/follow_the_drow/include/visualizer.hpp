@@ -33,9 +33,9 @@ class Visualizer {
         void DROWDetectorCallback(const follow_the_drow::detection::ConstPtr& data);
 
         void addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const;
-        void addPointToMarker(visualization_msgs::Marker& marker, float x, float y, float z, const Color color) const;
+        void addPointToMarker(visualization_msgs::Marker& marker, double x, double y, double z, const Color color) const;
 
-        visualization_msgs::Marker initMarker(const std::string& topic, float scaleRadius) const;
+        visualization_msgs::Marker initMarker(const std::string& topic, double scaleRadius) const;
         void update() const;
 
     public:

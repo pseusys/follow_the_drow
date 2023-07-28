@@ -76,4 +76,6 @@ namespace follow_the_drow {
         public:
             StatelessDetector(bool verbose);
     };
+
+    class StatefullDetector: public StatelessDetector {};
 }

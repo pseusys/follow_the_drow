@@ -11,7 +11,7 @@ Point::Point(double x, double y): Point(x, y, 0) {}
 
 Point::Point(double x, double y, double z): x(x), y(y), z(z) {}
 
-Point::Point(const Point& point): Point(this->x, this->y, this->z) {}
+Point::Point(const Point& point): Point(point.x, point.y, point.z) {}
 
 Point Point::polarToCartesian(double distance, double angle) {
     double x = distance * cos(angle);
@@ -34,4 +34,8 @@ Point Point::middleBetween(const Point& point) const {
     double y = (this->y + point.y) / 2;
     double z = (this->z + point.z) / 2;
     return Point(x, y, z);
+}
+
+std::ostream& operator<<(std::ostream& stream, const Point& point) {
+    return stream << "Point(" << point.x << ", " << point.y << ", " << point.z << ")";
 }

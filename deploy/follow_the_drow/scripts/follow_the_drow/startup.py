@@ -43,6 +43,8 @@ class Params:
     # File loader node arguments
     DATASET_PATH = _property("DATASET_PATH")
     _DATASET_PATH_NAME = "dataset_path"
+    FILE_LOADER_VERBOSE = _property("FILE_LOADER_VERBOSE")
+    _FILE_LOADER_VERBOSE_NAME = "verbose"
 
     # DROW detector node arguments
     DROW_DETECTOR_VERBOSE = _property("DROW_DETECTOR_VERBOSE")
@@ -60,6 +62,7 @@ def load_args_for_node(name: str):
 
     if name == Params.FILE_LOADER:
         Params.DATASET_PATH = get_param(f"/{name}/{Params._DATASET_PATH_NAME}")
+        Params.FILE_LOADER_VERBOSE = get_param(f"/{name}/{Params._FILE_LOADER_VERBOSE_NAME}")
     elif name == Params.DROW_DETECTOR:
         Params.DROW_DETECTOR_VERBOSE = get_param(f"/{name}/{Params._DROW_DETECTOR_VERBOSE_NAME}")
     else:

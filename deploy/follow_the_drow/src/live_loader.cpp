@@ -15,10 +15,10 @@ std::vector<geometry_msgs::Point> LiveLoader::lidarCallback(const sensor_msgs::L
     int nbBeams = ((-1 * scan->angle_min) + scan->angle_max) / scan->angle_increment;
     std::vector<geometry_msgs::Point> latestScan(nbBeams);
 
-    float beamAngle = scan->angle_min;
+    double beamAngle = scan->angle_min;
     for (int loop = 0; loop < nbBeams; loop++, beamAngle += scan->angle_increment) {
         bool measureOutOfRange = (scan->ranges[loop] < scan->range_max) && (scan->ranges[loop] > scan->range_min);
-        float patchedMeasure = measureOutOfRange ? scan->ranges[loop] : scan->range_max;
+        double patchedMeasure = measureOutOfRange ? scan->ranges[loop] : scan->range_max;
 
         latestScan[loop].x = transform[POLAR].x + transform[CARTESIAN].x + patchedMeasure;
         latestScan[loop].y = transform[POLAR].y + transform[CARTESIAN].y + beamAngle;
