@@ -9,15 +9,15 @@ using namespace follow_the_drow;
 
 PythonDetectorFactory::PythonDetectorFactory(const DetectorType& detector, const bool verbose): DetectorFactory(detector, verbose) {}
 
-const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<double>& measures, double minAngle, double incAngle) {
+const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<float>& measures, float minAngle, float incAngle) {
     std::vector<Point> points(measures.size());
-    double measureAngle = minAngle;
+    float measureAngle = minAngle;
     for (int measure = 0; measure < measures.size(); measure++, measureAngle += incAngle) points[measure] = Point::polarToCartesian(measures[measure], measureAngle);
     return points;
 }
 
-double* PythonDetectorFactory::toRawDoubles(std::vector<Point>& points) {
-    double *dump = new double[points.size() * 2];
+float* PythonDetectorFactory::toRawFloats(std::vector<Point>& points) {
+    float *dump = new float[points.size() * 2];
     for (size_t i = 0; i < points.size(); i++) {
         dump[i * 2] = points[i].x;
         dump[i * 2 + 1] = points[i].y;
@@ -25,19 +25,19 @@ double* PythonDetectorFactory::toRawDoubles(std::vector<Point>& points) {
     return dump;
 }
 
-const py::array_t<double> PythonDetectorFactory::forwardOne(const py::array_t<double>& latestBottomScan, double minAngle, double incAngle) {
-    std::vector<double> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
+const py::array_t<float> PythonDetectorFactory::forwardOne(const py::array_t<float>& latestBottomScan, float minAngle, float incAngle) {
+    std::vector<float> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
     std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle));
-    double* raw_dump = PythonDetectorFactory::toRawDoubles(result);
-    return py::array_t<double>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(double), sizeof(double)}, raw_dump);
+    float* raw_dump = PythonDetectorFactory::toRawFloats(result);
+    return py::array_t<float>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(float), sizeof(float)}, raw_dump);
 }
 
-const py::array_t<double> PythonDetectorFactory::forwardBoth(const py::array_t<double>& latestBottomScan, const py::array_t<double>& latestTopScan, double minAngle, double incAngle) {
-    std::vector<double> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
-    std::vector<double> topScan(latestTopScan.data(), latestTopScan.data() + latestTopScan.size());
+const py::array_t<float> PythonDetectorFactory::forwardBoth(const py::array_t<float>& latestBottomScan, const py::array_t<float>& latestTopScan, float minAngle, float incAngle) {
+    std::vector<float> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
+    std::vector<float> topScan(latestTopScan.data(), latestTopScan.data() + latestTopScan.size());
     std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle), PythonDetectorFactory::toPointVector(topScan, minAngle, incAngle));
-    double* raw_dump = PythonDetectorFactory::toRawDoubles(result);
-    return py::array_t<double>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(double), sizeof(double)}, raw_dump);
+    float* raw_dump = PythonDetectorFactory::toRawFloats(result);
+    return py::array_t<float>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(float), sizeof(float)}, raw_dump);
 }
 
 

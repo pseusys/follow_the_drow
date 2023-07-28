@@ -15,7 +15,7 @@ class LiveLoader {
         ros::Subscriber bottomLidar, topLidar, odometry;
         ros::Publisher rawData;
 
-        const std::map<std::string, double> inputTransformData;
+        const std::map<std::string, float> inputTransformData;
         std::array<geometry_msgs::Point, 2> bottomLidarTransform;
         std::array<geometry_msgs::Point, 2> topLidarTransform;
 
@@ -34,6 +34,6 @@ class LiveLoader {
         geometry_msgs::Point setupPointFromParams(std::string paramName) const;
 
     public:
-        LiveLoader(const std::map<std::string, double>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic);
+        LiveLoader(const std::map<std::string, float>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic);
 };
 

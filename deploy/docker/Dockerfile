@@ -22,7 +22,7 @@ COPY library /~
 RUN pip install /~ && find /~ -maxdepth 1 -mindepth 1 ! \( -name 'cpp_core' -o -name 'entrypoint.sh' -o -name 'catkin_ws' \) -exec rm -rf {} + && mv /~/cpp_core /~/fillow_the_drow_library
 
 ENV CMAKE_INSTALL_PREFIX /usr/local
-RUN mkdir /~/fillow_the_drow_library/build && cd /~/fillow_the_drow_library/build && cmake .. && make && make install
+RUN mkdir /~/fillow_the_drow_library/build && cd /~/fillow_the_drow_library/build && source /opt/ros/noetic/setup.bash && cmake .. && make && make install
 ENV FollowTheDrow_INCLUDE_DIRS /~/fillow_the_drow_library/include
 ENV FollowTheDrow_LIBRARY_DIRS ${CMAKE_INSTALL_PREFIX}/lib
 ENV FollowTheDrow_DIR ${CMAKE_INSTALL_PREFIX}/cmake

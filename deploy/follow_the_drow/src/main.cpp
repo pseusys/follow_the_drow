@@ -15,7 +15,7 @@ const std::string ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic"
 std::string DROW_DETECTOR_TOPIC;
 const std::string DROW_DETECTOR_TOPIC_NAME = "drow_detector_topic";
 
-std::map<std::string, double> TRANSFORM_DATA;
+std::map<std::string, float> TRANSFORM_DATA;
 const std::string TRANSFORM_DATA_NAME = "transform_data";
 std::string TOP_LIDAR_TOPIC;
 const std::string TOP_LIDAR_TOPIC_NAME = "top_lidar_topic";
@@ -68,7 +68,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
     std::string prefix = "/" + name + "/";
 
     if (name == LIVE_LOADER) {
-        TRANSFORM_DATA = readFromParams<std::map<std::string, double>>(prefix + TRANSFORM_DATA_NAME);
+        TRANSFORM_DATA = readFromParams<std::map<std::string, float>>(prefix + TRANSFORM_DATA_NAME);
         TOP_LIDAR_TOPIC = readFromParams<std::string>(prefix + TOP_LIDAR_TOPIC_NAME);
         BOTTOM_LIDAR_TOPIC = readFromParams<std::string>(prefix + BOTTOM_LIDAR_TOPIC_NAME);
         ODOMETRY_TOPIC = readFromParams<std::string>(prefix + ODOMETRY_TOPIC_NAME);

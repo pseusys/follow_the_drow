@@ -10,7 +10,7 @@ from json import loads
 from pathlib import Path
 from typing import Union, List, Dict, Tuple
 
-from numpy import genfromtxt, fromregex, where, array, full, array_equal, vectorize, float64, uint32
+from numpy import genfromtxt, fromregex, where, array, full, array_equal, vectorize, float32, uint32
 from numpy.typing import NDArray
 
 from ..utils.file_utils import DROW_DATA_PATH, DROW_TEST_SET
@@ -29,17 +29,17 @@ class DROW_Dataset(Logging):
         filenames = [f"{f.parent}/{f.stem}" for f in dataset_path.glob("*.csv")]
 
         self.scan_id: NDArray[uint32]
-        self.scan_time: NDArray[float64]
-        self.scans: NDArray[float64]
+        self.scan_time: NDArray[float32]
+        self.scans: NDArray[float32]
 
         scan_data = array([self._load_scan(f"{f}.csv", laser_scans) for f in filenames], dtype=object)
         self.scan_id, self.scan_time, self.scans = scan_data.transpose()
         self._print(f"Scans from {dataset}/*.csv loaded!")
 
         self.det_id: NDArray[uint32]
-        self.det_wc: NDArray[float64]
-        self.det_wa: NDArray[float64]
-        self.det_wp: NDArray[float64]
+        self.det_wc: NDArray[float32]
+        self.det_wa: NDArray[float32]
+        self.det_wp: NDArray[float32]
 
         wc_id, self.det_wc = array([self._load_det(f"{f}.wc") for f in filenames], dtype=object).transpose()
         wa_id, self.det_wa = array([self._load_det(f"{f}.wa") for f in filenames], dtype=object).transpose()
@@ -57,7 +57,7 @@ class DROW_Dataset(Logging):
 
     @staticmethod
     def _load_scan(fname: Union[Path, str], laser_scans: int) -> NDArray:
-        return genfromtxt(fname, delimiter=",", dtype=[("id", uint32), ("time", float64), ("scan", float64, laser_scans)], unpack=True)
+        return genfromtxt(fname, delimiter=",", dtype=[("id", uint32), ("time", float32), ("scan", float32, laser_scans)], unpack=True)
 
     @classmethod
     def _load_det(cls, fname: Union[Path, str]) -> Tuple[NDArray, NDArray]:
@@ -66,7 +66,7 @@ class DROW_Dataset(Logging):
 
     @staticmethod
     def _load_odom(fname: Union[Path, str]) -> NDArray:
-        return genfromtxt(fname, delimiter=",", dtype=[("eq", uint32), ("t", float64), ("xya", float64, 3)])
+        return genfromtxt(fname, delimiter=",", dtype=[("eq", uint32), ("t", float32), ("xya", float32, 3)])
 
     def get_scan(self, sequence_id: int, scan_id: int, time_window: int) -> Tuple[NDArray, NDArray]:
         start_time = scan_id - time_window + 1

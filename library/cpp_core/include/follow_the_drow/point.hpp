@@ -5,17 +5,17 @@
 namespace follow_the_drow {
     class Point {
         public:
-            double x, y, z;
+            float x, y, z;
 
             Point();
             Point(const Point& point);
-            Point(double x, double y);
-            Point(double x, double y, double z);
+            Point(float x, float y);
+            Point(float x, float y, float z);
 
-            static Point polarToCartesian(double distance, double angle);
-            static Point cartesianToPolar(double x, double y, double z);
+            static Point polarToCartesian(float distance, float angle);
+            static Point cartesianToPolar(float x, float y, float z);
 
-            double distanceTo(const Point& point) const;
+            float distanceTo(const Point& point) const;
             Point middleBetween(const Point& point) const;
 
             friend std::ostream& operator<<(std::ostream& stream, const Point& point);

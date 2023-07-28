@@ -24,7 +24,7 @@ Cluster::Cluster(const Cluster& cluster):
     pBetween(cluster.pBetween) {}
 
 
-double Cluster::size() const {
+float Cluster::size() const {
     return dSize;
 }
 
@@ -57,7 +57,7 @@ const Point& Cluster::endPoint() const {
 }
 
 
-double Cluster::distanceTo(const Cluster& cluster) const {
+float Cluster::distanceTo(const Cluster& cluster) const {
     return this->pBetween.distanceTo(cluster.pBetween);
 }
 

@@ -15,10 +15,10 @@ std::vector<geometry_msgs::Point> LiveLoader::lidarCallback(const sensor_msgs::L
     int nbBeams = ((-1 * scan->angle_min) + scan->angle_max) / scan->angle_increment;
     std::vector<geometry_msgs::Point> latestScan(nbBeams);
 
-    double beamAngle = scan->angle_min;
+    float beamAngle = scan->angle_min;
     for (int loop = 0; loop < nbBeams; loop++, beamAngle += scan->angle_increment) {
         bool measureOutOfRange = (scan->ranges[loop] < scan->range_max) && (scan->ranges[loop] > scan->range_min);
-        double patchedMeasure = measureOutOfRange ? scan->ranges[loop] : scan->range_max;
+        float patchedMeasure = measureOutOfRange ? scan->ranges[loop] : scan->range_max;
 
         latestScan[loop].x = transform[POLAR].x + transform[CARTESIAN].x + patchedMeasure;
         latestScan[loop].y = transform[POLAR].y + transform[CARTESIAN].y + beamAngle;
@@ -61,7 +61,7 @@ geometry_msgs::Point LiveLoader::setupPointFromParams(std::string paramName) con
     return point;
 }
 
-LiveLoader::LiveLoader(const std::map<std::string, double>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic): inputTransformData(transformData) {
+LiveLoader::LiveLoader(const std::map<std::string, float>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic): inputTransformData(transformData) {
     bottomLidar = handle.subscribe(bottomLidarTopic, 1, &LiveLoader::bottomLidarCallback, this);
     topLidar = handle.subscribe(topLidarTopic, 1, &LiveLoader::topLidarCallback, this);
     odometry = handle.subscribe(odometryLidarTopic, 1, &LiveLoader::odometryCallback, this);

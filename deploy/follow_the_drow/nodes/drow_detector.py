@@ -2,7 +2,7 @@
 
 from collections import deque
 
-from numpy import array, zeros, float64, argmax
+from numpy import array, zeros, float32, argmax
 
 from rospy import Publisher, Subscriber, Rate, is_shutdown, spin
 from geometry_msgs.msg import Point
@@ -34,9 +34,9 @@ class DROWDetector:
         self.data_initialized = False
 
     def callback(self, raw_data):
-        bottom_lidar = array([measure.x for measure in raw_data.bottom_lidar], dtype=float64)
-        top_lidar = array([measure.x for measure in raw_data.top_lidar], dtype=float64)
-        odometry = zeros(1, dtype=[("xya", float64, 3)])
+        bottom_lidar = array([measure.x for measure in raw_data.bottom_lidar], dtype=float32)
+        top_lidar = array([measure.x for measure in raw_data.top_lidar], dtype=float32)
+        odometry = zeros(1, dtype=[("xya", float32, 3)])
         odometry[0]["xya"] = (raw_data.odometry.x, raw_data.odometry.y, raw_data.odometry.z)
         self.dataset.push_measure(bottom_lidar, top_lidar, odometry[0])
         self.data_initialized = True

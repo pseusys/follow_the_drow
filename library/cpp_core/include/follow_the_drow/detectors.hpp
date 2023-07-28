@@ -28,7 +28,7 @@
 namespace follow_the_drow {
     class Cluster {
         private:
-            double dSize;
+            float dSize;
             int iStart, iMiddle, iEnd;
             Point pStart, pMiddle, pEnd, pBetween;
 
@@ -36,7 +36,7 @@ namespace follow_the_drow {
             Cluster(const Cluster& cluster);
             Cluster(int start, int end, const std::vector<Point>& reference);
 
-            double size() const;
+            float size() const;
             int start() const;
             int middle() const;
             int end() const;
@@ -46,7 +46,7 @@ namespace follow_the_drow {
             const Point& betweenPoint() const;
             const Point& endPoint() const;
 
-            double distanceTo(const Cluster& cluster) const;
+            float distanceTo(const Cluster& cluster) const;
             Point middleBetween(const Cluster& cluster) const;
     };
 
