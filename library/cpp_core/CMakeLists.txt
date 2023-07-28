@@ -11,9 +11,11 @@ list(REMOVE_ITEM HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/follow_the_drow/bin
 
 add_library(FollowTheDrow ${SOURCES})
 target_include_directories(FollowTheDrow PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/follow_the_drow)
-target_link_libraries(FollowTheDrow PRIVATE ${catkin_LIBRARIES})
 
 if(DEFINED ENV{ROS_ROOT})
+find_package(catkin REQUIRED COMPONENTS roscpp)
+target_include_directories(FollowTheDrow PRIVATE ${catkin_INCLUDE_DIRS})
+target_link_libraries(FollowTheDrow PRIVATE ${catkin_LIBRARIES})
 target_compile_definitions(FollowTheDrow PRIVATE -DROS_ENVIRONMENT)
 endif()
 

@@ -17,6 +17,7 @@
 #define DISTANCE_LEVEL 0.6
 
 #if defined ROS_ENVIRONMENT
+#include "ros/ros.h"
 #define LOG(...) ROS_INFO(__VA_ARGS__)
 #else
 #include <cstdio>
