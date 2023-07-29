@@ -32,13 +32,13 @@ _DETECTOR_WEIGHTS_PATH = Path(__file__).parent.parent / DROW_WEIGHTS_PATH
 
 
 class DrowDetector(Module, Detector):
-    N_TIME = 5
     N_SAMP = 48
     GPU = False  # This is the GPU index, use 0 for first GPU.
 
-    def __init__(self, dropout: float = 0.5, verbose: bool = True, *args, **kwargs):
+    def __init__(self, dropout: float, time_frame_size: int, verbose: bool, *args, **kwargs):
         Module.__init__(self, *args, **kwargs)
         Detector.__init__(self, verbose)
+        self.time_frame = time_frame_size
 
         self.dropout = dropout
         self.conv1a = Conv1d(1, 64, kernel_size=3, padding=1)
@@ -69,11 +69,11 @@ class DrowDetector(Module, Detector):
         self.reset_parameters()
 
     @classmethod
-    def init(cls, weights_file: Union[Path, str] = _DETECTOR_WEIGHTS_PATH, verbose: bool = True) -> "DrowDetector":
+    def init(cls, weights_file: Union[Path, str] = _DETECTOR_WEIGHTS_PATH, dropout: float = 0.5, time_frame_size: int = DROW_Dataset.TIME_FRAME, verbose: bool = True) -> "DrowDetector":
         map_location = None if cls.GPU else device("cpu")
         weights = load(weights_file, map_location)
 
-        detector = move(cls(verbose=verbose), cls.GPU)
+        detector = move(cls(dropout=dropout, time_frame_size=time_frame_size, verbose=verbose), cls.GPU)
         detector.reset_parameters()
         detector.load_state_dict(weights["model"])
         detector._print(f"Loaded weights from {weights_file}")
@@ -155,7 +155,7 @@ class DrowDetector(Module, Detector):
         for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
             for idet in trange(len(va.det_id[iseq]), desc="Scans", disable=not self._verbose, leave=False):
                 iscan = va.idet2iscan[iseq][idet]
-                scans, odoms = va.get_scan(iseq, iscan, self.N_TIME)
+                scans, odoms = va.get_scan(iseq, iscan, self.time_frame)
                 cut = cutout(scans, odoms, len(va.scans[iseq][iscan]), nsamp=self.N_SAMP)
                 confs, votes = self.forward_one(cut)
                 all_confs.append(confs)

@@ -8,10 +8,9 @@ from .detector import Detector
 
 
 class AlgorithmicDetector(Detector):
-    N_TIME = 5
-
-    def __init__(self, type: DetectorType, verbose: bool = True, *args, **kwargs):
+    def __init__(self, type: DetectorType, time_frame_size: int = DROW_Dataset.TIME_FRAME, verbose: bool = True, *args, **kwargs):
         Detector.__init__(self, verbose)
+        self.time_frame = time_frame_size
         self._detector = DetectorFactory(type, verbose)
 
     def forward_one(self, xb):
@@ -22,6 +21,6 @@ class AlgorithmicDetector(Detector):
         for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
             for idet in trange(len(va.det_id[iseq]), desc="Scans", disable=not self._verbose, leave=False):
                 iscan = va.idet2iscan[iseq][idet]
-                scans, odoms = va.get_scan(iseq, iscan, self.N_TIME)
+                scans, odoms = va.get_scan(iseq, iscan, self.time_frame)
                 people += [self.forward_one(scans[-1])]
         return people

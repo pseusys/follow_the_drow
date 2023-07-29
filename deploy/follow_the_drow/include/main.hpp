@@ -18,6 +18,7 @@ const std::string DROW_DETECTOR = "follow_the_drow_drow_detector";
 // General arguments
 extern int HEARTBEAT_RATE;
 extern std::string RAW_DATA_TOPIC;
+extern std::string ANNOTATED_DATA_TOPIC;
 extern std::string ALGORITHMIC_DETECTOR_TOPIC;
 extern std::string DROW_DETECTOR_TOPIC;
 
@@ -34,6 +35,7 @@ extern std::string GENERAL_FRAME;
 extern bool FLATTEN_OUTPUT;
 extern Color BOTTOM_BACKGROUND_COLOR;
 extern Color TOP_BACKGROUND_COLOR;
+extern Color ANNOTATED_BACKGROUND_COLOR;
 extern Color CENTER_MARKER_COLOR;
 extern Color ALGORITHMIC_DETECTION_COLOR;
 extern Color DROW_DETECTION_COLOR;

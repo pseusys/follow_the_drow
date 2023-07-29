@@ -35,6 +35,8 @@ class Params:
     _HEARTBEAT_RATE_NAME = "heartbeat_rate"
     RAW_DATA_TOPIC = _property("RAW_DATA_TOPIC")
     _RAW_DATA_TOPIC_NAME = "raw_data_topic"
+    ANNOTATED_DATA_TOPIC = _property("ANNOTATED_DATA_TOPIC")
+    _ANNOTATED_DATA_TOPIC_NAME = "annotated_data_topic"
     ALGORITHMIC_DETECTOR_TOPIC = _property("ALGORITHMIC_DETECTOR_TOPIC")
     _ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic"
     DROW_DETECTOR_TOPIC = _property("DROW_DETECTOR_TOPIC")
@@ -45,25 +47,33 @@ class Params:
     _DATASET_PATH_NAME = "dataset_path"
     FILE_LOADER_VERBOSE = _property("FILE_LOADER_VERBOSE")
     _FILE_LOADER_VERBOSE_NAME = "verbose"
+    FILE_LOADER_PERSONS_ONLY = _property("FILE_LOADER_PERSONS_ONLY")
+    _FILE_LOADER_PERSONS_ONLY_NAME = "persons_only"
 
     # DROW detector node arguments
     DROW_DETECTOR_VERBOSE = _property("DROW_DETECTOR_VERBOSE")
     _DROW_DETECTOR_VERBOSE_NAME = "verbose"
     DROW_DETECTOR_PERSONS_ONLY = _property("DROW_DETECTOR_PERSONS_ONLY")
     _DROW_DETECTOR_PERSONS_ONLY_NAME = "persons_only"
+    DROW_DETECTOR_THRESHOLD = _property("DROW_DETECTOR_THRESHOLD")
+    _DROW_DETECTOR_THRESHOLD_NAME = "threshold"
 
 
 def load_args_for_node(name: str):
     init_node(name)
     Params.HEARTBEAT_RATE = get_param(f"/{Params._HEARTBEAT_RATE_NAME}")
     Params.RAW_DATA_TOPIC = get_param(f"/{Params._RAW_DATA_TOPIC_NAME}")
+    Params.ANNOTATED_DATA_TOPIC = get_param(f"/{Params._ANNOTATED_DATA_TOPIC_NAME}")
     Params.ALGORITHMIC_DETECTOR_TOPIC = get_param(f"/{Params._ALGORITHMIC_DETECTOR_TOPIC_NAME}")
     Params.DROW_DETECTOR_TOPIC = get_param(f"/{Params._DROW_DETECTOR_TOPIC_NAME}")
 
     if name == Params.FILE_LOADER:
         Params.DATASET_PATH = get_param(f"/{name}/{Params._DATASET_PATH_NAME}")
         Params.FILE_LOADER_VERBOSE = get_param(f"/{name}/{Params._FILE_LOADER_VERBOSE_NAME}")
+        Params.FILE_LOADER_PERSONS_ONLY = get_param(f"/{name}/{Params._FILE_LOADER_PERSONS_ONLY_NAME}")
     elif name == Params.DROW_DETECTOR:
         Params.DROW_DETECTOR_VERBOSE = get_param(f"/{name}/{Params._DROW_DETECTOR_VERBOSE_NAME}")
+        Params.DROW_DETECTOR_PERSONS_ONLY = get_param(f"/{name}/{Params._DROW_DETECTOR_PERSONS_ONLY_NAME}")
+        Params.DROW_DETECTOR_THRESHOLD = get_param(f"/{name}/{Params._DROW_DETECTOR_THRESHOLD_NAME}")
     else:
         raise RuntimeError(f"Unknown node name '{name}'!")

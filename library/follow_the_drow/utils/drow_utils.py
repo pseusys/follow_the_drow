@@ -290,10 +290,6 @@ def votes_to_detections(xs, ys, probas, weighted_avg=False, min_thresh=1e-5, bin
         b_array = concatenate([sum(probs[:,1:], axis=-1, keepdims=True), probs[:,1:]], axis=-1)
         add.at(grid, (x_idx, y_idx), b_array)
 
-        #for idx, (nix, niy) in enumerate(zip(x_idx, y_idx)):
-        #    for index in range(len(grid[nix][niy])):
-        #        grid[nix][niy][index] += b_array[idx][index]
-
         # Find the maxima (NMS) only in the "common" voting grid.
         grid_all = grid[:,:,0]
         if blur_win is not None and blur_sigma is not None:

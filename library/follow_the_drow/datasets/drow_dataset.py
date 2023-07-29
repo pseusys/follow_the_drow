@@ -21,10 +21,12 @@ _DATASET_PATH = Path(__file__).parent.parent / DROW_DATA_PATH
 
 
 class DROW_Dataset(Logging):
+    TIME_FRAME = 5
     _LOAD_JSON_VECTOR = vectorize(loads, otypes=[object])
 
-    def __init__(self, datapath: Union[Path, str] = _DATASET_PATH, dataset: Union[Path, str] = DROW_TEST_SET, laser_scans: int = laser_measures, verbose: bool = True):
+    def __init__(self, datapath: Union[Path, str] = _DATASET_PATH, dataset: Union[Path, str] = DROW_TEST_SET, laser_scans: int = laser_measures, time_frame_size: int = TIME_FRAME, verbose: bool = True):
         Logging.__init__(self, verbose)
+        self.time_frame = time_frame_size
         dataset_path = Path(datapath) / Path(dataset)
         filenames = [f"{f.parent}/{f.stem}" for f in dataset_path.glob("*.csv")]
 

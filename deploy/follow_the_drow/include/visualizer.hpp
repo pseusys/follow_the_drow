@@ -13,22 +13,24 @@
 class Visualizer {
     private:
         ros::NodeHandle handle;
-        ros::Subscriber rawData, algorithmicDetector, DROWDetector;
+        ros::Subscriber rawData, annotatedData, algorithmicDetector, DROWDetector;
         ros::Publisher backVisualizer, frontVisualizer;
         const std::string frontTopic, backTopic;
 
         bool flattenOutput = false;
-        Color bottomBackground, topBackground, centerMarker;
+        Color bottomBackground, topBackground, annotatedBackground, centerMarker;
         Color algorithmicDetection, DROWDetection;
 
-        std::vector<geometry_msgs::Point> latestBottomScan, latestTopScan;
+        std::vector<geometry_msgs::Point> latestBottomScan, latestTopScan, latestAnnotation;
         std::vector<geometry_msgs::Point> algorithmicDetectorData, DROWDetectorData;
 
         bool scanReceived = false;
+        bool annotatedReceived = false;
         bool algorithmicReceived = false;
         bool DROWReceived = false;
 
         void rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data);
+        void annotatedDataCallback(const follow_the_drow::detection::ConstPtr& data);
         void algorithmicDetectorCallback(const follow_the_drow::detection::ConstPtr& data);
         void DROWDetectorCallback(const follow_the_drow::detection::ConstPtr& data);
 
@@ -39,5 +41,5 @@ class Visualizer {
         void update() const;
 
     public:
-        Visualizer(Color bottom, Color top, Color center, Color algorithmic, Color drow, bool flatten, const std::string& front, const std::string& back);
+        Visualizer(Color bottom, Color top, Color annotated, Color center, Color algorithmic, Color drow, bool flatten, const std::string& front, const std::string& back);
 };
