@@ -1,7 +1,5 @@
 #!/usr/bin python3
 
-from collections import deque
-
 from numpy import array, zeros, float32, argmax, any
 
 from rospy import Publisher, Subscriber, Rate, is_shutdown, spin

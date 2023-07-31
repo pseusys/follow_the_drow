@@ -8,7 +8,7 @@ _ReturnType = Union[Tuple[Any, ...], Any]
 
 DROW_DATA_PATH = Path("include/DROWv2-data")
 DROW_TRAIN_SET = Path("train")
-DROW_VALIDATION_SET= Path("val")
+DROW_VALIDATION_SET = Path("val")
 DROW_TEST_SET = Path("test")
 DROW_WEIGHTS_PATH = Path("include/weights.pth.tar")
 
