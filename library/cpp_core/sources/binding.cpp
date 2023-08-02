@@ -1,8 +1,11 @@
+#include <cassert>
+
 #include <pybind11/pybind11.h>
 
 #include "binding.hpp"
 
 #define STRINGIFY(x) #x
+#define assertm(exp, msg) assert(((void)msg, exp))
 
 using namespace follow_the_drow;
 
@@ -16,6 +19,11 @@ const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<float>
     return points;
 }
 
+const Point PythonDetectorFactory::toPoint(std::vector<float>& measures) {
+    assertm(measures.size() == 3, "Odometry point array length should be equal to 3!");
+    return Point(measures[0], measures[1], measures[2]);
+}
+
 float* PythonDetectorFactory::toRawFloats(std::vector<Point>& points) {
     float *dump = new float[points.size() * 2];
     for (size_t i = 0; i < points.size(); i++) {
@@ -25,17 +33,19 @@ float* PythonDetectorFactory::toRawFloats(std::vector<Point>& points) {
     return dump;
 }
 
-const py::array_t<float> PythonDetectorFactory::forwardOne(const py::array_t<float>& latestBottomScan, float minAngle, float incAngle) {
+const py::array_t<float> PythonDetectorFactory::forwardOne(const py::array_t<float>& latestBottomScan, const py::array_t<float>& latestOdometry, float minAngle, float incAngle) {
     std::vector<float> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
-    std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle));
+    std::vector<float> odometry(latestOdometry.data(), latestOdometry.data() + latestOdometry.size());
+    std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle), PythonDetectorFactory::toPoint(odometry));
     float* raw_dump = PythonDetectorFactory::toRawFloats(result);
     return py::array_t<float>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(float), sizeof(float)}, raw_dump);
 }
 
-const py::array_t<float> PythonDetectorFactory::forwardBoth(const py::array_t<float>& latestBottomScan, const py::array_t<float>& latestTopScan, float minAngle, float incAngle) {
+const py::array_t<float> PythonDetectorFactory::forwardBoth(const py::array_t<float>& latestBottomScan, const py::array_t<float>& latestTopScan, const py::array_t<float>& latestOdometry, float minAngle, float incAngle) {
     std::vector<float> bottomScan(latestBottomScan.data(), latestBottomScan.data() + latestBottomScan.size());
     std::vector<float> topScan(latestTopScan.data(), latestTopScan.data() + latestTopScan.size());
-    std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle), PythonDetectorFactory::toPointVector(topScan, minAngle, incAngle));
+    std::vector<float> odometry(latestOdometry.data(), latestOdometry.data() + latestOdometry.size());
+    std::vector<Point> result = detector->forward(PythonDetectorFactory::toPointVector(bottomScan, minAngle, incAngle), PythonDetectorFactory::toPointVector(topScan, minAngle, incAngle), PythonDetectorFactory::toPoint(odometry));
     float* raw_dump = PythonDetectorFactory::toRawFloats(result);
     return py::array_t<float>(std::vector<int>{result.size(), 2}, std::vector<int>{2 * sizeof(float), sizeof(float)}, raw_dump);
 }

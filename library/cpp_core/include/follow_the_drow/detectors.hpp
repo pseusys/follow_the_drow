@@ -2,27 +2,7 @@
 
 #include <vector>
 
-#include "point.hpp"
-
-#define CLUSTER_THRESHOLD 0.2
-
-#define LEG_SIZE_MIN 0.0
-#define LEG_SIZE_MAX 0.2
-#define LEGS_DISTANCE_MIN 0.05
-#define LEGS_DISTANCE_MAX 0.7
-
-#define CHEST_SIZE_MIN 0.3
-#define CHEST_SIZE_MAX 0.8
-
-#define DISTANCE_LEVEL 0.6
-
-#if defined ROS_ENVIRONMENT
-#include "ros/ros.h"
-#define LOG(...) ROS_INFO(__VA_ARGS__)
-#else
-#include <cstdio>
-#define LOG(...) printf(__VA_ARGS__)
-#endif
+#include "tracked.hpp"
 
 
 namespace follow_the_drow {
@@ -54,29 +34,37 @@ namespace follow_the_drow {
     class AbstractDetector {
         protected:
             const bool logging = true;
-            virtual const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) = 0;
+            virtual const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived, const Point& odometry, bool odometryReceived) = 0;
 
         public:
             AbstractDetector(bool verbose);
 
             const std::vector<Point> forward(const std::vector<Point>& latestBottomScan);
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const Point& odometry);
             const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan);
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, const Point& odometry);
     };
 
 
     class StatelessDetector: public AbstractDetector {
-        protected:
-            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived) override;
-
         private:
+            Point previousPosition;
+            std::vector<Tracked> previousPeople;
+
             const std::vector<Cluster> performClustering(const std::vector<Point>& storage) const;
             const std::vector<Cluster> detectLegs(const std::vector<Cluster>& clusters) const;
             const std::vector<Cluster> detectChests(const std::vector<Cluster>& clusters) const;
             const std::vector<Point> detectPeople(const std::vector<Cluster>& legClusters, const std::vector<Cluster>& chestClusters, bool topScanReceived) const;
 
+            const std::vector<Tracked> estimatePreviousPeople(const Point& newOdometry);
+            const std::vector<Tracked> pullAssociatedPeople(std::vector<Point>& detectedPeople, const std::vector<Tracked>& estimatedPrevious);
+            const std::vector<Tracked> trackDetectedPeople(const std::vector<Point>& detectedPeople);
+            const std::vector<Point> getCurrentlyDetectedPeople();
+
+        protected:
+            const std::vector<Point> forward(const std::vector<Point>& latestBottomScan, const std::vector<Point>& latestTopScan, bool topScanReceived, const Point& odometry, bool odometryReceived) override;
+
         public:
             StatelessDetector(bool verbose);
     };
-
-    class StatefullDetector: public StatelessDetector {};
 }

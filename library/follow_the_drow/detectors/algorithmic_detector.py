@@ -13,8 +13,8 @@ class AlgorithmicDetector(Detector):
         self.time_frame = time_frame_size
         self._detector = DetectorFactory(type, verbose)
 
-    def forward_one(self, xb):
-        return self._detector.forward_one(xb, laser_minimum, laser_increment)
+    def forward_one(self, scans, odoms):
+        return self._detector.forward_one(scans, odoms, laser_minimum, laser_increment)
 
     def forward_all(self, va: DROW_Dataset):
         people = list()
@@ -22,5 +22,6 @@ class AlgorithmicDetector(Detector):
             for idet in trange(len(va.det_id[iseq]), desc="Scans", disable=not self._verbose, leave=False):
                 iscan = va.idet2iscan[iseq][idet]
                 scans, odoms = va.get_scan(iseq, iscan, self.time_frame)
-                people += [self.forward_one(scans[-1])]
+                for scan, odom in zip(scans, odoms):
+                    people += [self.forward_one(scan, odom["xya"])]
         return people

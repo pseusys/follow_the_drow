@@ -39,3 +39,11 @@ Point Point::middleBetween(const Point& point) const {
 std::ostream& operator<<(std::ostream& stream, const Point& point) {
     return stream << "Point(" << point.x << ", " << point.y << ", " << point.z << ")";
 }
+
+Point Point::operator+(const Point& point) const {
+    return Point(this->x + point.x, this->y + point.y, this->z + point.z);
+}
+
+Point Point::operator-(const Point& point) const {
+    return Point(this->x - point.x, this->y - point.y, this->z - point.z);
+}

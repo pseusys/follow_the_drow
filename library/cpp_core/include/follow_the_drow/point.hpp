@@ -19,5 +19,7 @@ namespace follow_the_drow {
             Point middleBetween(const Point& point) const;
 
             friend std::ostream& operator<<(std::ostream& stream, const Point& point);
+            Point operator+(const Point& point) const;
+            Point operator-(const Point& point) const;
     };
 }
