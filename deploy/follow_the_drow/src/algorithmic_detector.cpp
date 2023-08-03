@@ -33,7 +33,7 @@ void AlgorithmicDetector::update() {
     detectionData.publish(detection);
 }
 
-AlgorithmicDetector::AlgorithmicDetector(bool logging): detector(follow_the_drow::AlgorithmicDetector(logging)) {
+AlgorithmicDetector::AlgorithmicDetector(int frequencyInit, int frequencyMax, float uncertaintyMax, float uncertaintyMin, float uncertaintyInc, float clusterThreshold, float distanceLevel, float legSizeMin, float legSizeMax, float chestSizeMin, float chestSizeMax, float legsDistanceMin, float legsDistanceMax, bool logging): detector(follow_the_drow::AlgorithmicDetector(logging, frequencyInit, frequencyMax, uncertaintyMax, uncertaintyMin, uncertaintyInc, clusterThreshold, distanceLevel, legSizeMin, legSizeMax, chestSizeMin, chestSizeMax, legsDistanceMin, legsDistanceMax)) {
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &AlgorithmicDetector::rawDataCallback, this);
     detectionData = handle.advertise<follow_the_drow::detection>(ALGORITHMIC_DETECTOR_TOPIC, 1);
 
@@ -48,7 +48,7 @@ AlgorithmicDetector::AlgorithmicDetector(bool logging): detector(follow_the_drow
 
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, ALGORITHMIC_DETECTOR);
-    AlgorithmicDetector bsObject(ALGORITHMIC_DETECOR_VERBOSE);
+    AlgorithmicDetector bsObject(FREQUENCY_INIT, FREQUENCY_MAX, UNCERTAINTY_MAX, UNCERTAINTY_MIN, UNCERTAINTY_INC, CLUSTER_THRESHOLD, DISTANCE_LEVEL, LEG_SIZE_MIN, LEG_SIZE_MAX, CHEST_SIZE_MIN, CHEST_SIZE_MAX, LEGS_DISTANCE_MIN, LEGS_DISTANCE_MAX, ALGORITHMIC_DETECOR_VERBOSE);
     ros::spin();
     return 0;
 }

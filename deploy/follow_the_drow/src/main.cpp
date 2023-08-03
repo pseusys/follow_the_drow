@@ -47,6 +47,32 @@ const std::string BACK_VISUALIZATION_TOPIC_NAME = "back_visualization_topic";
 std::string FRONT_VISUALIZATION_TOPIC;
 const std::string FRONT_VISUALIZATION_TOPIC_NAME = "front_visualization_topic";
 
+int FREQUENCY_INIT;
+const std::string FREQUENCY_INIT_NAME = "frequency_init";
+int FREQUENCY_MAX;
+const std::string FREQUENCY_MAX_NAME = "frequency_max";
+float UNCERTAINTY_MAX;
+const std::string UNCERTAINTY_MAX_NAME = "uncertainty_max";
+float UNCERTAINTY_MIN;
+const std::string UNCERTAINTY_MIN_NAME = "uncertainty_min";
+float UNCERTAINTY_INC;
+const std::string UNCERTAINTY_INC_NAME = "uncertainty_inc";
+float CLUSTER_THRESHOLD;
+const std::string CLUSTER_THRESHOLD_NAME = "cluster_threshold";
+float DISTANCE_LEVEL;
+const std::string DISTANCE_LEVEL_NAME = "distance_level";
+float LEG_SIZE_MIN;
+const std::string LEG_SIZE_MIN_NAME = "leg_size_min";
+float LEG_SIZE_MAX;
+const std::string LEG_SIZE_MAX_NAME = "leg_size_max";
+float CHEST_SIZE_MIN;
+const std::string CHEST_SIZE_MIN_NAME = "chest_size_min";
+float CHEST_SIZE_MAX;
+const std::string CHEST_SIZE_MAX_NAME = "chest_size_max";
+float LEGS_DISTANCE_MIN;
+const std::string LEGS_DISTANCE_MIN_NAME = "legs_distance_min";
+float LEGS_DISTANCE_MAX;
+const std::string LEGS_DISTANCE_MAX_NAME = "legs_distance_max";
 bool ALGORITHMIC_DETECOR_VERBOSE;
 const std::string ALGORITHMIC_DETECOR_VERBOSE_NAME = "verbose";
 
@@ -87,6 +113,19 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
         BACK_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + BACK_VISUALIZATION_TOPIC_NAME);
         FRONT_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + FRONT_VISUALIZATION_TOPIC_NAME);
     } else if (name == ALGORITHMIC_DETECTOR) {
+        FREQUENCY_INIT = readFromParams<int>(prefix + FREQUENCY_INIT_NAME);
+        FREQUENCY_MAX = readFromParams<int>(prefix + FREQUENCY_MAX_NAME);
+        UNCERTAINTY_MAX = readFromParams<float>(prefix + UNCERTAINTY_MAX_NAME);
+        UNCERTAINTY_MIN = readFromParams<float>(prefix + UNCERTAINTY_MIN_NAME);
+        UNCERTAINTY_INC = readFromParams<float>(prefix + UNCERTAINTY_INC_NAME);
+        CLUSTER_THRESHOLD = readFromParams<float>(prefix + CLUSTER_THRESHOLD_NAME);
+        DISTANCE_LEVEL = readFromParams<float>(prefix + DISTANCE_LEVEL_NAME);
+        LEG_SIZE_MIN = readFromParams<float>(prefix + LEG_SIZE_MIN_NAME);
+        LEG_SIZE_MAX = readFromParams<float>(prefix + LEG_SIZE_MAX_NAME);
+        CHEST_SIZE_MIN = readFromParams<float>(prefix + CHEST_SIZE_MIN_NAME);
+        CHEST_SIZE_MAX = readFromParams<float>(prefix + CHEST_SIZE_MAX_NAME);
+        LEGS_DISTANCE_MIN = readFromParams<float>(prefix + LEGS_DISTANCE_MIN_NAME);
+        LEGS_DISTANCE_MAX = readFromParams<float>(prefix + LEGS_DISTANCE_MAX_NAME);
         ALGORITHMIC_DETECOR_VERBOSE = readFromParams<bool>(prefix + ALGORITHMIC_DETECOR_VERBOSE_NAME);
     } else throw std::runtime_error("Unknown node name '" + name + "'!");
 }

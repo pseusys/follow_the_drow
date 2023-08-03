@@ -7,25 +7,6 @@
 
 using namespace follow_the_drow;
 
-#define FREQUENCY_INIT 5
-#define FREQUENCY_MAX 25
-
-#define UNCERTAINTY_MIN 1
-#define UNCERTAINTY_MAX 1
-#define UNCERTAINTY_INC 0.05
-
-#define CLUSTER_THRESHOLD 0.1
-
-#define LEG_SIZE_MIN 0.05
-#define LEG_SIZE_MAX 0.25
-#define LEGS_DISTANCE_MIN 0.0
-#define LEGS_DISTANCE_MAX 0.7
-
-#define CHEST_SIZE_MIN 0.3
-#define CHEST_SIZE_MAX 0.8
-
-#define DISTANCE_LEVEL 0.6
-
 #if defined ROS_ENVIRONMENT
 #include "ros/ros.h"
 #define LOG(...) ROS_INFO(__VA_ARGS__)
@@ -39,7 +20,7 @@ const std::vector<Cluster> AlgorithmicDetector::performClustering(const std::vec
     std::vector<Cluster> clusters;
     int clusterStart = 0;
     for (int loop = 1; loop < storage.size(); loop++)
-        if (storage[loop-1].distanceTo(storage[loop]) >= CLUSTER_THRESHOLD) {
+        if (storage[loop-1].distanceTo(storage[loop]) >= clusterThreshold) {
             clusters.push_back(Cluster(clusterStart, loop - 1, storage));
             clusterStart = loop;
         }
@@ -51,7 +32,7 @@ const std::vector<Cluster> AlgorithmicDetector::performClustering(const std::vec
 const std::vector<Cluster> AlgorithmicDetector::detectLegs(const std::vector<Cluster>& clusters) const {
     std::vector<Cluster> legClusters;
     for (int loop = 0; loop < clusters.size(); loop++)
-        if ((clusters[loop].size() < LEG_SIZE_MAX) && (clusters[loop].size() > LEG_SIZE_MIN))
+        if ((clusters[loop].size() < legSizeMax) && (clusters[loop].size() > legSizeMin))
             legClusters.push_back(Cluster(clusters[loop]));
     if (verbose && legClusters.size() > 0) LOG("%ld legs have been detected\n", legClusters.size());
     return legClusters;
@@ -60,7 +41,7 @@ const std::vector<Cluster> AlgorithmicDetector::detectLegs(const std::vector<Clu
 const std::vector<Cluster> AlgorithmicDetector::detectChests(const std::vector<Cluster>& clusters) const {
     std::vector<Cluster> chestClusters;
     for (int loop = 0; loop < clusters.size(); loop++)
-        if ((clusters[loop].size() < CHEST_SIZE_MAX) && (clusters[loop].size() > CHEST_SIZE_MIN))
+        if ((clusters[loop].size() < chestSizeMax) && (clusters[loop].size() > chestSizeMin))
             chestClusters.push_back(Cluster(clusters[loop]));
     if (verbose && chestClusters.size() > 0) LOG("%ld chests have been detected\n", chestClusters.size());
     return chestClusters;
@@ -72,7 +53,7 @@ const std::vector<Point> AlgorithmicDetector::detectPeople(const std::vector<Clu
     for (int loopLeftLeg = 0; loopLeftLeg < legClusters.size(); loopLeftLeg++)
         for (int loopRightLeg = loopLeftLeg + 1; loopRightLeg < legClusters.size(); loopRightLeg++) {
             float twoLegsDistance = legClusters[loopLeftLeg].distanceTo(legClusters[loopRightLeg]);
-            bool personLegsDetected = (twoLegsDistance > LEGS_DISTANCE_MIN && twoLegsDistance < LEGS_DISTANCE_MAX);
+            bool personLegsDetected = (twoLegsDistance > legsDistanceMin && twoLegsDistance < legsDistanceMax);
             if (!personLegsDetected) continue;
 
             if (!topScanReceived) {
@@ -83,7 +64,7 @@ const std::vector<Point> AlgorithmicDetector::detectPeople(const std::vector<Clu
             for (int loopChest = 0; loopChest < chestClusters.size(); loopChest++) {
                 float leftChestDistance = legClusters[loopLeftLeg].distanceTo(chestClusters[loopChest]);
                 float rightChestDistance = legClusters[loopRightLeg].distanceTo(chestClusters[loopChest]);
-                bool personChestDetected = (leftChestDistance < DISTANCE_LEVEL) && (rightChestDistance < DISTANCE_LEVEL);
+                bool personChestDetected = (leftChestDistance < distanceLevel) && (rightChestDistance < distanceLevel);
                 if (!personChestDetected) continue;
 
                 detection.push_back(chestClusters[loopChest].betweenPoint());
@@ -113,7 +94,7 @@ const std::vector<Tracked> AlgorithmicDetector::pullAssociatedPeople(std::vector
     std::vector<Tracked> associated;
     for (int prevLoop = 0; prevLoop < estimatedPrevious.size(); prevLoop++) {
         int associatedIndex = -1;
-        float minDistance = UNCERTAINTY_MAX;
+        float minDistance = uncertaintyMax;
         for (int detLoop = 0; detLoop < detectedPeople.size(); detLoop++) {
             float distance = estimatedPrevious[prevLoop].distanceTo(detectedPeople[detLoop]);
             if (distance < minDistance) {
@@ -122,12 +103,12 @@ const std::vector<Tracked> AlgorithmicDetector::pullAssociatedPeople(std::vector
             }
         }
         if (associatedIndex != -1) {
-            associated.push_back(Tracked(detectedPeople[associatedIndex], FREQUENCY_INIT, FREQUENCY_MAX));
+            associated.push_back(Tracked(detectedPeople[associatedIndex], frequencyInit, uncertaintyMin));
             detectedPeople.erase(detectedPeople.begin() + associatedIndex);
         } else {
-            float uncertainty = estimatedPrevious[prevLoop].uncertainty + UNCERTAINTY_INC;
+            float uncertainty = estimatedPrevious[prevLoop].uncertainty + uncertaintyInc;
             int frequency = estimatedPrevious[prevLoop].frequency + 1;
-            if (frequency > FREQUENCY_MAX) associated.push_back(Tracked(estimatedPrevious[prevLoop], frequency, uncertainty));
+            if (frequency < frequencyMax) associated.push_back(Tracked(estimatedPrevious[prevLoop], frequency, uncertainty));
         }
     }
     return associated;
@@ -135,14 +116,14 @@ const std::vector<Tracked> AlgorithmicDetector::pullAssociatedPeople(std::vector
 
 const std::vector<Tracked> AlgorithmicDetector::trackDetectedPeople(const std::vector<Point>& detectedPeople) {
     std::vector<Tracked> tracked = previousPeople;
-    for (int loop = 0; loop < detectedPeople.size(); loop++) tracked.push_back(Tracked(detectedPeople[loop], FREQUENCY_INIT, FREQUENCY_MAX));
+    for (int loop = 0; loop < detectedPeople.size(); loop++) tracked.push_back(Tracked(detectedPeople[loop], frequencyInit, uncertaintyMin));
     return tracked;
 }
 
 const std::vector<Point> AlgorithmicDetector::getCurrentlyDetectedPeople() {
     std::vector<Point> current;
     for (int loop = 0; loop < previousPeople.size(); loop++)
-        if (previousPeople[loop].frequency == FREQUENCY_INIT)
+        if (previousPeople[loop].frequency == frequencyInit)
             current.push_back(previousPeople[loop]);
     return current;
 }
@@ -185,4 +166,4 @@ const std::vector<Point> AlgorithmicDetector::forward(const std::vector<Point>& 
     return forward(latestBottomScan, latestTopScan, topScanExists, odometry, true);
 }
 
-AlgorithmicDetector::AlgorithmicDetector(bool logging): verbose(logging) {}
+AlgorithmicDetector::AlgorithmicDetector(bool logging, int freqInit, int freqMax, float uncertMax, float uncertMin, float uncertInc, float clustThresh, float distLevel, float legSizMin, float legSizMax, float chestSizMin, float chestSizMax, float legsDistMin, float legsDistMax): verbose(logging), frequencyInit(freqInit), frequencyMax(freqMax), uncertaintyMax(uncertMax), uncertaintyMin(uncertMin), uncertaintyInc(uncertInc), clusterThreshold(clustThresh), distanceLevel(distLevel), legSizeMin(legSizMin), legSizeMax(legSizMax), chestSizeMin(chestSizMin), chestSizeMax(chestSizMax), legsDistanceMin(legsDistMin), legsDistanceMax(legsDistMax) {}

@@ -25,6 +25,19 @@
 		<param name="front_visualization_topic" value="$(optenv FRONT_VISUALIZATION_TOPIC visualization_front)" />
 	</node>
 	<node name="follow_the_drow_algorithmic_detector" pkg="follow_the_drow" type="algorithmic_detector" output="screen" launch-prefix="gdb -batch -ex run -ex bt --args" if="$(optenv ALGORITHMIC_DETECTOR true)">
+		<param name="frequency_init" value="$(optenv ALGORITHMIC_DETECTOR_FREQUENCY_INIT 5)" />
+		<param name="frequency_max" value="$(optenv ALGORITHMIC_DETECTOR_FREQUENCY_MAX 25)" />
+		<param name="uncertainty_max" value="$(optenv ALGORITHMIC_DETECTOR_UNCERTAINTY_MAX 1)" />
+		<param name="uncertainty_min" value="$(optenv ALGORITHMIC_DETECTOR_UNCERTAINTY_MIN 3)" />
+		<param name="uncertainty_inc" value="$(optenv ALGORITHMIC_DETECTOR_UNCERTAINTY_INC 0.05)" />
+		<param name="cluster_threshold" value="$(optenv ALGORITHMIC_DETECTOR_CLUSTER_THRESHOLD 0.1)" />
+		<param name="distance_level" value="$(optenv ALGORITHMIC_DETECTOR_DISTANCE_LEVEL 0.6)" />
+		<param name="leg_size_min" value="$(optenv ALGORITHMIC_DETECTOR_LEG_SIZE_MIN 0.05)" />
+		<param name="leg_size_max" value="$(optenv ALGORITHMIC_DETECTOR_LEG_SIZE_MAX 0.25)" />
+		<param name="chest_size_min" value="$(optenv ALGORITHMIC_DETECTOR_CHEST_SIZE_MIN 0.3)" />
+		<param name="chest_size_max" value="$(optenv ALGORITHMIC_DETECTOR_CHEST_SIZE_MAX 0.8)" />
+		<param name="legs_distance_min" value="$(optenv ALGORITHMIC_DETECTOR_LEGS_DISTANCE_MIN 0)" />
+		<param name="legs_distance_max" value="$(optenv ALGORITHMIC_DETECTOR_LEGS_DISTANCE_MAX 0.7)" />
 		<param name="verbose" value="$(optenv ALGORITHMIC_DETECTOR_VERBOSE true)" />
 	</node>
 	<node name="follow_the_drow_drow_detector" pkg="follow_the_drow" type="drow_detector.py" output="screen" if="$(optenv DROW_DETECTOR true)">

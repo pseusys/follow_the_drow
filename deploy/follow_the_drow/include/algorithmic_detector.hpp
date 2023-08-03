@@ -27,5 +27,5 @@ class AlgorithmicDetector {
         void update();
     
     public:
-        AlgorithmicDetector(bool logging);
+        AlgorithmicDetector(int frequencyInit, int frequencyMax, float uncertaintyMax, float uncertaintyMin, float uncertaintyInc, float clusterThreshold, float distanceLevel, float legSizeMin, float legSizeMax, float chestSizeMin, float chestSizeMax, float legsDistanceMin, float legsDistanceMax, bool logging);
 };
