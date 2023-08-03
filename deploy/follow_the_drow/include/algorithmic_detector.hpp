@@ -7,24 +7,25 @@
 #include "nav_msgs/Odometry.h"
 
 #include "follow_the_drow/raw_data.h"
-#include "follow_the_drow/detector_factory.hpp"
+#include "follow_the_drow/detector.hpp"
 
 
-class AlgorithmicDetector: follow_the_drow::DetectorFactory {
+class AlgorithmicDetector {
     private:
+        follow_the_drow::AlgorithmicDetector detector;
+
         ros::NodeHandle handle;
         ros::Subscriber rawData;
         ros::Publisher detectionData;
 
         std::vector<follow_the_drow::Point> latestBottomScan, latestTopScan;
+        follow_the_drow::Point latestOdometry;
 
         bool rawDataInitialized = false;
         void rawDataCallback(const follow_the_drow::raw_data::ConstPtr& data);
 
-        // Convert polar to Points
-        // Run forward
-        void update() const;
+        void update();
     
     public:
-        AlgorithmicDetector(const follow_the_drow::DetectorType detector, const bool verbose);
+        AlgorithmicDetector(bool logging);
 };

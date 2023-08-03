@@ -47,8 +47,6 @@ const std::string BACK_VISUALIZATION_TOPIC_NAME = "back_visualization_topic";
 std::string FRONT_VISUALIZATION_TOPIC;
 const std::string FRONT_VISUALIZATION_TOPIC_NAME = "front_visualization_topic";
 
-follow_the_drow::DetectorType ALGORITHMIC_DETECOR_TYPE;
-const std::string ALGORITHMIC_DETECOR_TYPE_NAME = "detector_type";
 bool ALGORITHMIC_DETECOR_VERBOSE;
 const std::string ALGORITHMIC_DETECOR_VERBOSE_NAME = "verbose";
 
@@ -89,7 +87,6 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
         BACK_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + BACK_VISUALIZATION_TOPIC_NAME);
         FRONT_VISUALIZATION_TOPIC = readFromParams<std::string>(prefix + FRONT_VISUALIZATION_TOPIC_NAME);
     } else if (name == ALGORITHMIC_DETECTOR) {
-        ALGORITHMIC_DETECOR_TYPE = readFromParams<follow_the_drow::DetectorType>(prefix + ALGORITHMIC_DETECOR_TYPE_NAME, &follow_the_drow::getDetectorTypeFromString);
         ALGORITHMIC_DETECOR_VERBOSE = readFromParams<bool>(prefix + ALGORITHMIC_DETECOR_VERBOSE_NAME);
     } else throw std::runtime_error("Unknown node name '" + name + "'!");
 }

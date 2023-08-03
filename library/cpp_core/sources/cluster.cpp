@@ -1,4 +1,4 @@
-#include "detectors.hpp"
+#include "detector.hpp"
 
 using namespace follow_the_drow;
 

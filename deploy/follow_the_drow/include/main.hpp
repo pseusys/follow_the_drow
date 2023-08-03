@@ -3,8 +3,6 @@
 #include <map>
 #include <string>
 
-#include "follow_the_drow/detector_factory.hpp"
-
 #include "colors.hpp"
 
 
@@ -43,5 +41,4 @@ extern std::string BACK_VISUALIZATION_TOPIC;
 extern std::string FRONT_VISUALIZATION_TOPIC;
 
 // Algorithmic detector node arguments
-extern follow_the_drow::DetectorType ALGORITHMIC_DETECOR_TYPE;
 extern bool ALGORITHMIC_DETECOR_VERBOSE;

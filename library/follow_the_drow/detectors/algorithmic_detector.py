@@ -2,19 +2,19 @@ from tqdm.auto import trange
 
 from ..datasets import DROW_Dataset
 from ..utils.drow_utils import laser_minimum, laser_increment
-from ..cpp_binding import DetectorFactory, DetectorType
+from ..cpp_binding import DetectorFactory
 
 from .detector import Detector
 
 
 class AlgorithmicDetector(Detector):
-    def __init__(self, type: DetectorType, time_frame_size: int = DROW_Dataset.TIME_FRAME, verbose: bool = True, *args, **kwargs):
+    def __init__(self, time_frame_size: int = DROW_Dataset.TIME_FRAME, verbose: bool = True, *args, **kwargs):
         Detector.__init__(self, verbose)
         self.time_frame = time_frame_size
-        self._detector = DetectorFactory(type, verbose)
+        self._detector = DetectorFactory(laser_minimum, laser_increment, verbose)
 
     def forward_one(self, scans, odoms):
-        return self._detector.forward_one(scans, odoms, laser_minimum, laser_increment)
+        return self._detector.forward_one(scans, odoms)
 
     def forward_all(self, va: DROW_Dataset):
         people = list()
