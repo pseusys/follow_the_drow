@@ -41,4 +41,17 @@ extern std::string BACK_VISUALIZATION_TOPIC;
 extern std::string FRONT_VISUALIZATION_TOPIC;
 
 // Algorithmic detector node arguments
+extern int FREQUENCY_INIT;
+extern int FREQUENCY_MAX;
+extern float UNCERTAINTY_MAX;
+extern float UNCERTAINTY_MIN;
+extern float UNCERTAINTY_INC;
+extern float CLUSTER_THRESHOLD;
+extern float DISTANCE_LEVEL;
+extern float LEG_SIZE_MIN;
+extern float LEG_SIZE_MAX;
+extern float CHEST_SIZE_MIN;
+extern float CHEST_SIZE_MAX;
+extern float LEGS_DISTANCE_MIN;
+extern float LEGS_DISTANCE_MAX;
 extern bool ALGORITHMIC_DETECOR_VERBOSE;

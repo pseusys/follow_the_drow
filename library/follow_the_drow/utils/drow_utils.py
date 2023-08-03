@@ -343,5 +343,13 @@ def _process_detections(det_x, det_y, det_p, det_f, wcs, was, wps, eval_r):
 
 def comp_prec_rec_softmax(scans, wcs, was, wps, pred_conf, pred_offs, eval_r=0.5, **v2d_kw):
     x, y = prepare_prec_rec_softmax(scans, pred_offs)
-    det_x, det_y, det_p, det_f = _deep2flat(votes_to_detections(x, y, pred_conf, **v2d_kw))
+    lols = votes_to_detections(x, y, pred_conf, **v2d_kw)
+    det_x, det_y, det_p, det_f = _deep2flat(lols)
+    return _process_detections(det_x, det_y, det_p, det_f, wcs, was, wps, eval_r)
+
+
+def calc_prec_rec_softmax(wcs, was, wps, predictions, eval_r=0.5):
+    std_prob = array([0, 0, 0, 1], dtype=float32)
+    deep = [[(p[:, 0][i], p[:, 1][i], std_prob.copy()) for i in range(len(p))] for p in predictions]
+    det_x, det_y, det_p, det_f = _deep2flat(deep)
     return _process_detections(det_x, det_y, det_p, det_f, wcs, was, wps, eval_r)

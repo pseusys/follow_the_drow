@@ -10,7 +10,7 @@
 using namespace follow_the_drow;
 
 
-PythonDetectorFactory::PythonDetectorFactory(float minAng, float incAng, bool logging): minAngle(minAng), incAngle(incAng), detector(AlgorithmicDetector(logging)) {}
+PythonDetectorFactory::PythonDetectorFactory(float minAng, float incAng, int frequencyInit, int frequencyMax, float uncertaintyMax, float uncertaintyMin, float uncertaintyInc, float clusterThreshold, float distanceLevel, float legSizeMin, float legSizeMax, float chestSizeMin, float chestSizeMax, float legsDistanceMin, float legsDistanceMax, bool logging): minAngle(minAng), incAngle(incAng), detector(AlgorithmicDetector(logging, frequencyInit, frequencyMax, uncertaintyMax, uncertaintyMin, uncertaintyInc, clusterThreshold, distanceLevel, legSizeMin, legSizeMax, chestSizeMin, chestSizeMax, legsDistanceMin, legsDistanceMax)) {}
 
 const std::vector<Point> PythonDetectorFactory::toPointVector(std::vector<float>& measures) {
     std::vector<Point> points(measures.size());
@@ -60,7 +60,7 @@ PYBIND11_MODULE(cpp_binding, m) {
     )pbdoc";
 
     py::class_<PythonDetectorFactory>(m, "DetectorFactory")
-        .def(py::init<float, float, bool>())
+        .def(py::init<float, float, int, int, float, float, float, float, float, float, float, float, float, float, float, bool>())
         .def("forward_one", &PythonDetectorFactory::forwardOne, py::return_value_policy::take_ownership)
         .def("forward_both", &PythonDetectorFactory::forwardBoth, py::return_value_policy::take_ownership)
         .def("__repr__",

@@ -50,7 +50,7 @@ def _peakf1(recs, precs):
 
 def _eer(recs, precs):
     # Find the first nonzero or else (0,0) will be the EER :)
-    p1 =  where(precs != 0)[0][0]
+    p1 = where(precs != 0)[0][0]
     r1 = where(recs != 0)[0][0]
     idx = argmin(abs(precs[p1:] - recs[r1:]))
     return (precs[p1+idx] + recs[r1+idx])/2  # They are often the exact same, but if not, use average.
