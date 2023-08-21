@@ -54,5 +54,5 @@ class FileLoader:
 
 if __name__ == "__main__":
     load_args_for_node(Params.FILE_LOADER)
-    FileLoader(Params.DATASET_PATH, Params.FILE_LOADER_PERSONS_ONLY, Params.FILE_LOADER_VERBOSE).__call__()
+    FileLoader(Params.FILE_LOADER_DATASET_PATH, Params.FILE_LOADER_PERSONS_ONLY, Params.FILE_LOADER_VERBOSE).__call__()
     spin()

@@ -87,6 +87,7 @@ def load_args_for_node(name: str):
     Params.ANNOTATED_DATA_TOPIC = get_param(f"/{Params._ANNOTATED_DATA_TOPIC_NAME}")
     Params.ALGORITHMIC_DETECTOR_TOPIC = get_param(f"/{Params._ALGORITHMIC_DETECTOR_TOPIC_NAME}")
     Params.DROW_DETECTOR_TOPIC = get_param(f"/{Params._DROW_DETECTOR_TOPIC_NAME}")
+    Params.DATA_ANNOTATION_RATE = get_param(f"/{Params._DATA_ANNOTATION_RATE_NAME}")
     Params.GENERAL_FRAME = get_param(f"/{Params._GENERAL_FRAME_NAME}")
 
     if name == Params.FILE_LOADER:
