@@ -80,7 +80,7 @@ void Visualizer::update() const {
         backVisualizer.publish(backMarker);
     }
 
-    visualization_msgs::Marker frontMarker = initMarker(frontTopic, DETECTION_RADIUS);;
+    visualization_msgs::Marker frontMarker = initMarker(frontTopic, DETECTION_RADIUS);
 
     if (annotatedReceived)
         for (int loop = 0; loop < latestAnnotation.size(); loop++)

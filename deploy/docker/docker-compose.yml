@@ -22,6 +22,8 @@ services:
     environment:
       - ROS_MASTER_URI=http://${ROBAIR_IP}:11311
       - ROS_IP=${CONTAINER_IP}
+      # Output files path
+      - OUTPUT_PATH=/~/catkin_ws/out
       # Some environment variables required for RVIZ GUI
       - DISPLAY=${DISPLAY}
       - NVIDIA_VISIBLE_DEVICES=all

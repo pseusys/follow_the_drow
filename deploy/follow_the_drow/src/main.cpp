@@ -16,6 +16,10 @@ std::string ALGORITHMIC_DETECTOR_TOPIC;
 const std::string ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic";
 std::string DROW_DETECTOR_TOPIC;
 const std::string DROW_DETECTOR_TOPIC_NAME = "drow_detector_topic";
+int DATA_ANNOTATION_RATE;
+const std::string DATA_ANNOTATION_RATE_NAME = "data_annotation_rate";
+std::string GENERAL_FRAME;
+const std::string GENERAL_FRAME_NAME = "general_frame";
 
 std::map<std::string, float> TRANSFORM_DATA;
 const std::string TRANSFORM_DATA_NAME = "transform_data";
@@ -26,8 +30,6 @@ const std::string BOTTOM_LIDAR_TOPIC_NAME = "bottom_lidar_topic";
 std::string ODOMETRY_TOPIC;
 const std::string ODOMETRY_TOPIC_NAME = "odometry_topic";
 
-std::string GENERAL_FRAME;
-const std::string GENERAL_FRAME_NAME = "general_frame";
 bool FLATTEN_OUTPUT;
 const std::string FLATTEN_OUTPUT_NAME = "flatten_output";
 Color BOTTOM_BACKGROUND_COLOR;
@@ -94,6 +96,8 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
     ANNOTATED_DATA_TOPIC = readFromParams<std::string>("/" + ANNOTATED_DATA_TOPIC_NAME);
     ALGORITHMIC_DETECTOR_TOPIC = readFromParams<std::string>("/" + ALGORITHMIC_DETECTOR_TOPIC_NAME);
     DROW_DETECTOR_TOPIC = readFromParams<std::string>("/" + DROW_DETECTOR_TOPIC_NAME);
+    DATA_ANNOTATION_RATE = readFromParams<int>("/" + DATA_ANNOTATION_RATE_NAME);
+    GENERAL_FRAME = readFromParams<std::string>("/" + GENERAL_FRAME_NAME);
     std::string prefix = "/" + name + "/";
 
     if (name == LIVE_LOADER) {
@@ -102,7 +106,6 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
         BOTTOM_LIDAR_TOPIC = readFromParams<std::string>(prefix + BOTTOM_LIDAR_TOPIC_NAME);
         ODOMETRY_TOPIC = readFromParams<std::string>(prefix + ODOMETRY_TOPIC_NAME);
     } else if (name == VISUALIZER) {
-        GENERAL_FRAME = readFromParams<std::string>(prefix + GENERAL_FRAME_NAME);
         FLATTEN_OUTPUT = readFromParams<bool>(prefix + FLATTEN_OUTPUT_NAME);
         BOTTOM_BACKGROUND_COLOR = readFromParams<Color>(prefix + BOTTOM_BACKGROUND_COLOR_NAME, &getColorFromString);
         TOP_BACKGROUND_COLOR = readFromParams<Color>(prefix + TOP_BACKGROUND_COLOR_NAME, &getColorFromString);

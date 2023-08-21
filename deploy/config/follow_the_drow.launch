@@ -1,5 +1,10 @@
 <launch>
-	<node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d $(find follow_the_drow)/config/visualization.rviz" />
+	<group if="$(optenv DATA_ANNOTATOR false)">
+        <node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d $(find follow_the_drow)/config/annotation.rviz" />
+    </group>
+	<group unless="$(optenv DATA_ANNOTATOR false)">
+        <node name="rviz_rviz" pkg="rviz" type="rviz" output="log" required="true" if="$(optenv RVIZ_RVIZ true)" args="-d $(find follow_the_drow)/config/visualization.rviz" />
+    </group>
 	<node name="rosbag_play" pkg="rosbag" type="play" output="log" if="$(optenv ROSBAG_PLAY false)" args="-l /~/catkin_ws/out/$(env RECORD_LOCATION latest.bag)" />
 	<node name="follow_the_drow_live_loader" pkg="follow_the_drow" type="live_loader" output="screen" launch-prefix="gdb -batch -ex run -ex bt --args" if="$(optenv LIVE_LOADER true)">
 		<rosparam param="transform_data" file="$(find follow_the_drow)/config/robair_transform.yaml" />
@@ -8,12 +13,11 @@
 		<param name="odometry_topic" value="$(optenv ODOMETRY_TOPIC odom)" />
 	</node>
 	<node name="follow_the_drow_file_loader" pkg="follow_the_drow" type="file_loader.py" output="screen" if="$(optenv FILE_LOADER false)">
-		<param name="dataset_path" value="$(optenv DATASET_PATH test)" />
+		<param name="dataset_path" value="$(optenv FILE_LOADER_DATASET_PATH test)" />
 		<param name="verbose" value="$(optenv FILE_LOADER_VERBOSE true)" />
 		<param name="persons_only" value="$(optenv FILE_LOADER_PERSONS_ONLY true)" />
 	</node>
 	<node name="follow_the_drow_visualizer" pkg="follow_the_drow" type="visualizer" output="screen" launch-prefix="gdb -batch -ex run -ex bt --args" if="$(optenv VISUALIZER true)">
-		<param name="general_frame" value="$(optenv GENERAL_FRAME base_link)" />
 		<param name="flatten_output" value="$(optenv FLATTEN_OUTPUT true)" />
 		<param name="bottom_backgorund_color" value="$(optenv BOTTOM_BACKGROUND_COLOR blue)" />
 		<param name="top_backgorund_color" value="$(optenv TOP_BACKGROUND_COLOR cyan)" />
@@ -41,13 +45,23 @@
 		<param name="verbose" value="$(optenv ALGORITHMIC_DETECTOR_VERBOSE true)" />
 	</node>
 	<node name="follow_the_drow_drow_detector" pkg="follow_the_drow" type="drow_detector.py" output="screen" if="$(optenv DROW_DETECTOR true)">
-		<param name="verbose" value="$(optenv DROW_DETECTOR_VERBOSE true)" />
 		<param name="persons_only" value="$(optenv DROW_DETECTOR_PERSONS_ONLY true)" />
 		<param name="threshold" value="$(optenv DROW_DETECTOR_THRESHOLD 0.5)" />
+		<param name="verbose" value="$(optenv DROW_DETECTOR_VERBOSE true)" />
+	</node>
+	<node name="follow_the_drow_data_annotator" pkg="follow_the_drow" type="data_annotator.py" output="screen" if="$(optenv DATA_ANNOTATOR false)">
+		<param name="dataset_path" value="$(optenv DATA_ANNOTATOR_DATASET_PATH train)" />
+		<param name="backgorund_color" value="$(optenv DATA_BACKGROUND_COLOR blue)" />
+		<param name="annotated_color" value="$(optenv DATA_ANNOTATED_COLOR red)" />
+		<param name="visualization_topic" value="$(optenv DATA_VISUALIZATION_TOPIC annotation_data)" />
+		<param name="output_file" value="$(optenv ANNOTATION_FILE *.csv)" />
+		<param name="verbose" value="$(optenv DATA_ANNOTATOR_VERBOSE true)" />
 	</node>
 	<param name="heartbeat_rate" value="$(optenv HEARTBEAT_RATE 10)" />
 	<param name="raw_data_topic" value="$(optenv RAW_DATA_TOPIC raw_data)" />
 	<param name="annotated_data_topic" value="$(optenv ANNOTATED_DATA_TOPIC raw_data)" />
 	<param name="algorithmic_detector_topic" value="$(optenv ALGORITHMIC_DETECTOR_TOPIC algorithmic_detector)" />
 	<param name="drow_detector_topic" value="$(optenv DROW_DETECTOR_TOPIC drow_detector)" />
+	<param name="data_annotation_rate" value="$(optenv DATA_ANNOTATION_RATE 5)" />
+	<param name="general_frame" value="$(optenv GENERAL_FRAME base_link)" />
 </launch>

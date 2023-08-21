@@ -72,5 +72,6 @@ target_link_libraries(algorithmic_detector ${catkin_LIBRARIES} FollowTheDrow)
 catkin_install_python(PROGRAMS
   nodes/file_loader.py
   nodes/drow_detector.py
+  nodes/data_annotator.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

@@ -28,13 +28,13 @@ class DROW_Dataset(Logging):
         Logging.__init__(self, verbose)
         self.time_frame = time_frame_size
         dataset_path = Path(datapath) / Path(dataset)
-        filenames = [f"{f.parent}/{f.stem}" for f in dataset_path.glob("*.csv")]
+        self.filenames = [f"{f.parent}/{f.stem}" for f in dataset_path.glob("*.csv")]
 
         self.scan_id: NDArray[uint32]
         self.scan_time: NDArray[float32]
         self.scans: NDArray[float32]
 
-        scan_data = array([self._load_scan(f"{f}.csv", laser_scans) for f in filenames], dtype=object)
+        scan_data = array([self._load_scan(f"{f}.csv", laser_scans) for f in self.filenames], dtype=object)
         self.scan_id, self.scan_time, self.scans = scan_data.transpose()
         self._print(f"Scans from {dataset}/*.csv loaded!")
 
@@ -43,9 +43,9 @@ class DROW_Dataset(Logging):
         self.det_wa: NDArray[float32]
         self.det_wp: NDArray[float32]
 
-        wc_id, self.det_wc = array([self._load_det(f"{f}.wc") for f in filenames], dtype=object).transpose()
-        wa_id, self.det_wa = array([self._load_det(f"{f}.wa") for f in filenames], dtype=object).transpose()
-        wp_id, self.det_wp = array([self._load_det(f"{f}.wp") for f in filenames], dtype=object).transpose()
+        wc_id, self.det_wc = array([self._load_det(f"{f}.wc") for f in self.filenames], dtype=object).transpose()
+        wa_id, self.det_wa = array([self._load_det(f"{f}.wa") for f in self.filenames], dtype=object).transpose()
+        wp_id, self.det_wp = array([self._load_det(f"{f}.wp") for f in self.filenames], dtype=object).transpose()
         assert all(array_equal(a, b) and array_equal(a, c) for a, b, c in zip(wc_id, wa_id, wp_id)), "Dataset corrupt!"
         self.det_id = wc_id
         self._print(f"Detections from {dataset}/*.[wc|wa|wp] loaded!")
@@ -53,7 +53,7 @@ class DROW_Dataset(Logging):
         self.odoms: NDArray
         self.idet2iscan: List[Dict[int, int]]
 
-        self.odoms = array([self._load_odom(f"{f}.odom2") for f in filenames], dtype=object)
+        self.odoms = array([self._load_odom(f"{f}.odom2") for f in self.filenames], dtype=object)
         self.idet2iscan = [{i: where(sid == d)[0][0] for i, d in enumerate(did)} for sid, did in zip(self.scan_id, self.det_id)]
         self._print(f"Detections from {dataset}/*.odom2 loaded!")
 

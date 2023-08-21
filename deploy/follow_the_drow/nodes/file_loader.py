@@ -14,7 +14,7 @@ from follow_the_drow.utils.drow_utils import laser_angles
 class FileLoader:
     def __init__(self, dataset: Path, persons_only: bool, verbose: bool) -> None:
         self.persons_only = persons_only
-        self.dataset = DROW_Dataset(dataset=dataset, verbose=verbose)
+        self.dataset = DROW_Dataset(dataset=dataset, time_frame_size=Params.DATA_ANNOTATION_RATE, verbose=verbose)
         self.raw_data = Publisher(Params.RAW_DATA_TOPIC, raw_data, queue_size=10)
         self.annotated_data = Publisher(Params.ANNOTATED_DATA_TOPIC, detection, queue_size=10)
         self.rate = Rate(Params.HEARTBEAT_RATE)

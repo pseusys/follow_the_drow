@@ -25,7 +25,7 @@ class DROWDetector:
     def __init__(self, persons_only: bool, threshold: float, verbose: bool) -> None:
         self.persons_only = persons_only
         self.threshold = threshold
-        self.dataset = LiveDataset(verbose=verbose)
+        self.dataset = LiveDataset(time_frame_size=Params.DATA_ANNOTATION_RATE, verbose=verbose)
         self.detector = DrowDetector.init(time_frame_size=self.dataset.time_frame, verbose=verbose)
         self.drow_data = Publisher(Params.DROW_DETECTOR_TOPIC, detection, queue_size=1)
         self.raw_data = Subscriber(Params.RAW_DATA_TOPIC, raw_data, self.callback, queue_size=10)

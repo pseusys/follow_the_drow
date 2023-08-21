@@ -19,6 +19,8 @@ extern std::string RAW_DATA_TOPIC;
 extern std::string ANNOTATED_DATA_TOPIC;
 extern std::string ALGORITHMIC_DETECTOR_TOPIC;
 extern std::string DROW_DETECTOR_TOPIC;
+extern int DATA_ANNOTATION_RATE;
+extern std::string GENERAL_FRAME;
 
 void loadArgumentsForNode(int argc, char** argv, const std::string& name);
 
@@ -29,7 +31,6 @@ extern std::string BOTTOM_LIDAR_TOPIC;
 extern std::string ODOMETRY_TOPIC;
 
 // Visualizer node arguments
-extern std::string GENERAL_FRAME;
 extern bool FLATTEN_OUTPUT;
 extern Color BOTTOM_BACKGROUND_COLOR;
 extern Color TOP_BACKGROUND_COLOR;
