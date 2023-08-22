@@ -55,7 +55,7 @@ link_directories(
   $ENV{FollowTheDrow_LIBRARY_DIRS}
 )
 
-set(UTIL_SOURCES src/main.cpp src/utils.cpp src/colors.cpp)
+set(UTIL_SOURCES src/main.cpp src/utils.cpp src/colors.cpp src/tracker.cpp)
 
 add_executable(live_loader src/live_loader.cpp ${UTIL_SOURCES})
 add_dependencies(live_loader ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

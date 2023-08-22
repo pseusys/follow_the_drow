@@ -4,6 +4,7 @@
 #include <string>
 
 #include "colors.hpp"
+#include "tracker.hpp"
 
 
 // Node names
@@ -19,6 +20,7 @@ extern std::string RAW_DATA_TOPIC;
 extern std::string ANNOTATED_DATA_TOPIC;
 extern std::string ALGORITHMIC_DETECTOR_TOPIC;
 extern std::string DROW_DETECTOR_TOPIC;
+extern std::string FOLLOW_ME_BEHAVIOR_TOPIC;
 extern int DATA_ANNOTATION_RATE;
 extern std::string GENERAL_FRAME;
 
@@ -55,4 +57,5 @@ extern float CHEST_SIZE_MIN;
 extern float CHEST_SIZE_MAX;
 extern float LEGS_DISTANCE_MIN;
 extern float LEGS_DISTANCE_MAX;
+extern TrackerPolicy ALGORITHMIC_DETECTOR_TRACKING_POLICY;
 extern bool ALGORITHMIC_DETECOR_VERBOSE;

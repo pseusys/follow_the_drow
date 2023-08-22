@@ -16,6 +16,8 @@ std::string ALGORITHMIC_DETECTOR_TOPIC;
 const std::string ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic";
 std::string DROW_DETECTOR_TOPIC;
 const std::string DROW_DETECTOR_TOPIC_NAME = "drow_detector_topic";
+std::string FOLLOW_ME_BEHAVIOR_TOPIC;
+const std::string FOLLOW_ME_BEHAVIOR_TOPIC_NAME = "follow_me_behavior_topic";
 int DATA_ANNOTATION_RATE;
 const std::string DATA_ANNOTATION_RATE_NAME = "data_annotation_rate";
 std::string GENERAL_FRAME;
@@ -75,6 +77,8 @@ float LEGS_DISTANCE_MIN;
 const std::string LEGS_DISTANCE_MIN_NAME = "legs_distance_min";
 float LEGS_DISTANCE_MAX;
 const std::string LEGS_DISTANCE_MAX_NAME = "legs_distance_max";
+TrackerPolicy ALGORITHMIC_DETECTOR_TRACKING_POLICY;
+const std::string ALGORITHMIC_DETECTOR_TRACKING_POLICY_NAME = "tracking_policy";
 bool ALGORITHMIC_DETECOR_VERBOSE;
 const std::string ALGORITHMIC_DETECOR_VERBOSE_NAME = "verbose";
 
@@ -96,6 +100,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
     ANNOTATED_DATA_TOPIC = readFromParams<std::string>("/" + ANNOTATED_DATA_TOPIC_NAME);
     ALGORITHMIC_DETECTOR_TOPIC = readFromParams<std::string>("/" + ALGORITHMIC_DETECTOR_TOPIC_NAME);
     DROW_DETECTOR_TOPIC = readFromParams<std::string>("/" + DROW_DETECTOR_TOPIC_NAME);
+    FOLLOW_ME_BEHAVIOR_TOPIC = readFromParams<std::string>("/" + FOLLOW_ME_BEHAVIOR_TOPIC_NAME);
     DATA_ANNOTATION_RATE = readFromParams<int>("/" + DATA_ANNOTATION_RATE_NAME);
     GENERAL_FRAME = readFromParams<std::string>("/" + GENERAL_FRAME_NAME);
     std::string prefix = "/" + name + "/";
@@ -129,6 +134,7 @@ void loadArgumentsForNode(int argc, char** argv, const std::string& name) {
         CHEST_SIZE_MAX = readFromParams<float>(prefix + CHEST_SIZE_MAX_NAME);
         LEGS_DISTANCE_MIN = readFromParams<float>(prefix + LEGS_DISTANCE_MIN_NAME);
         LEGS_DISTANCE_MAX = readFromParams<float>(prefix + LEGS_DISTANCE_MAX_NAME);
+        ALGORITHMIC_DETECTOR_TRACKING_POLICY = readFromParams<TrackerPolicy>(prefix + ALGORITHMIC_DETECTOR_TRACKING_POLICY_NAME, &getTrackerPolicyFromString);
         ALGORITHMIC_DETECOR_VERBOSE = readFromParams<bool>(prefix + ALGORITHMIC_DETECOR_VERBOSE_NAME);
     } else throw std::runtime_error("Unknown node name '" + name + "'!");
 }
