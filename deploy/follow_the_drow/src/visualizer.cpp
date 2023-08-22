@@ -35,6 +35,12 @@ void Visualizer::DROWDetectorCallback(const follow_the_drow::detection::ConstPtr
     DROWReceived = true;
 }
 
+void Visualizer::followMeCallback(const geometry_msgs::Point::ConstPtr& data) {
+    latestFollowMe.x = data->x;
+    latestFollowMe.y = data->y;
+    followMeReceived = true;
+}
+
 void Visualizer::addPointToMarker(visualization_msgs::Marker& marker, const geometry_msgs::Point& point, const Color color) const {
     geometry_msgs::Point copy = point;
     if (flattenOutput) copy.z = 0;
@@ -94,17 +100,21 @@ void Visualizer::update() const {
         for (int loop = 0; loop < DROWDetectorData.size(); loop++)
             addPointToMarker(frontMarker, DROWDetectorData[loop], DROWDetection);
 
+    if (followMeReceived)
+        addPointToMarker(frontMarker, latestFollowMe, myFollower);
+
     addPointToMarker(frontMarker, 0, 0, 0, centerMarker);
     frontVisualizer.publish(frontMarker);
 }
 
-Visualizer::Visualizer(Color bottom, Color top, Color annotated, Color center, Color algorithmic, Color drow, bool flatten, const std::string& front, const std::string& back): bottomBackground(bottom), topBackground(top), annotatedBackground(annotated), centerMarker(center), algorithmicDetection(algorithmic), DROWDetection(drow), flattenOutput(flatten), frontTopic(front), backTopic(back) {
+Visualizer::Visualizer(Color bottom, Color top, Color annotated, Color center, Color algorithmic, Color drow, Color follower, bool flatten, const std::string& front, const std::string& back): bottomBackground(bottom), topBackground(top), annotatedBackground(annotated), centerMarker(center), algorithmicDetection(algorithmic), DROWDetection(drow), myFollower(follower), flattenOutput(flatten), frontTopic(front), backTopic(back) {
     backVisualizer = handle.advertise<visualization_msgs::Marker>(backTopic, 1);
     frontVisualizer = handle.advertise<visualization_msgs::Marker>(frontTopic, 1);
     rawData = handle.subscribe(RAW_DATA_TOPIC, 1, &Visualizer::rawDataCallback, this);
     annotatedData = handle.subscribe(ANNOTATED_DATA_TOPIC, 1, &Visualizer::annotatedDataCallback, this);
     algorithmicDetector = handle.subscribe(ALGORITHMIC_DETECTOR_TOPIC, 1, &Visualizer::algorithmicDetectorCallback, this);
     DROWDetector = handle.subscribe(DROW_DETECTOR_TOPIC, 1, &Visualizer::DROWDetectorCallback, this);
+    followMe = handle.subscribe(FOLLOW_ME_BEHAVIOR_TOPIC, 1, &Visualizer::followMeCallback, this);
 
     ros::Rate rate(HEARTBEAT_RATE);
     while (ros::ok()) {
@@ -117,7 +127,7 @@ Visualizer::Visualizer(Color bottom, Color top, Color annotated, Color center, C
 
 int main(int argc, char **argv) {
     loadArgumentsForNode(argc, argv, VISUALIZER);
-    Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, ANNOTATED_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, DROW_DETECTION_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
+    Visualizer bsObject(BOTTOM_BACKGROUND_COLOR, TOP_BACKGROUND_COLOR, ANNOTATED_BACKGROUND_COLOR, CENTER_MARKER_COLOR, ALGORITHMIC_DETECTION_COLOR, DROW_DETECTION_COLOR, FOLLOW_ME_COLOR, FLATTEN_OUTPUT, FRONT_VISUALIZATION_TOPIC, BACK_VISUALIZATION_TOPIC);
     ros::spin();
     return 0;
 }

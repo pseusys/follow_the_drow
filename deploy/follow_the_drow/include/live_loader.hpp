@@ -36,4 +36,3 @@ class LiveLoader {
     public:
         LiveLoader(const std::map<std::string, float>& transformData, const std::string& topLidarTopic, const std::string& bottomLidarTopic, const std::string& odometryLidarTopic);
 };
-

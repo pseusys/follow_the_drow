@@ -55,7 +55,7 @@ link_directories(
   $ENV{FollowTheDrow_LIBRARY_DIRS}
 )
 
-set(UTIL_SOURCES src/main.cpp src/utils.cpp src/colors.cpp src/tracker.cpp)
+set(UTIL_SOURCES src/main.cpp src/utils.cpp src/colors.cpp src/tracker_policy.cpp)
 
 add_executable(live_loader src/live_loader.cpp ${UTIL_SOURCES})
 add_dependencies(live_loader ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -68,6 +68,10 @@ target_link_libraries(visualizer ${catkin_LIBRARIES} FollowTheDrow)
 add_executable(algorithmic_detector src/algorithmic_detector.cpp ${UTIL_SOURCES})
 add_dependencies(algorithmic_detector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(algorithmic_detector ${catkin_LIBRARIES} FollowTheDrow)
+
+add_executable(person_tracker src/person_tracker.cpp ${UTIL_SOURCES})
+add_dependencies(person_tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(person_tracker ${catkin_LIBRARIES} FollowTheDrow)
 
 catkin_install_python(PROGRAMS
   nodes/file_loader.py

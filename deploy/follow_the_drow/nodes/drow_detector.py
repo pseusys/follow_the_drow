@@ -5,7 +5,7 @@ from numpy import array, zeros, float32, argmax, any
 from rospy import Publisher, Subscriber, Rate, is_shutdown, spin
 from geometry_msgs.msg import Point
 
-from follow_the_drow import Params, TrackerPolicy, load_args_for_node
+from follow_the_drow import Params, load_args_for_node
 from follow_the_drow.msg import raw_data, detection
 from follow_the_drow.detectors import DrowDetector
 from follow_the_drow.datasets import LiveDataset
@@ -22,9 +22,8 @@ class DROWDetector:
         "class_weights": [0.89740097838073, 0.3280190481521334, 0.4575675717820713]
     }
 
-    def __init__(self, persons_only: bool, tracker: TrackerPolicy, threshold: float, verbose: bool) -> None:
+    def __init__(self, persons_only: bool, threshold: float, verbose: bool) -> None:
         self.persons_only = persons_only
-        self.tracker = tracker
         self.threshold = threshold
         self.dataset = LiveDataset(time_frame_size=Params.DATA_ANNOTATION_RATE, verbose=verbose)
         self.detector = DrowDetector.init(time_frame_size=self.dataset.time_frame, verbose=verbose)
@@ -68,5 +67,5 @@ class DROWDetector:
 
 if __name__ == "__main__":
     load_args_for_node(Params.DROW_DETECTOR)
-    DROWDetector(Params.DROW_DETECTOR_PERSONS_ONLY, Params.DROW_DETECTOR_TRACKING_POLICY, Params.DROW_DETECTOR_THRESHOLD, Params.DROW_DETECTOR_VERBOSE).__call__()
+    DROWDetector(Params.DROW_DETECTOR_PERSONS_ONLY, Params.DROW_DETECTOR_THRESHOLD, Params.DROW_DETECTOR_VERBOSE).__call__()
     spin()

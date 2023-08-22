@@ -25,6 +25,7 @@
 		<param name="center_marker_color" value="$(optenv CENTER_MARKER_COLOR magenta)" />
 		<param name="algorithmic_detection_color" value="$(optenv ALGORITHMIC_DETECTION_COLOR red)" />
 		<param name="drow_detection_color" value="$(optenv DROW_DETECTION_COLOR green)" />
+		<param name="follow_me_color" value="$(optenv FOLLOW_ME_COLOR white)" />
 		<param name="back_visualization_topic" value="$(optenv BACK_VISUALIZATION_TOPIC visualization_back)" />
 		<param name="front_visualization_topic" value="$(optenv FRONT_VISUALIZATION_TOPIC visualization_front)" />
 	</node>
@@ -42,14 +43,16 @@
 		<param name="chest_size_max" value="$(optenv ALGORITHMIC_DETECTOR_CHEST_SIZE_MAX 0.8)" />
 		<param name="legs_distance_min" value="$(optenv ALGORITHMIC_DETECTOR_LEGS_DISTANCE_MIN 0)" />
 		<param name="legs_distance_max" value="$(optenv ALGORITHMIC_DETECTOR_LEGS_DISTANCE_MAX 0.7)" />
-		<param name="tracking_policy" value="$(optenv ALGORITHMIC_DETECTOR_TRACKING_POLICY tracked)" />
 		<param name="verbose" value="$(optenv ALGORITHMIC_DETECTOR_VERBOSE true)" />
 	</node>
 	<node name="follow_the_drow_drow_detector" pkg="follow_the_drow" type="drow_detector.py" output="screen" if="$(optenv DROW_DETECTOR true)">
 		<param name="persons_only" value="$(optenv DROW_DETECTOR_PERSONS_ONLY true)" />
-		<param name="tracking_policy" value="$(optenv DROW_DETECTOR_TRACKING_POLICY tracked)" />
 		<param name="threshold" value="$(optenv DROW_DETECTOR_THRESHOLD 0.5)" />
 		<param name="verbose" value="$(optenv DROW_DETECTOR_VERBOSE true)" />
+	</node>
+	<node name="follow_the_drow_person_tracker" pkg="follow_the_drow" type="person_tracker" output="screen" launch-prefix="gdb -batch -ex run -ex bt --args" if="$(optenv PERSON_TRACKER true)">
+		<param name="tracking_policy" value="$(optenv TRACKING_POLICY tracked)" />
+		<param name="detection_input_topic" value="$(optenv DETECTION_INPUT_TOPIC algorithmic_detector)" />
 	</node>
 	<node name="follow_the_drow_data_annotator" pkg="follow_the_drow" type="data_annotator.py" output="screen" if="$(optenv DATA_ANNOTATOR false)">
 		<param name="dataset_path" value="$(optenv DATA_ANNOTATOR_DATASET_PATH train)" />
@@ -64,8 +67,8 @@
 	<param name="annotated_data_topic" value="$(optenv ANNOTATED_DATA_TOPIC raw_data)" />
 	<param name="algorithmic_detector_topic" value="$(optenv ALGORITHMIC_DETECTOR_TOPIC algorithmic_detector)" />
 	<param name="drow_detector_topic" value="$(optenv DROW_DETECTOR_TOPIC drow_detector)" />
-	<param name="follow_me_behavior_topic" value="$(optenv FOLLOW_ME_BEHAVIOR_TOPIC person_detected)" />
 	<param name="data_annotation_rate" value="$(optenv DATA_ANNOTATION_RATE 5)" />
+	<param name="follow_me_behavior_topic" value="$(optenv FOLLOW_ME_BEHAVIOR_TOPIC person_detected)" />
 	<param name="general_frame" value="$(optenv GENERAL_FRAME base_link)" />
 	<group if="$(optenv FOLLOW_ME_BEHAVIOR false)">
 		<!-- TODO: find out what nodes (and what config) is required for follow me behavior! -->

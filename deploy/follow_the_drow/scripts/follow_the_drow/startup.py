@@ -3,7 +3,6 @@ from typing import Any, Callable
 from rospy import init_node, get_param
 
 from .color import color
-from .tracker import TrackerPolicy
 
 
 def _set_attribute(name: str) -> Callable[["Params", Any], None]:
@@ -33,6 +32,7 @@ class Params:
     ALGORITHMIC_DETECTOR = "follow_the_drow_algorithmic_detector"
     DROW_DETECTOR = "follow_the_drow_drow_detector"
     DATA_ANNOTATOR = "follow_the_drow_data_annotator"
+    PERSON_TRACKER = "follow_the_drow_person_tracker"
 
     # General arguments
     HEARTBEAT_RATE = _property("HEARTBEAT_RATE")
@@ -45,8 +45,6 @@ class Params:
     _ALGORITHMIC_DETECTOR_TOPIC_NAME = "algorithmic_detector_topic"
     DROW_DETECTOR_TOPIC = _property("DROW_DETECTOR_TOPIC")
     _DROW_DETECTOR_TOPIC_NAME = "drow_detector_topic"
-    FOLLOW_ME_BEHAVIOR_TOPIC = _property("FOLLOW_ME_BEHAVIOR_TOPIC")
-    _FOLLOW_ME_BEHAVIOR_TOPIC_NAME = "follow_me_behavior_topic"
     DATA_ANNOTATION_RATE = _property("DATA_ANNOTATION_RATE")
     _DATA_ANNOTATION_RATE_NAME = "data_annotation_rate"
     GENERAL_FRAME = _property("GENERAL_FRAME")
@@ -92,7 +90,6 @@ def load_args_for_node(name: str):
     Params.ANNOTATED_DATA_TOPIC = get_param(f"/{Params._ANNOTATED_DATA_TOPIC_NAME}")
     Params.ALGORITHMIC_DETECTOR_TOPIC = get_param(f"/{Params._ALGORITHMIC_DETECTOR_TOPIC_NAME}")
     Params.DROW_DETECTOR_TOPIC = get_param(f"/{Params._DROW_DETECTOR_TOPIC_NAME}")
-    Params.FOLLOW_ME_BEHAVIOR_TOPIC = get_param(f"/{Params._FOLLOW_ME_BEHAVIOR_TOPIC_NAME}")
     Params.DATA_ANNOTATION_RATE = get_param(f"/{Params._DATA_ANNOTATION_RATE_NAME}")
     Params.GENERAL_FRAME = get_param(f"/{Params._GENERAL_FRAME_NAME}")
 
@@ -102,7 +99,6 @@ def load_args_for_node(name: str):
         Params.FILE_LOADER_PERSONS_ONLY = get_param(f"/{name}/{Params._FILE_LOADER_PERSONS_ONLY_NAME}")
     elif name == Params.DROW_DETECTOR:
         Params.DROW_DETECTOR_PERSONS_ONLY = get_param(f"/{name}/{Params._DROW_DETECTOR_PERSONS_ONLY_NAME}")
-        Params.DROW_DETECTOR_TRACKING_POLICY = TrackerPolicy(get_param(f"/{name}/{Params._DROW_DETECTOR_TRACKING_POLICY_NAME}"))
         Params.DROW_DETECTOR_THRESHOLD = get_param(f"/{name}/{Params._DROW_DETECTOR_THRESHOLD_NAME}")
         Params.DROW_DETECTOR_VERBOSE = get_param(f"/{name}/{Params._DROW_DETECTOR_VERBOSE_NAME}")
     elif name == Params.DATA_ANNOTATOR:
