@@ -48,21 +48,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           target: basic
 
-  build-python-package-wheel:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Python3 🐍
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10' 
-
-      - name: Build follow_the_drow Python3 package wheel 🛞
-        run: python3 -m build --sdist
-
   test-notebooks:
     runs-on: ubuntu-latest
 
@@ -75,8 +60,8 @@ jobs:
         with:
           python-version: '3.10' 
 
-      - name: Install library locally abd test Jupyter Notebooks 📓
-        run: make redrow-detector-test
+      - name: Install library locally 👇
+        run: pip3 install -e library
 
   build-cpp-static-library:
     runs-on: ubuntu-latest
