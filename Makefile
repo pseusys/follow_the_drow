@@ -59,7 +59,12 @@ launch-docker-robot:
 
 
 
-clean:
+clean-docker:
+	docker rmi follow_the_drow
+	docker rm -f ros-desktop-follow-the-drow
+.PHONY: clean-docker
+
+clean-local:
 	rm -rf venv
 	rm -rf compare/cache
 	rm -rf library/cpp_core/build
@@ -68,4 +73,7 @@ clean:
 	rm -rf library/follow_the_drow/include
 	rm -rf deploy/out
 	rm -rf **/__pycache__
+.PHONY: clean-local
+
+clean: clean-docker clean-local
 .PHONY: clean

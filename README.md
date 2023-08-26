@@ -48,17 +48,12 @@ It's 12.5 in paper, but here I decided to use 10 for compatibility and annotatio
 
 ## TODOs
 
-1. Test "cutouts" with translation data?
+1. Use translation data with "cutouts".
+2. Reannotate DROW dataset.
 
 ## Roadmap
 
-1. Debug and run stateless detector
-2. Rewrite stateful detector, make sure it inherits from abstract
-3. Debug and run it in wrapper
-4. Setup follow me behavior interop (topics, connections)
-5. Detector interface (including pythonic) should accept odometry
-6. Fix TODOs
-7. Complete workflows
-8. Follow me: Study inputs, is it first detected human or closest? Create adapter node, input humans, output one human, with modes; first_index, closest, first_detected (with tracking).
-9. Move defines to parameters - after stateful detector will be implemented
-10. Clear docker image on make clear
+1. Setup follow me behavior interop (topics, connections)
+2. Tracking node: consistent output
+3. Complete readme(s)
+4. Write a report

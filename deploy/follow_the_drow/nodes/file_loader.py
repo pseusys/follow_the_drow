@@ -32,7 +32,7 @@ class FileLoader:
 
         if scan_counter % self.dataset.time_frame != 0:
             return
-        anni = next(iter([k for k, v in self.dataset.idet2iscan[file_counter].items() if v == scan_counter]), list())
+        anni = next(iter([k for k, v in self.dataset.idet2iscan[file_counter].items() if v == scan_counter]), None)
         if anni is None:
             annotated = list()
         elif self.persons_only:

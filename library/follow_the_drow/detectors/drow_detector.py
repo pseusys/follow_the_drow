@@ -142,14 +142,12 @@ class DrowDetector(Module, Detector):
         constant_(self.bn4a.weight, 1)
         constant_(self.bn4b.weight, 1)
 
-     # TODO: return points instead
     def forward_one(self, xb):
         self.eval()
         with no_grad():
             logits, votes = self(Variable(move(from_numpy(xb), self.GPU)))
             return softmax(logits, dim=-1).data.cpu().numpy(), votes.data.cpu().numpy()
 
-    # TODO: return points instead
     def forward_all(self, va: DROW_Dataset):
         all_confs, all_votes = [], []
         for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
