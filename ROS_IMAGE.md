@@ -34,12 +34,6 @@ It can be re-built using make `build-image` target, defined in `Makefile`:
 make build-image
 ```
 
-TODO: add optional argument to add the lib.
-Describe it with:
-The `library` (see `library` directory), which includes `follow_the_drow` C++ library (`library/cpp_core`) and `follow_the_drow` Python library (`library/follow_the_drow`).
-
-TODO: create a release with docker compose config and image with the release tag.
-
 ## Run your Nodes
 
 In order to run your own nodes, take a look at `deploy/docker/docker-compose.yml` file.

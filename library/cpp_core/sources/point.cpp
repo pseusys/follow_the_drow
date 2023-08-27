@@ -19,12 +19,6 @@ Point Point::polarToCartesian(float distance, float angle) {
     return Point(x, y, 0);
 }
 
-Point Point::cartesianToPolar(float x, float y, float z) {
-    float distance = sqrt(pow(x, 2) + pow(y, 2));
-    float angle = x != 0 ? atan(y / x) : 0;
-    return Point(distance, angle, z);
-}
-
 float Point::distanceTo(const Point& point) const {
     return sqrt(pow((this->x - point.x), 2) + pow((this->y - point.y), 2));
 }

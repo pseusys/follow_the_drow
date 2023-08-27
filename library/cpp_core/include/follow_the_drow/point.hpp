@@ -13,7 +13,6 @@ namespace follow_the_drow {
             Point(float x, float y, float z);
 
             static Point polarToCartesian(float distance, float angle);
-            static Point cartesianToPolar(float x, float y, float z);
 
             float distanceTo(const Point& point) const;
             Point middleBetween(const Point& point) const;
