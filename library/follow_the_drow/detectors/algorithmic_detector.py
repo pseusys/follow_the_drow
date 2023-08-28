@@ -29,6 +29,10 @@ class AlgorithmicDetector(Detector):
         self.time_frame = time_frame_size
         self._detector = DetectorFactory(laser_minimum, laser_increment, frequency_init, frequency_max, uncertainty_max, uncertainty_min, uncertainty_inc, cluster_threshold, distance_level, leg_size_min, leg_size_max, chest_size_min, chest_size_max, legs_distance_min, legs_distance_max, verbose)
 
+    @classmethod
+    def init(cls, verbose: bool = True) -> "Detector":
+        return cls(verbose)
+
     def forward_one(self, scans, odoms):
         return self._detector.forward_one(scans, odoms)
 

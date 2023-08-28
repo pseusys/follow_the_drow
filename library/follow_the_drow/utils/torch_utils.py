@@ -13,7 +13,7 @@ from torch.cuda import is_available
 
 from .generic_utils import istype
 
-T = TypeVar("T", Module, Tensor)
+_T = TypeVar("_T", Module, Tensor)
 
 
 def init_module(mod: Module, weight: Optional[Union[Callable[[Tensor], Any], float]] = None, bias: int = 0) -> Module:
@@ -30,7 +30,7 @@ def init_module(mod: Module, weight: Optional[Union[Callable[[Tensor], Any], flo
     return mod
 
 
-def move(what: T, use_cuda: Union[bool, int] = False, **kw) -> T:
+def move(what: _T, use_cuda: Union[bool, int] = False, **kw) -> _T:
     """
     Original name: `maybe_cuda`
     """

@@ -1,10 +1,10 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 from ..datasets import DROW_Dataset
 from ..utils.generic_utils import Logging
 
 
-class Detector(Logging):
+class Detector(Logging, ABC):
     def __init__(self, verbose: bool = True):
         Logging.__init__(self, verbose)
 
