@@ -4,7 +4,7 @@ from os import getenv
 from pathlib import Path
 from typing import Optional, List, Tuple
 
-from rospy import Publisher, Subscriber, Rate, Time, Header, spin, loginfo
+from rospy import Publisher, Subscriber, Time, Header, spin, loginfo
 from std_msgs.msg import ColorRGBA
 from geometry_msgs.msg import Point, PointStamped, PoseStamped, Pose, Vector3, Quaternion, PoseWithCovarianceStamped
 from visualization_msgs.msg import Marker

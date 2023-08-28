@@ -11,7 +11,18 @@ CONTAINER_IP := $(shell hostname -I | awk '{print $$1}')
 
 help:
 	@ # Display help information
-	echo ":)"
+	echo "Welcome to the 'FOLLOW THE DROW' project!"
+	echo "This is the available make command list:"
+	echo "    'make venv': create python virtual environment and install latest jupyter server libraries as well as follow_the_drow library, enable required params."
+	echo "    'make build-lib': build follow_the_drow C++ lib, install the lib if run as superuser."
+	echo "    'make redrow-detector-test': clear outputs and re-run all notebooks in 'compare' directory."
+	echo "    'make build-image': build required Docker image locally and test successful creation."
+	echo "    'make launch-docker-local': launch ROS pipeline in docker on local device, don't even ty to connect to any robot."
+	echo "    'make launch-docker-robot': test RobAIR connection and run ROS pipeline on the RobAIR."
+	echo "        WARNING: the default RobAIR IP address is 192.168.1.201; to use another IP use the following syntax: 'make launch-docker-robot ROBAIR_IP=X.X.X.X'."
+	echo "    'make clean-docker': clean all Docker related artifacts, stop container and remove image, that is useful because Docker image caches are HUGE."
+	echo "    'make clean-local': remove all file artifacts in this repo (including installed follow_the_drow C++ library if any)."
+	echo "    'make clean': remove all project traces from the computer."
 .PHONY: help
 
 
@@ -65,6 +76,9 @@ clean-docker:
 .PHONY: clean-docker
 
 clean-local:
+	if [ -f library/cpp_core/build/install_manifest.txt ]; then
+		xargs rm < library/cpp_core/build/install_manifest.txt
+	fi
 	rm -rf venv
 	rm -rf compare/cache
 	rm -rf library/cpp_core/build

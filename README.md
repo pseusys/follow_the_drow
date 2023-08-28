@@ -128,7 +128,7 @@ The Docker-related configurations are stored in `deploy/docker` directory.
 > NB! Special attention should be paid to Docker network and environment settings. They are vital for connection to RobAIR and ROS GUI apps.
 
 Dockerfile contains two targets: `basic` and `ftd`.
-Basic target is described in `ROS_IMAGE.md` file and can be used for integration of any ROS apps with Docker.
+Basic target is described in [`ROS_IMAGE.md`](./ROS_IMAGE.md) file and can be used for integration of any ROS apps with Docker.
 FTB target includes `follow_the_drow` libraries and is specialized for this specific app.
 
 > NB! All user configuration should be done via `deploy/conf.env` file. It contains general system configurations and parameters and special parameters for every node. All these will be described below.
@@ -197,6 +197,7 @@ These are general system configurations and parameters:
 - `DROW_DETECTOR_TOPIC` (string) detection results from DROW detector is published there from `DROW_detector` and picked up by `visualizer` and `tracker` (default: "drow_detector").
 - `FOLLOW_ME_BEHAVIOR_TOPIC` (string) tracked person position is published to this topic by `tracker` and picked up by `visualizer` node and "follow me behavior" pipeline.
 - `DATA_ANNOTATION_RATE` (integer) scans to annotations rate (5 for DROW dataset, see "temporal cutouts").
+- `GENERAL_FRAME` (string) ROS base frame name (is assumed to be centered to the bottom center point of the RobAIR).
 
 ## ROS package
 
@@ -215,11 +216,113 @@ Run it with this command:
 make launch-docker-robot
 ```
 
-### ... nodes
+### Live loader node
 
-???
+Live loader node accepts data from ROS topics, that are: "scan" (bottom lidar data), "scan2" (top lidar data) and "odom" (odometry data).
+It outputs the same data, transformed and aggregated as a single message (`raw_data.msg`) into "raw data" topic.
+It transforms lidar measures from polar coordinate system to array of cartesian points and converts both top and bottom lidar data to single frame.
+It also extracts the most important data from odometry message and converts it into point (x and y coordinates are translation data, z is rotation angle).
 
-### Debug
+Live loader constructor accepts transformation data (from configuration file, default: top lidar upward offset is 1.2m, bottom lidar front offset is 0.15m, top lidar front offset is 0.05m), top (default: "scan2") and bottom (default: "scan") lidars and odometry (default: "odom") topic names.
+
+### File loader node
+
+File loader node accepts data from files (DROW dataset format).
+It outputs the data as a single message (`raw_data.msg`) into "raw data" topic and also publishes annotated data as `detection.msg` messages.
+It calculates detection angles and transforms measures to cartesian points.
+As for annotations, it publishes annotations only for the annotated scans (every 5th scan in DROW dataset).
+
+File loader constructor accepts dataset name (DROW dataset is divided into train, val and test sets, default: test) and `persons_only` boolean parameter (default: false).
+If the parameter is set to true, the annotations are published only for `wp` (person) class, otherwise they are published for all classes.
+Finally, the file loader accepts `verbose` flag for node output control (default: true).
+
+### Visualizer node
+
+Visualizer node accepts data from several topics and outputs them to RVIZ GUI.
+It accepts detection data from "detection topics" from both detector nodes (algorithmic and DROW), annotation data from "annotated data" topic from file loader node and tracked person position from tracker node.
+It doesn't require anything and draws only available data.
+
+The output colors are defined as constructor arguments, the default values are:
+
+- Bottom lidar measures: blue
+- Top lidar measures: cyan
+- Annotations (from dataset): yellow
+- Robot position (center): magenta
+- Algorithmic detection data: red
+- DROW detection data: green
+- Person the robot tracks: white
+
+Visualizer constructor accepts `flatten` parameter (default: true), if set to true all points will have z coordinate 0.
+It also accepts topic names for background data (raw top and bottom lidar measures, default: "visualization_back") and foreground data (everything else, default: "visualization_front").
+Since the data is divided into two topics, its partial enabling and disabling can be done in runtime.
+
+### Algorithmic detector node
+
+Algorithmic detector performs algorithmic petection of people on scan data.
+It accepts data from "raw data" topic and publishes detection data to algorithmic "detection topic" as a `detection.msg` message.
+It uses clustering and tracking for person detection, algorithm is provided in `follow_the_drow` library.
+
+Algorithmic detector constructor accepts many different parameters:
+
+1. `frequencyInit` (int): initial frequency (default: 5).
+2. `frequencyMax` (int): maximum frequency (default: 25).
+3. `uncertaintyMax` (float): maximum uncertainty (default: 3).
+4. `uncertaintyMin` (float): minimum uncertainty (default: 1).
+5. `uncertaintyInc` (float): per-frame uncertainty increase (default: 0.05).
+6. `clusterThreshold` (float): minimum distance between two clusters (default: ???).
+7. `distanceLevel` (float): maximum distance between persons' legs and chest (default: ???).
+8. `legSizeMin` (float): minimum size of a leg cluster (default: ???).
+9. `legSizeMax` (float): maximum size of a leg cluster (default: ???).
+10. `chestSizeMin` (float): minimum size of a chest cluster (default: ???).
+11. `chestSizeMax` (float): maximum size of a chest cluster (default: ???).
+12. `legsDistanceMin` (float): minimum distance between leg clusters (default: ???).
+13. `legsDistanceMax` (float): maximum distance between leg clusters (default: ???).
+
+> NB! While tracking people: "frequency" represents how many frames ago was the person last detected and "uncertainty" represents the radius around the last detected person position we are ready to find the person on this frame.
+
+As the last argument the constructor accepts `verbose` flag for node output control (default: false).
+
+### DROW detector node
+
+DROW detector performs petection of people on scan data using neural network designed and trained by DROW paper authors.
+It accepts data from "raw data" topic and publishes detection data to DROW "detection topic" as a `detection.msg` message.
+The neural network is described in [this paper](https://arxiv.org/abs/1804.02463), support code and architecture are provided in `follow_the_drow` library.
+
+DROW detector constructor accepts detection threshold (minimum certainty, default: 0.8) and `persons_only` boolean parameter (default: false).
+If the parameter is set to true, only the `wp` (person) class detections are considered, otherwise class detections are used.
+As the last argument it accepts `verbose` flag for node output control (default: false).
+
+### Data annotator node
+
+This is a special node, designed for manual dataset re-annotation.
+It uses RVIZ interface only.
+It reads dataset (DROW-style) and expects user to manually annotate every frame.
+After a file is annotated, the annotations are stored as DROW annotation files in `output` directory.
+
+> NB! This node shouldn't be used at the same time with the others. If this node is enabled, all other `follow_the_drow` nodes are expected to be disabled.
+
+This node uses special RVIZ configuration with smaller grid size.
+The controls are:
+
+- "Publish point": annotate point as a person.
+- "Publish initial position": proceed to the next frame.
+- "Publish goal": delete all annotations from current frame and return to the previous one if there are none.
+
+Data annotator constructor accepts dataset name (default: test), colors for scan data (default: blue) and annotation (default: red) visualization, visualization topic name (default: "annotation_data") and output filename template ("*" sign if exists will be replaced by variable file name part, default: "\*.csv").
+As the last argument it accepts `verbose` flag for node output control (default: true).
+
+### Person tracker node
+
+This node is used for tracking **only one** person from all the people detected.
+It accepts detection data from "detection topics" from one of the detector nodes and publishes tracked person position for visualizer node and "follow me behavior" pipeline.
+
+> NB! There are several tracking policies provided: "first" (first person detected on every frame will be tracked), "closest" (the person closest to robot will be tracked), "tracked" (same as "closest", but if on previous frame a person was detected the new tracked person will be the closest one to that person position) and "none" (tracking position will be set to robot coordinates).
+
+It's important to note, that this node output is _persistent_, meaning that even if there are no detections on some frame some position will be published anyway (but it may be equal to robot coordinates `(0, 0)`, so the robot won't move anywhere).
+
+Person tracker constructor accepts tracking policy (default: "tracked") and detection data input topic name (should be one of the "detection topics", default: "algorithmic_detector").
+
+### Debugging nodes
 
 > NB! Nodes are _by default_ built with debug info **and** GDB is included into Docker image.
 
@@ -229,11 +332,26 @@ In file `deploy/follow_the_drow/CMakeLists.txt` in line #5 `RelWithDebInfo` can 
 
 ## Notebooks
 
-???
+Jupyter notebooks are located inside of the `compare` directory.
+
+The notebooks can be run with single make command:
+
+```bash
+make redrow-detector-test
+```
+
+The `redrow_detector.ipynb` is an improved and optimized version of the [DROW paper final notebook](https://github.com/VisualComputingInstitute/DROW/blob/master/v2/Clean%20Final*%20%5BT%3D5%2Cnet%3Ddrow3xLF2p%2Codom%3Drot%2Ctrainval%5D.ipynb).
+The `algorithmic_detector.ipynb` uses the same metrics and tests for exploring algorithmic detector.
 
 ## Other
 
-???
+The repository also contains some github actions in `.github/workflows` directory for testing both python and C++ libraries build and for ROS environment Docker image publishing.
+
+In order to revise other available make commands use:
+
+```bash
+make help
+```
 
 ## Notes
 
@@ -261,10 +379,10 @@ Here, it was decided to lower this number to 10Hz for compatibility reasons.
 
 ## TODOs
 
-1. In the DROW paper translation odometry data was not used while calculating "cutouts" - using it might improve performance.
+1. In the DROW paper translation odometry data was not used while calculating scans - using it might improve performance.
 2. Add possibility for recording bag files (add configurations to launch file and `conf.env`, store bag files in `out` directory).
 3. The DROW dataset is very poorly annotated - it can be re-annotated (by and or algoritmically) in order to improve real world performance.
-4. The DROW detector neural network uses complicated "cutouts" system in order to receive temporal data - it can be simplified (and probably improved) by using recurrent neural network.
+4. The DROW detector neural network uses complicated "temporal cutouts" system in order to receive temporal data - it can be simplified (and probably improved) by using recurrent neural network.
 5. The DROW detector neural network uses complicated "votes" system in order to calculate human positions - this can be simplified (and probably improved) by using a different neural network architecture:
 
 Let `n` be the ray count.
@@ -275,7 +393,6 @@ Then the output data will be converted to coordinates using laser data.
 ## Roadmap
 
 1. Setup follow me behavior interop (topics, connections)
-2. Tracking node: consistent output
-3. Complete readme(s)
-4. Write a report
-5. Fill in README gaps (`???`)
+2. Algorithmic detector parameter finetuning
+3. Write a report
+4. Fill in README gaps (`???`)
