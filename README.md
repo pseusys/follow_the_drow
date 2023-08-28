@@ -220,7 +220,7 @@ make launch-docker-robot
 
 Live loader node accepts data from ROS topics, that are: "scan" (bottom lidar data), "scan2" (top lidar data) and "odom" (odometry data).
 It outputs the same data, transformed and aggregated as a single message (`raw_data.msg`) into "raw data" topic.
-It transforms lidar measures from polar coordinate system to array of cartesian points and converts both top and bottom lidar data to single frame.
+It transforms raw lidar measures to polar coordinate system and converts both top and bottom lidar data to single frame.
 It also extracts the most important data from odometry message and converts it into point (x and y coordinates are translation data, z is rotation angle).
 
 Live loader constructor accepts transformation data (from configuration file, default: top lidar upward offset is 1.2m, bottom lidar front offset is 0.15m, top lidar front offset is 0.05m), top (default: "scan2") and bottom (default: "scan") lidars and odometry (default: "odom") topic names.
@@ -229,7 +229,7 @@ Live loader constructor accepts transformation data (from configuration file, de
 
 File loader node accepts data from files (DROW dataset format).
 It outputs the data as a single message (`raw_data.msg`) into "raw data" topic and also publishes annotated data as `detection.msg` messages.
-It calculates detection angles and transforms measures to cartesian points.
+It calculates detection angles and transforms raw measures to polar coordinates.
 As for annotations, it publishes annotations only for the annotated scans (every 5th scan in DROW dataset).
 
 File loader constructor accepts dataset name (DROW dataset is divided into train, val and test sets, default: test) and `persons_only` boolean parameter (default: false).
@@ -377,7 +377,7 @@ Here, it was decided to lower this number to 10Hz for compatibility reasons.
 
 > NB! Neither the laptop the system was launched, nor RobAIR have GPU, so neural network based DROW detector operates _really_ slowly (at approximately 1 Hz).
 
-## TODOs
+## Future development ideas
 
 1. In the DROW paper translation odometry data was not used while calculating scans - using it might improve performance.
 2. Add possibility for recording bag files (add configurations to launch file and `conf.env`, store bag files in `out` directory).
