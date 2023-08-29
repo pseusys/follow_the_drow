@@ -268,14 +268,14 @@ Algorithmic detector constructor accepts many different parameters:
 3. `uncertaintyMax` (float): maximum uncertainty (default: 3).
 4. `uncertaintyMin` (float): minimum uncertainty (default: 1).
 5. `uncertaintyInc` (float): per-frame uncertainty increase (default: 0.05).
-6. `clusterThreshold` (float): minimum distance between two clusters (default: ???).
-7. `distanceLevel` (float): maximum distance between persons' legs and chest (default: ???).
-8. `legSizeMin` (float): minimum size of a leg cluster (default: ???).
-9. `legSizeMax` (float): maximum size of a leg cluster (default: ???).
-10. `chestSizeMin` (float): minimum size of a chest cluster (default: ???).
-11. `chestSizeMax` (float): maximum size of a chest cluster (default: ???).
-12. `legsDistanceMin` (float): minimum distance between leg clusters (default: ???).
-13. `legsDistanceMax` (float): maximum distance between leg clusters (default: ???).
+6. `clusterThreshold` (float): minimum distance between two clusters (default: 0.1).
+7. `distanceLevel` (float): maximum distance between persons' legs and chest (default: 0.6).
+8. `legSizeMin` (float): minimum size of a leg cluster (default: 0.05).
+9. `legSizeMax` (float): maximum size of a leg cluster (default: 0.25).
+10. `chestSizeMin` (float): minimum size of a chest cluster (default: 0.3).
+11. `chestSizeMax` (float): maximum size of a chest cluster (default: 0.8).
+12. `legsDistanceMin` (float): minimum distance between leg clusters (default: 0).
+13. `legsDistanceMax` (float): maximum distance between leg clusters (default: 0.7).
 
 > NB! While tracking people: "frequency" represents how many frames ago was the person last detected and "uncertainty" represents the radius around the last detected person position we are ready to find the person on this frame.
 
@@ -366,7 +366,7 @@ Contains many sequences, each sequence has:
 
 ### RobAIR FoV
 
-RobAIR lidar has 726 rays, it covers ??? degrees.
+RobAIR lidar has 725 rays, it covers approximately 255 degrees.
 RobAIR camera has more narrow field of view: it starts on ray **315** and ends on ray **430**.
 
 ### DROW detector frequency
@@ -380,18 +380,12 @@ Here, it was decided to lower this number to 10Hz for compatibility reasons.
 
 1. In the DROW paper translation odometry data was not used while calculating scans - using it might improve performance.
 2. Add possibility for recording bag files (add configurations to launch file and `conf.env`, store bag files in `out` directory).
-3. The DROW dataset is very poorly annotated - it can be re-annotated (by and or algoritmically) in order to improve real world performance.
-4. The DROW detector neural network uses complicated "temporal cutouts" system in order to receive temporal data - it can be simplified (and probably improved) by using recurrent neural network.
-5. The DROW detector neural network uses complicated "votes" system in order to calculate human positions - this can be simplified (and probably improved) by using a different neural network architecture:
+3. DROW detector uses stored hyperparameters that produce the most accurate result - same can be applied to algorithmic detector, different sets of best hyperparameters can be saved and loaded for 1 and 2 lidars cases.
+4. The DROW dataset is very poorly annotated - it can be re-annotated (by and or algoritmically) in order to improve real world performance.
+5. The DROW detector neural network uses complicated "temporal cutouts" system in order to receive temporal data - it can be simplified (and probably improved) by using recurrent neural network.
+6. The DROW detector neural network uses complicated "votes" system in order to calculate human positions - this can be simplified (and probably improved) by using a different neural network architecture:
 
 Let `n` be the ray count.
 Then neural network input shape will be `n` floats - `n` distances for `n` laser measures (or `2n` for 2 lidars).
 The output shape will be `n` floats - each of them will be a **probability of the laser measurement to hit a person**.
 Then the output data will be converted to coordinates using laser data.
-
-## Roadmap
-
-1. Setup follow me behavior interop (topics, connections)
-2. Algorithmic detector parameter finetuning
-3. Write a report
-4. Fill in README gaps (`???`)
