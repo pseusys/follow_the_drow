@@ -188,7 +188,6 @@ These are general system configurations and parameters:
 
 - `RVIZ_RVIZ` (boolean) enables RVIZ visualization window (default: true).
 - `ROSBAG_PLAY` (boolean) enables playing bag data (default: false) from `RECORD_LOCATION` (string) file (default: "latest.bag").
-- `FOLLOW_ME_BEHAVIOR` (boolean) enables "follow me behavior" pipeline connection (default: false).
 - Each node has boolean variable for enabling and disabling it (default: all nodes are enabled except for `live_loader` and `data_annotator`).
 - `HEARTBEAT_RATE` (number) system frequency rate (default: 10Hz).
 - `RAW_DATA_TOPIC` (string) "raw data" topic name, data from `live_loader` and `file_loader` nodes is published there and picked up by `tracker` and `visualizer` nodes (default: "raw_data").
@@ -206,9 +205,9 @@ However, a few things have to be doublechecked for that:
 
 1. Connection (host IP and RobAIR IP): see `Makefile`.
 2. **Input** topics and frames names: see `robair_ufr.launch` in `robairmain` package on RobAIR and `deploy/conf.env`.
-3. Follow me behavior nodes names and packages: see `~/catkin_ws/src` on RobAIR and `deploy/conf.env`.
+3. Follow me behavior nodes names and packages: see `~/catkin_ws/src` on RobAIR in order to see what nodes are already present there.
 
-> NB! Make sure ROS is **not** running on RobAIR - that would lead to node name collisions!
+> NB! Follow me behavior package is **not** included i.e. it should be added OR run separately directly on RobAIR! Example launch configuration can be found in `deploy/config/follow_me_behavior_example.launch` file. WARNING: it is impossible to launch nodes located on RobAIR from laptop. Local ROS and RobAIR ROS communicate only by topics!
 
 Run it with this command:
 
@@ -244,13 +243,13 @@ It doesn't require anything and draws only available data.
 
 The output colors are defined as constructor arguments, the default values are:
 
-- Bottom lidar measures: blue
-- Top lidar measures: cyan
-- Annotations (from dataset): yellow
-- Robot position (center): magenta
-- Algorithmic detection data: red
-- DROW detection data: green
-- Person the robot tracks: white
+- Bottom lidar measures: `blue`
+- Top lidar measures: `cyan`
+- Annotations (from dataset): `yellow`
+- Robot position (center): `magenta`
+- Algorithmic detection data: `red`
+- DROW detection data: `green`
+- Person the robot tracks: `white`
 
 Visualizer constructor accepts `flatten` parameter (default: true), if set to true all points will have z coordinate 0.
 It also accepts topic names for background data (raw top and bottom lidar measures, default: "visualization_back") and foreground data (everything else, default: "visualization_front").

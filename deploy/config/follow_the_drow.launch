@@ -70,7 +70,4 @@
 	<param name="data_annotation_rate" value="$(optenv DATA_ANNOTATION_RATE 5)" />
 	<param name="follow_me_behavior_topic" value="$(optenv FOLLOW_ME_BEHAVIOR_TOPIC person_detected)" />
 	<param name="general_frame" value="$(optenv GENERAL_FRAME base_link)" />
-	<group if="$(optenv FOLLOW_ME_BEHAVIOR false)">
-		<!-- TODO: find out what nodes (and what config) is required for follow me behavior! -->
-    </group>
 </launch>
