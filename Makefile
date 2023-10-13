@@ -50,6 +50,11 @@ redrow-detector-test: venv
 	jupyter nbconvert --execute --to notebook --inplace compare/redrow_detector.ipynb
 .PHONY: redrow-detector-test
 
+algorithmic-detector-test: venv
+	@ # Run algorithmic detector test
+	jupyter nbconvert --execute --to notebook --inplace compare/algorithmic_detector.ipynb
+.PHONY: algorithmic-detector-test
+
 
 
 build-image:

@@ -13,5 +13,9 @@ library/follow_the_drow/*.so
 library/cpp_core/build
 library/build
 
+report/*
+!report/*.tex
+!report/*.png
+
 *.py[cod]
 *.egg-info

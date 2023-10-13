@@ -16,6 +16,8 @@ library/build
 *.py[cod]
 *.egg-info
 
+report
+
 .gitattributes
 .gitignore
 Makefile

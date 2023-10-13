@@ -7,9 +7,10 @@ https://github.com/VisualComputingInstitute/DROW/blob/master/v2/Clean%20Final*%2
 """
 
 from pathlib import Path
+from time import time
 from typing import Union
 
-from torch import no_grad, from_numpy, sum, device, load
+from torch import no_grad, from_numpy, sum as tsum, device, load
 from torch.nn import Module, Conv1d, BatchNorm1d
 from torch.nn.functional import leaky_relu, max_pool1d, dropout, avg_pool1d, softmax
 from torch.nn.init import kaiming_normal_, constant_
@@ -100,7 +101,7 @@ class DrowDetector(Module, Detector):
         x = dropout(x, p=self.dropout, training=self.training)
 
         x = x.view(B, T, *x.shape[1:])
-        x = sum(x, dim=1)
+        x = tsum(x, dim=1)
 
         x = leaky_relu(self.bn3a(self.conv3a(x)), 0.1)
         x = leaky_relu(self.bn3b(self.conv3b(x)), 0.1)
@@ -149,13 +150,17 @@ class DrowDetector(Module, Detector):
             return softmax(logits, dim=-1).data.cpu().numpy(), votes.data.cpu().numpy()
 
     def forward_all(self, va: DROW_Dataset):
+        times = list()
         all_confs, all_votes = [], []
         for iseq in trange(len(va.det_id), desc="Sequences", disable=not self._verbose):
             for idet in trange(len(va.det_id[iseq]), desc="Scans", disable=not self._verbose, leave=False):
+                start_time = time()
                 iscan = va.idet2iscan[iseq][idet]
                 scans, odoms = va.get_scan(iseq, iscan, self.time_frame)
                 cut = cutout(scans, odoms, len(va.scans[iseq][iscan]), nsamp=self.N_SAMP)
                 confs, votes = self.forward_one(cut)
                 all_confs.append(confs)
                 all_votes.append(votes)
+                times += [time() - start_time]
+        self._print(f"Average detection time: {sum(times) / len(times)} seconds")
         return array(all_confs), array(all_votes)
