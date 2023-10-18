@@ -1,0 +1,32 @@
+name: Report
+
+on:
+  push:
+    paths:
+      - 'report/**'
+      - '.github/workflows/build_report.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  generate-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository 🛎️
+        uses: actions/checkout@v4
+      
+      - name: Pull LaTeX builder image 🖼️
+        run: docker pull blang/latex
+
+      - name: Build Report 📝
+        run: docker run --rm -i --user="$(id -u):$(id -g)" -v "$(PWD)/report:/data" blang/latex pdflatex main.tex
+
+      - name: Update release 📩
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file_glob: true
+          overwrite: true
+          tag: report
+          file: report/main.pdf

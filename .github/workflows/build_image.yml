@@ -3,9 +3,9 @@ name: BUILD
 on:
   push:
     paths:
-      - '.github/workflows/**'
       - 'deploy/docker/**'
       - 'library'
+      - '.github/workflows/build_image.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
