@@ -1,4 +1,4 @@
-name: Report
+name: REPORT
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  generate-cv:
+  generate-report:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository 🛎️
@@ -21,7 +21,7 @@ jobs:
         run: docker pull blang/latex
 
       - name: Build Report 📝
-        run: docker run --rm -i --user="$(id -u):$(id -g)" -v "$(PWD)/report:/data" blang/latex pdflatex main.tex
+        run: docker run --rm -i --user="$(id -u):$(id -g)" -v "$PWD/report:/data" blang/latex pdflatex main.tex
 
       - name: Update release 📩
         uses: svenstaro/upload-release-action@v2
