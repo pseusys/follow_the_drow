@@ -209,7 +209,13 @@ However, a few things have to be doublechecked for that:
 
 > NB! Follow me behavior package is **not** included i.e. it should be added OR run separately directly on RobAIR! Example launch configuration can be found in `deploy/config/follow_me_behavior_example.launch` file. WARNING: it is impossible to launch nodes located on RobAIR from laptop. Local ROS and RobAIR ROS communicate only by topics!
 
-Run it with this command:
+Run the package locally with this command:
+
+```bash
+make launch-docker-local
+```
+
+Run the package on RobAIR with this command:
 
 ```bash
 make launch-docker-robot

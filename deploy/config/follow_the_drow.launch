@@ -64,7 +64,7 @@
 	</node>
 	<param name="heartbeat_rate" value="$(optenv HEARTBEAT_RATE 10)" />
 	<param name="raw_data_topic" value="$(optenv RAW_DATA_TOPIC raw_data)" />
-	<param name="annotated_data_topic" value="$(optenv ANNOTATED_DATA_TOPIC raw_data)" />
+	<param name="annotated_data_topic" value="$(optenv ANNOTATED_DATA_TOPIC annotated_data)" />
 	<param name="algorithmic_detector_topic" value="$(optenv ALGORITHMIC_DETECTOR_TOPIC algorithmic_detector)" />
 	<param name="drow_detector_topic" value="$(optenv DROW_DETECTOR_TOPIC drow_detector)" />
 	<param name="data_annotation_rate" value="$(optenv DATA_ANNOTATION_RATE 5)" />
