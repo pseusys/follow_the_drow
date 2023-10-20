@@ -5,6 +5,7 @@ on:
     paths:
       - 'deploy/docker/**'
       - 'library'
+      - 'Makefile'
       - '.github/workflows/build_image.yml'
 
 concurrency:
@@ -49,7 +50,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           target: basic
 
-  test-notebooks:
+  build-python-library:
     runs-on: ubuntu-latest
 
     steps:
@@ -61,8 +62,8 @@ jobs:
         with:
           python-version: '3.10' 
 
-      - name: Install library locally 👇
-        run: pip3 install -e library
+      - name: Install follow_the_drow Python library locally 👇
+        run: make venv
 
   build-cpp-static-library:
     runs-on: ubuntu-latest
@@ -76,5 +77,15 @@ jobs:
         with:
           version: '11'
 
-      - name: Build follow_the_drow C++ static library 📚
-        run: make build-lib
+      - name: Build and install follow_the_drow C++ static library 📚
+        run: sudo make build-lib
+
+  build-ftd-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Build image 🖼️
+        run: make build-image

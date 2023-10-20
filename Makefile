@@ -77,7 +77,7 @@ launch-docker-robot:
 
 report:
 	@ # Compile report LaTeX
-	docker run --rm -i -v $(PWD)/report:/workdir -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) arkark/latexmk latexmk -pdf main.tex
+	docker run --rm -i -v $(PWD)/report:/workdir arkark/latexmk /bin/bash -c "latexmk -pdf main.tex && chown -R '$(shell id -u):$(shell id -g)' /workdir"
 .PHONY: report
 
 

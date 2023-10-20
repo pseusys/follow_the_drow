@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'report/**'
+      - 'Makefile'
       - '.github/workflows/build_report.yml'
 
 concurrency:
