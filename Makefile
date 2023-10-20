@@ -99,6 +99,7 @@ clean-local:
 	rm -rf library/follow_the_drow/include
 	rm -rf deploy/out
 	rm -rf **/__pycache__
+	rm -rf report/out
 .PHONY: clean-local
 
 clean: clean-docker clean-local
