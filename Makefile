@@ -30,7 +30,7 @@ help:
 venv:
 	@ # Create python virtual environment
 	python3 -m venv venv
-	pip3 install --upgrade pip jupyter~=1.0
+	pip3 install --upgrade pip jupyter~=1.0 jupyter-contrib-nbextensions~=0.7.0
 	pip3 install -e library
 	jupyter nbextension enable --py widgetsnbextension
 

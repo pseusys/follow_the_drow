@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   generate-report:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository 🛎️
