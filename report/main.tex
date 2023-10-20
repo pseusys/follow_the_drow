@@ -1,13 +1,14 @@
 \documentclass{article}
 
-\usepackage{graphicx}
 \usepackage{ijcai11}
 \usepackage{times}
 \usepackage{stfloats}
 \usepackage{indentfirst}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{textcomp}
+
+\usepackage{graphicx}
+\graphicspath{{images}}
 
 \usepackage[hyphens]{url}
 \usepackage[colorlinks=true, linkcolor=, urlcolor=blue, citecolor=]{hyperref}
@@ -29,8 +30,6 @@
 }
 
 \begin{document}
-
-\graphicspath{{images}}
 
 \maketitle{
     \hbox to0pt{
@@ -307,7 +306,7 @@ The following results were obtained:
 	\item \textbf{Algorithmic detector} 0.0001 seconds.
 \end{itemize}
 
-RobAIR architecture does not include any GPU, so it was decided to run tests on a machine that does not have a GPU either.
+RobAIR architecture does not include any graphics processing unit (GPU), so it was decided to run tests on a machine that does not have a GPU either.
 The machine CPU is Intel\textregistered{} Core\texttrademark{} i7-3520M CPU @ 2.90GHz and the GPU is integrated in it.
 
 Although the ROS spin rate used for testing was 10Hz (that is still more than the rate used during DROW dataset recording, that is 12.5Hz), that was not enough to run DROW detector each frame.

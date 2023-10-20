@@ -75,6 +75,13 @@ launch-docker-robot:
 
 
 
+report:
+	@ # Compile report LaTeX
+	docker run --rm -it -v $(PWD)/report:/workdir -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) arkark/latexmk latexmk -pdf main.tex
+.PHONY: report
+
+
+
 clean-docker:
 	docker rmi follow_the_drow
 	docker rm -f ros-desktop-follow-the-drow
