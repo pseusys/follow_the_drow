@@ -64,8 +64,8 @@
 \begin{abstract}
     This paper compares two different methods of detecting people using data from 2D LiDARs, their performance and accuracy are evaluated.
     The "algorithmic detector" is based on an heuristic algorithm, identifying people by detecting clusters of points situated close to each other.
-    The "DROW detector" is based on neural network, that used data from the most recent DROW dataset version to fit.
-    This network processes five most recent LiDAR measurements and predicts person positions using temporal context.
+    The "DROW detector" is based on a neural network, that used data from the most recent DROW dataset version to fit.
+    This network processes five most recent LiDAR measurements and predicts person positions thus using temporal context.
 
     The detectors were tested using live data and compared using data from the DROW dataset.
     A special "\texttt{follow\_the\_drow}" library, a Robot Operating System (ROS) package, and a Docker image were introduced for detector comparison and deployment.
