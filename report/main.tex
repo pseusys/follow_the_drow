@@ -68,7 +68,7 @@
     This network processes five most recent LiDAR measurements and predicts person positions thus using temporal context.
 
     The detectors were tested using live data and compared using data from the DROW dataset.
-    A special "\texttt{follow\_the\_drow}" library, a Robot Operating System (ROS) package, and a Docker image were introduced for detector comparison and deployment.
+    A special "\texttt{follow\_the\_drow}" (FTD) library, a Robot Operating System (ROS) package, and a Docker image were introduced for detector comparison and deployment.
 
     Comparison of precision-recall curves of the detectors revealed that DROW detector is more accurate on DROW dataset.
     However, incorrect annotation issues were found in the dataset, questioning the results.
@@ -115,15 +115,15 @@ For launching the detectors on RobAIR, a Robot Operating System (ROS)\cite{ros_s
 In order to launch the pipeline on machines that do not have ROS installed, a Docker image containing the source code was introduced.
 
 Figure \ref{fig:ftd_setup_chart} shows the setup that was used for detectors execution and comparison.
-Detector comparison was performed locally on a laptop using DROW dataset and \texttt{follow\_the\_drow} library.
+Detector comparison was performed locally on a laptop using DROW dataset and FTD library.
 The results obtained were stored in Jupyter notebooks.
 Live detector testing was performed on a laptop connected to a RobAIR.
-The \texttt{follow\_the\_drow} ROS package was run locally in Docker container, it used input live data from RobAIR sensors and displayed detection results on screen with RVIZ\cite{rviz_wiki} package.
+The FTD ROS package was run locally in Docker container, it used input live data from RobAIR sensors and displayed detection results on screen with RVIZ\cite{rviz_wiki} package.
 
-The \texttt{follow\_the\_drow} library, ROS package and Docker image are considered to be contribution of this work.
+The FTD library, ROS package and Docker image are considered to be contribution of this work.
 All of them can be reused for comparing different person detectors and just running any ROS packages in Docker (with minor changes) with or without connection to a physical robot.
 
-\subsection{\texttt{follow\_the\_drow} library}
+\subsection{Follow the DROW library}
 
 The library consists of three parts.
 
@@ -137,7 +137,7 @@ The final part is the utilities part, it contains not only utility functions use
 
 \subsubsection{DROW dataset provider}
 
-The DROW dataset itself is automatically packaged and distributed together with the \texttt{follow\_the\_drow} library.
+The DROW dataset itself is automatically packaged and distributed together with the FTD library.
 Dataset provider loads all the data simultaneously into memory and keeps it there.
 The dataset contains data from one (knee-height) LiDAR only, so it has only one method for data retrieval, the data received from it should be considered as "bottom".
 Since DROW detector processes five latest measures and algorithmic detector processes one detection at a time, the retrieval function combines one or more latest measures into array.
@@ -165,27 +165,27 @@ The algorithm searches for objects represented by certain patterns of "clusters"
 It is capable of processing bottom LiDAR measures (15cm from the ground) only as well as top (1.6m from the ground) and bottom LiDAR measurements together.
 The detector returns an array of predicted person positions.
 
-Follow the DROW library also provides a binding of the algorithm \texttt{C++} code to \texttt{Python} class using \texttt{pybind11}\cite{pybind_site} library.
+FTD library also provides a binding of the algorithm \texttt{C++} code to \texttt{Python} class using \texttt{pybind11}\cite{pybind_site} library.
 
 \subsection{Follow the DROW ROS package}
 
 \begin{figure*}[t!]
 	\centering
 	\includegraphics[width=0.9\textwidth]{ftd_package_chart}
-	\caption{Follow the DROW ROS package chart}
+	\caption{FTD ROS package chart}
 	\label{fig:ftd_package_chart}
 \end{figure*}
 
 \begin{figure}[b!]
 	\centering
 	\includegraphics[width=0.75\linewidth]{ftd_live_output}
-	\caption{Visualizer node live output}
+	\caption{Visualizer node live output: dark blue markers - lower LiDAR data, cyan markers - top LiDAR data, red markers - algorithmic detector person predictions, green markers - DROW detector person predictions}
 	\label{fig:visualizer_node_live}
 \end{figure}
 
 A ROS package was created for launching the detectors on local machine using input data from real-world (RobAIR) environment.
-The package requires \texttt{follow\_the\_drow} library.
-Figure \ref{fig:ftd_package_chart} demonstrates nodes of follow the DROW ROS package and topics they read data from and write to.
+The package requires FTD library.
+Figure \ref{fig:ftd_package_chart} demonstrates nodes of FTD ROS package and topics they read data from and write to.
 It contains the following nodes:
 
 \begin{enumerate}
@@ -235,7 +235,7 @@ First, an image with full ROS installation was created.
 The image includes all ROS packages installed, \texttt{catkin}\cite{catkin_wiki} workspace created and a running script exporting all required environmental variables.
 The image is published on GitHub container registry\cite{FTD_docker_image}.
 
-The other image was build on top of the previous one, it also includes \texttt{follow\_the\_drow} library.
+The other image was build on top of the previous one, it also includes FTD library.
 Unfortunately, it couldn't be published because its' size is more than 3Gb, but it can be built and launched locally instead.
 
 A docker compose file was created that sets all environmental variables required for RVIZ graphical output and configures volumes with ROS nodes source code.
@@ -324,12 +324,12 @@ As it can be seen by example provided, in real-world the algorithmic detector pe
 That, however, does not imply any conclusions about DROW detector architecture - only about the available weights, that were produced by training the neural network on the dataset.
 That also does not cover any of the specific cases, that are out of scope of algorithmic detector (wheelchairs, walkers, people in lab coats, etc.).
 
-The \texttt{follow\_the\_drow} pipeline created for detector launching and testing is also considered a contribution of this work.
+The FTD pipeline created for detector launching and testing is also considered a contribution of this work.
 The pipeline includes:
 \begin{itemize}
     \item \texttt{Python} library for testing detectors including bindings for \texttt{C++} code.
     \item ROS package for detector configuration and comparison, that also interoperates with \textbf{Follow me behavior} packages.
-    \item Docker image for running latest full ROS 1 distribution on any Linux device in general and \texttt{follow\_the\_drow} ROS package in particular both locally (e.g. for testing purposes) and on a physical robot.
+    \item Docker image for running latest full ROS 1 distribution on any Linux device in general and FTD ROS package in particular both locally (e.g. for testing purposes) and on a physical robot.
 \end{itemize}
 
 Please, consider consulting the paper repository README file\cite{FTD_repo_readme} for information on the ROS package configuration and console commands for testing and comparing the detectors.
