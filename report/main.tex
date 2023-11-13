@@ -7,6 +7,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+\usepackage[utf8]{inputenc}
+
 \usepackage{graphicx}
 \graphicspath{{images}}
 
@@ -79,9 +81,9 @@
 \section{Introduction}
 
 Light detection and ranging technology (LiDAR) has a wide range of uses in many fields\cite{lidar_market}.
-Despite growing availability and active development of 3D LiDARs, 2D LiDARs still remain common in modern robotics\cite{lidar_popularity} and autonomous vehicle industry\cite{lidar_autonomous}.
+Despite the growing availability and active development of 3D LiDARs, 2D LiDARs still remain common in modern robotics\cite{lidar_popularity} and autonomous vehicle industry\cite{lidar_autonomous}.
 One of the most challenging tasks in both of the specified fields is person detection.
-Not only this task is difficult because people are in many cases very important objects to identify (e.g. autonomous cars), but also because in general human bodies can not be expected to share a common shape in 2D space.
+Not only is this task difficult because people are in many cases very important objects to identify (e.g. autonomous cars), but also because in general, human bodies can not be expected to share a common shape in 2D space.
 
 In this work two person detectors of two different types are compared.
 One of them uses an heuristic algorithm for determining person positions.
@@ -92,11 +94,11 @@ The other detector uses a neural network described in "Deep Person Detection in 
 The network consists of 1D convolutional and maxpooling layers.
 It processes 5 most recent LiDAR measures simultaneously to make use of the temporal context of detection.
 The network returns a vote for every measure point, these votes are converted to predicted person positions later.
-This detector will be referenced as "DROW detector" later (just like it was called in the article it originates to).
+This detector will be referenced as "DROW detector" later (just like it was called in the article it originates from).
 
 The robots the detectors were designed for (Karl for DROW detector and RobAIR\cite{RobAIR_site} for algorithmic detector) do not differ much in terms of LiDAR type and positioning.
-In both cases 2D LiDARs with similar fields of view were used (225\textdegree{} for Karl and 255\textdegree{} for RobAIR).
-In both cases the LiDARs were positioned approximately on knee height (37cm for Karl and around 10cm for RobAIR).
+In both cases, 2D LiDARs with similar fields of view were used (225\textdegree{} for Karl and 255\textdegree{} for RobAIR).
+In both cases, the LiDARs were positioned approximately on knee height (37cm for Karl and around 10cm for RobAIR).
 This allowed using the same dataset, originally prepared and annotated for "DROW: Real-Time Deep Learning based Wheelchair Detection in 2D
 Range Data"\cite{DROW_2016} article, for detector evaluating and comparing.
 
@@ -127,7 +129,7 @@ All of them can be reused for comparing different person detectors and just runn
 
 The library consists of three parts.
 
-Datasets part contains the dataset described in DROW article together with some useful methods for loading and acquiring data from it.
+Datasets part contains the dataset described in DROW article along with some useful methods for loading and acquiring data from it.
 The second dataset available is the live dataset, that provides similar interface for working with live data received from robot scanners in runtime.
 
 Detector part contains the DROW detector, it is equipped with a few methods for convenient detected person position votes processing.
@@ -145,7 +147,7 @@ Since DROW detector processes five latest measures and algorithmic detector proc
 \subsubsection{Live dataset provider}
 
 The live dataset provider emulates dataset for live data.
-It accumulates measures in a queue of requested, returns and empties the queue upon data retrieval.
+It accumulates measures in a queue, returns and empties the queue upon data retrieval.
 It has support for receiving (and retrieving by detector) data from two LiDARs simultaneously.
 
 \subsubsection{DROW person detector}
@@ -253,31 +255,62 @@ The notebooks are rendered and available in this paper GitHub repository\cite{FT
 	\centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_false_negative_1}
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_nn_false_negative_1}
 		\caption{}
 		\label{fig:drow_false_negative_1}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_false_negative_2}
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_nn_false_negative_2}
 		\caption{}
 		\label{fig:drow_false_negative_2}
 	\end{subfigure}
 	\parbox[b]{\textwidth}{}
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_false_positive_1}
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_nn_false_positive_1}
 		\caption{}
 		\label{fig:drow_false_positive_1}
 	\end{subfigure}%
 	\begin{subfigure}{.5\linewidth}
 		\centering
-		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_false_positive_2}
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_nn_false_positive_2}
 		\caption{}
 		\label{fig:drow_false_positive_2}
 	\end{subfigure}
 	\caption{DROW dataset incorrect annotation examples}
-	\label{fig:drow_annotation_errors}
+	\label{fig:drow_nn_annotation_errors}
+\end{figure*}
+
+\begin{figure*}[t]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_al_false_negative}
+		\caption{}
+		\label{fig:ftd_al_false_negative}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_al_false_positive}
+		\caption{}
+		\label{fig:ftd_al_false_positive}
+	\end{subfigure}
+	\parbox[b]{\textwidth}{}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_al_positive_wc}
+		\caption{}
+		\label{fig:ftd_al_positive_wc}
+	\end{subfigure}%
+	\begin{subfigure}{.5\linewidth}
+		\centering
+		\includegraphics[width=.65\linewidth, height=.65\linewidth]{ftd_al_positive_both}
+		\caption{}
+		\label{fig:ftd_al_positive_both}
+	\end{subfigure}
+	\caption{Examples of algorithmic detection results}
+	\label{fig:drow_al_detection_results}
 \end{figure*}
 
 The detection result accuracy was compared by AUC of precision-recall curve\cite{prec_rec_curve}.
@@ -287,14 +320,23 @@ In both cases, DROW dataset annotations were used as "ground truth" for person p
 The figure \ref{fig:pr_auc_comparison} shows that DROW detector performs significantly better (AUC = 71.1\% for people with visible two legs) than algorithic detector (AUC = 0.0\%).
 However, after a closer investigation, it was concluded that the primary reason for the difference was DROW dataset annotations misplacement.
 
-Figure \ref{fig:drow_annotation_errors} shows examples of DROW dataset annotation misplacement.
+Figure \ref{fig:drow_nn_annotation_errors} shows examples of DROW dataset annotation misplacement.
 Pink marker represents the robot, people around it are marked with white circles (manually).
 Blue markers represent LiDAR measures, green markers represent person positions predicted by DROW detector and yellow markers represent DROW dataset annotations.
 
-Figures \ref{fig:drow_false_negative_1} and \ref{fig:drow_false_negative_2} show false negative annotation examples, while figures \ref{fig:drow_false_positive_1} and \ref{fig:drow_false_positive_2} show false positive annotation examples.
+Figures \ref{fig:drow_false_negative_1} and \ref{fig:drow_false_negative_2} show false negative annotation examples,
+while figures \ref{fig:drow_false_positive_1} and \ref{fig:drow_false_positive_2} show false positive annotation examples.
 It has been manually calculated that during the first 3 minutes of DROW dataset recorded data, the annotations match real people positions at most for 20 seconds.
 
 The neural network, trained with this data taken for ground truth can not be expected to find accurate person positions.
+
+Although because of incorrect dataset annotation, precision and recall curves of algorithmic detector do not represent its' accuracy, it can still be visually observed.
+Figure \ref{fig:drow_al_detection_results} shows several examples of algorithmic detection results.
+Pink marker represents the robot, people around it are marked with white circles (manually).
+Blue markers represent LiDAR measures, red markers represent person positions predicted by algorithmic detector and yellow markers represent DROW dataset annotations.
+
+Figures \ref{fig:ftd_al_false_negative} and \ref{fig:ftd_al_false_positive} show false negative and positive detections respectively,
+while figures \ref{fig:ftd_al_positive_wc} and \ref{fig:drow_al_detection_results} show correct detections of walking persons and persons in wheelchairs.
 
 \subsection{Execution time comparison}
 
@@ -319,7 +361,7 @@ Since 2D LiDARs are in many cases preferred to 3D LiDARs and cameras not only be
 In this paper, a comparison between two person detectors was made: an heuristic algorithm based detector, relying on some assumptions about human body shape in 2D space, and a neural network based detector, inspired by a popular convolutional neural network VGGnet\cite{vggnet_paper} architecture. 
 
 The two detectors were tested and compared using data from DROW dataset.
-The results indicate, that the comparison is not really feasible because of the data in the DROW dataset being annotated incorrectly.
+The results obtained during limited time of my internship indicate, that a meaningful comparison is not really feasible because of the data in the DROW dataset being annotated incorrectly.
 As it can be seen by example provided, in real-world the algorithmic detector performs better (sometimes it detects people).
 That, however, does not imply any conclusions about DROW detector architecture - only about the available weights, that were produced by training the neural network on the dataset.
 That also does not cover any of the specific cases, that are out of scope of algorithmic detector (wheelchairs, walkers, people in lab coats, etc.).
