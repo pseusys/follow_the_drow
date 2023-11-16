@@ -112,7 +112,7 @@ Range Data"\cite{DROW_2016} article, for detector evaluating and comparing.
 \end{figure*}
 
 Comparison of the algorithmic and DROW detectors requires their execution in the similar environments and on the same input data.
-In order to launch both detectors and receive their output, a library with and Python interface for both detectors was written.
+In order to launch both detectors and receive their output, a library with \texttt{Python} interface for both detectors was written.
 For launching the detectors on RobAIR, a Robot Operating System (ROS)\cite{ros_site} package containing LiDAR data collector, transformer and detector nodes was created.
 In order to launch the pipeline on machines that do not have ROS installed, a Docker image containing the source code was introduced.
 
@@ -148,23 +148,23 @@ Since DROW detector processes five latest measures and algorithmic detector proc
 
 The live dataset provider emulates dataset for live data.
 It accumulates measures in a queue, returns and empties the queue upon data retrieval.
-It has support for receiving (and retrieving by detector) data from two LiDARs simultaneously.
+It provides methods for receiving (and retrieving by detector) data from two LiDARs simultaneously.
 
 \subsubsection{DROW person detector}
 
 DROW person detector is adapted from DROW\cite{DROW_2018} article.
-It utilizes a neural network model built with pytorch\cite{pytorch_site} library.
+It utilizes a neural network model built with \texttt{pytorch}\cite{pytorch_site} library.
 The neural network casts a vote for object location for a fixed-size window around every measure point.
 At every time it processes five latest measures in order to keep track of temporal changes in input data.
 It is only capable of processing bottom LiDAR measures.
-The detector returns arrays of votes and confidencies, that can be later transformed into predicted person positions using library functions.
+The detector returns arrays of votes and confidencies, that can be later transformed into predicted person positions using library functions, implementing non-maximum suppression.
 
 \subsubsection{Algorithmic person detector}
 
 Algorithmic person detector was adapted from \textbf{Follow me behavior} \cite{follow_me_behavior} article.
 It was changed so that it would benefit from using advanced \texttt{C++} features (links, vectors, etc.) and also become configurable at runtime.
 The algorithm searches for objects represented by certain patterns of "clusters" of points situated close to each other.
-It is capable of processing bottom LiDAR measures (15cm from the ground) only as well as top (1.6m from the ground) and bottom LiDAR measurements together.
+It is capable of processing bottom LiDAR measures (15cm from the ground) as well as top (1.6m from the ground) and bottom LiDAR measures together.
 The detector returns an array of predicted person positions.
 
 FTD library also provides a binding of the algorithm \texttt{C++} code to \texttt{Python} class using \texttt{pybind11}\cite{pybind_site} library.
@@ -234,18 +234,18 @@ The closest to the RobAIR prediction is accurate (it is marked with white circle
 Since the latest ROS 1 version can be installed on Ubuntu Focal Fossa (20.04) only\cite{ros_latest_installation}\cite{ros_latest_package}, a Docker image was created for launching the ROS package on any Linux device.
 
 First, an image with full ROS installation was created.
-The image includes all ROS packages installed, \texttt{catkin}\cite{catkin_wiki} workspace created and a running script exporting all required environmental variables.
+The image includes all ROS packages, \texttt{catkin}\cite{catkin_wiki} workspace and a running script exporting all required environmental variables.
 The image is published on GitHub container registry\cite{FTD_docker_image}.
 
 The other image was build on top of the previous one, it also includes FTD library.
-Unfortunately, it couldn't be published because its' size is more than 3Gb, but it can be built and launched locally instead.
+Unfortunately, it couldn't be published because its' size exceeds 3Gb, but it can be built and launched locally instead.
+This image can also be configured to be used with physical RobAIR by setting special environmental variables.
 
 A docker compose file was created that sets all environmental variables required for RVIZ graphical output and configures volumes with ROS nodes source code.
-This image can also be configured to be used with physical RobAIR by setting special environmental variables.
 
 \section{Results}
 
-Detector comparison was performed on a laptop, using DROW dataset data.
+Detector comparison was performed locally, using DROW dataset data.
 For result storing and visualization, Jupyter notebooks were used.
 The notebooks are rendered and available in this paper GitHub repository\cite{FTD_comparison}.
 
